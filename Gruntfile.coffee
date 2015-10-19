@@ -6,6 +6,10 @@ module.exports = (grunt) ->
   # Defaults:
   # ================================================================
   defaults =
+
+    # Ports
+    serverPort: 9000
+
     # 'secret' used to sign the JWT
     jwtSecret: 'my_random_and_uber_secret_string_to_sign_the_json_web_tokens'
 
@@ -45,16 +49,14 @@ module.exports = (grunt) ->
 
   # Data available to the tasks:
   # The previous config plus some aditional params.
-   config = _.extend config,
+  config = _.extend config,
 
     # Directories:
-    rootDir:      __dirname
-    srcDir:       './src'
-    docsDir:      'docs'
+    rootDir: __dirname
+    srcDir:  './src'
+    docsDir: 'docs'
 
-    # Dev. server settings:
-    serverPort:         9000
-
+    # Other
     banner: '/*! <%= package.name %> <%= package.version %> |
  © <%= package.author %> - All rights reserved |
  <%= package.homepage %> */\n'

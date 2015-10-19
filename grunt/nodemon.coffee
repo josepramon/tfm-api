@@ -2,7 +2,7 @@
 # @see https://github.com/ChrisWren/grunt-nodemon
 module.exports =
 
-  dev:
+  TFM_API_dev:
     script: './src/app.js'
     options:
       args: ['dev']
@@ -16,7 +16,7 @@ module.exports =
         PORT: '<%= serverPort %>'
         DEBUG: 'ApiApp:*'
 
-  production:
+  TFM_API_production:
     script: './src/app.js'
     options:
       watch: ['./src']

@@ -65,7 +65,7 @@ server:
   description: 'Starts a HTTP server on the dist directory'
   tasks:
     - env:app
-    - nodemon:production
+    - nodemon:TFM_API_production
 
 server:stop:
   description: 'Stops the HTTP server'
