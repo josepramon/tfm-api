@@ -1,0 +1,12 @@
+language: node_js
+
+node_js:
+  - "stable"
+
+services:
+  - mongodb
+  - redis-server
+
+before_script: "npm install -g grunt-cli"
+
+script: "grunt test:coverage"
