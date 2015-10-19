@@ -1,0 +1,19 @@
+# 3rd party stuff managed by package managers like npm or bower
+node_modules
+
+# generated stuff
+db/mongo/data
+db/mongo/log
+db/mongo/pid
+db/redis/pid
+db/redis/dump.rdb
+test/coverage
+doc/api
+
+# IDE files
+*.sublime-project
+*.sublime-workspace
+
+# other
+TODO.md
+env.json
