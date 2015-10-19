@@ -1,0 +1,13 @@
+{
+  "node": true,
+  "mocha": true,
+  "curly": true,
+  "eqnull": true,
+  "eqeqeq": true,
+  "undef": true,
+  "expr": true,
+  "esnext": true,
+  "globals": {
+    "console": true
+  }
+}
