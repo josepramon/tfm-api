@@ -4,6 +4,7 @@ var
   fs          = require('fs'),
   path        = require('path'),
   glob        = require('glob'),
+  config      = require('../src/config'),
   fixturesDir = path.normalize(__dirname + '/../test/fixtures/');
 
 

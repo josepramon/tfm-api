@@ -5,6 +5,7 @@ var
   path              = require('path'),
   mongoose          = require('mongoose'),
   mongoConfigParser = require('../src/lib/mongoConfigParser'),
+  config            = require('../src/config'),
   User              = require('../src/modules/api/models/User'),
   prompt            = require('prompt');
 
