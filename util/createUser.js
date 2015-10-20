@@ -5,17 +5,18 @@ var
   path              = require('path'),
   mongoose          = require('mongoose'),
   mongoConfigParser = require('../src/lib/mongoConfigParser'),
+  config            = require('../src/config'),
   User              = require('../src/modules/api/models/User'),
   prompt            = require('prompt');
 
 
 // Get the connection params for the mongo instance and connect
 var mongoConn = new mongoConfigParser().setEnv({
-  host     : process.env.MONGO_HOST,
-  port     : process.env.MONGO_PORT,
-  user     : process.env.MONGO_USER,
-  password : process.env.MONGO_PASSWORD,
-  database : process.env.MONGO_DATABASE
+  host     : config.mongo.host,
+  port     : config.mongo.port,
+  user     : config.mongo.user,
+  password : config.mongo.password,
+  database : config.mongo.database
 });
 
 

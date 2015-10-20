@@ -39,17 +39,14 @@ var unmockRedis = function() {
 describe('lib/jwtAuth', function() {
 
   before(function(done) {
-
-    // set a jwt secret
-    process.env.JWT_SECRET = 'secret';
-
+    this.timeout(10000);
     mockRedis();
-
     done();
   });
 
 
   after(function(done) {
+    this.timeout(10000);
     unmockRedis();
     done();
   });

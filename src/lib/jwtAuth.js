@@ -15,10 +15,11 @@ var
   jsonwebtoken = require('jsonwebtoken'),
   errors       = require('./errors'),
   redis        = require('redis'),
-  client       = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST),
+  config       = require('src/config'),
+  client       = redis.createClient(config.redis.port, config.redis.host),
 
   TOKEN_EXPIRATION     = 60 * 60, // 1 hour
-  JWT_SECRET           = process.env.JWT_SECRET;
+  JWT_SECRET           = config.jwtSecret;
 
 
 

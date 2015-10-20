@@ -5,26 +5,7 @@ module.exports = (grunt) ->
 
   # Defaults:
   # ================================================================
-  defaults =
-
-    # Ports
-    serverPort: 9000
-
-    # 'secret' used to sign the JWT
-    jwtSecret: 'my_random_and_uber_secret_string_to_sign_the_json_web_tokens'
-
-    # Redis settings
-    redis:
-      host: 'localhost'
-      port: 6379
-
-    # Mongo settings
-    mongo:
-      host:     'localhost'
-      port:     27017
-      user:     null
-      password: null
-      database: 'tfmAPI'
+  defaults = grunt.file.readJSON('env.default.json')
 
 
   # The defaults can be overrided so you can place the frontendApp wherever you
@@ -41,7 +22,6 @@ module.exports = (grunt) ->
     envConfig = {}
 
   config = _.defaults envConfig, defaults
-
 
 
   # Actual tasks config...

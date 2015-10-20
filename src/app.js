@@ -10,6 +10,7 @@ if(process.env.APP_DIR_FOR_CODE_COVERAGE) {
   require('../config/require');
 }
 
+
 var
   debug      = require('debug')('ApiApp:' + process.pid),
   fs         = require('fs'),
@@ -20,8 +21,25 @@ var
   cors       = require('cors'),
   config     = require('./config'),
 
-  publicDir  = process.env.APP_PUBLIC_DIR,
   port       = process.env.PORT || 5000;
+
+
+
+/**
+ * Mailer component initialization
+ */
+var setupMailer = function() {
+  var
+    mailConfig = config.mail,
+    mailer     = require('src/lib/mailer');
+
+  if(mailConfig && mailConfig.sender) {
+    mailer.setDefaults({ from: mailConfig.sender });
+    delete mailConfig.sender
+  }
+
+  mailer.setup(mailConfig);
+}
 
 
 /**
@@ -31,6 +49,9 @@ var
 var createApp = function() {
 
   var app = express();
+
+  // configure the mailer
+  setupMailer();
 
 
   // BASE SETUP
@@ -48,10 +69,6 @@ var createApp = function() {
   // configure app to use response-time to detect possible bottlenecks or other issues
   app.use(require('response-time')());
   app.use(require('compression')());
-
-  // setup the routes
-  var routeHandlers = require('./routeHandlers');
-  app.get('/', routeHandlers.root);
 
 
   // SETUP THE PAGINATION MIDDLEWARE

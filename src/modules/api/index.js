@@ -6,6 +6,7 @@ var
   express    = require('express'),
   mongoose   = require('mongoose'),
   debug      = require('debug')('ApiApp:API:' + process.pid),
+  config     = require('src/config'),
   jwt        = require('express-jwt'),
   jwtAuth    = require('src/lib/jwtAuth'),
   errors     = require('src/lib/errors'),
@@ -17,11 +18,11 @@ var
 var mongoConfigParser = require('src/lib/mongoConfigParser');
 
 var mongoConn = new mongoConfigParser().setEnv({
-  host     : process.env.MONGO_HOST,
-  port     : process.env.MONGO_PORT,
-  user     : process.env.MONGO_USER,
-  password : process.env.MONGO_PASSWORD,
-  database : process.env.MONGO_DATABASE
+  host     : config.mongo.host,
+  port     : config.mongo.port,
+  user     : config.mongo.user,
+  password : config.mongo.password,
+  database : config.mongo.database
 });
 
 /* istanbul ignore next */
@@ -49,7 +50,7 @@ var excluded = {path: [
 ]};
 
 // Setup the authentication using JWT
-router.use( jwt({ secret: process.env.JWT_SECRET }).unless(excluded) );
+router.use( jwt({ secret: config.jwtSecret }).unless(excluded) );
 router.use( jwtAuth.middleware().unless(excluded) );
 
 
