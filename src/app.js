@@ -10,6 +10,7 @@ if(process.env.APP_DIR_FOR_CODE_COVERAGE) {
   require('../config/require');
 }
 
+
 var
   debug      = require('debug')('ApiApp:' + process.pid),
   fs         = require('fs'),
@@ -23,6 +24,24 @@ var
   port       = process.env.PORT || 5000;
 
 
+
+/**
+ * Mailer component initialization
+ */
+var setupMailer = function() {
+  var
+    mailConfig = config.mail,
+    mailer     = require('src/lib/mailer');
+
+  if(mailConfig && mailConfig.sender) {
+    mailer.setDefaults({ from: mailConfig.sender });
+    delete mailConfig.sender
+  }
+
+  mailer.setup(mailConfig);
+}
+
+
 /**
  * App setup, wrapped inside a function so it can be called multiple
  * times to create the workers when running in cluster mode
@@ -30,6 +49,9 @@ var
 var createApp = function() {
 
   var app = express();
+
+  // configure the mailer
+  setupMailer();
 
 
   // BASE SETUP

@@ -13,6 +13,7 @@ var loadJsonSync = function(path) {
 
     var stat = fs.statSync(path);
 
+    /* istanbul ignore next */
     if(stat.isFile()) {
       var content = fs.readFileSync(path, 'utf8');
       ret = JSON.parse(content);
