@@ -20,7 +20,6 @@ var
   cors       = require('cors'),
   config     = require('./config'),
 
-  publicDir  = process.env.APP_PUBLIC_DIR,
   port       = process.env.PORT || 5000;
 
 
