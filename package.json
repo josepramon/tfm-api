@@ -1,6 +1,6 @@
 {
   "name": "TFM-API",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "TFM API server",
   "author": "Josep Ramon Camps Lladó <jrcamps@gmail.com>",
   "homepage": "http://www.mosaiqo.com",
@@ -26,6 +26,7 @@
     "mongoose-deep-populate": "^2.0.0",
     "mongoose-paginate": "^4.0.1",
     "mongoose-time": "^0.1.0",
+    "nodemailer": "^1.8.0",
     "redis": "^2.2.5",
     "response-time": "^2.3.1",
     "slug": "^0.9.1",

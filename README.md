@@ -20,6 +20,42 @@ To run the API, the following components are required:
     - Start Mongo by executing `grunt mongo`.
     - Run `grunt mongo:populate` to load the fake data.
     - Run `grunt mongo:stop` to stop mongo (the grunt tasks will start/stop it when needed).
+- Create a file called `env.json` and override any of the settings defined in `env.default.json`. This file contains some application parameters that should be configured, like mongo, redis, and mail parameters.
+
+### Mail sending:
+
+Mail settings should be configured in `env.json`. Mail sending is handled by the [Nodemailer library](http://nodemailer.com/). The configuration should be something like:
+
+```json
+{
+  "mail": {
+    "service": 'gmail',
+    "auth": {
+        "user": 'sender@gmail.com',
+        "pass": 'password'
+    },
+    "sender": "Some name <sender@gmail.com"
+  }
+}
+```
+
+Nodemailer supports various services. See the full list [here](https://github.com/andris9/nodemailer-wellknown#supported-services). It's also possible to setup a regular SMTP connection, with a configuration like:
+
+```json
+{
+  "mail": {
+    "host": 'localhost',
+    "port": 25,
+    "auth": {
+        "user": 'username',
+        "pass": 'password'
+    }
+    "sender": "Some name <sender@gmail.com"
+  }
+}
+```
+
+The `sender` field is the default sender for all the mails originating from the API.
 
 
 ## Usage:

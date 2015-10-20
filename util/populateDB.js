@@ -4,6 +4,7 @@ var
   fs          = require('fs'),
   path        = require('path'),
   glob        = require('glob'),
+  config      = require('../src/config'),
   fixturesDir = path.normalize(__dirname + '/../test/fixtures/');
 
 
@@ -13,11 +14,11 @@ var
 var mongoConfigParser = require('../src/lib/mongoConfigParser');
 
 var mongoConn = new mongoConfigParser().setEnv({
-  host     : process.env.MONGO_HOST,
-  port     : process.env.MONGO_PORT,
-  user     : process.env.MONGO_USER,
-  password : process.env.MONGO_PASSWORD,
-  database : process.env.MONGO_DATABASE
+  host     : config.mongo.host,
+  port     : config.mongo.port,
+  user     : config.mongo.user,
+  password : config.mongo.password,
+  database : config.mongo.database
 });
 
 // DATA LOAD:

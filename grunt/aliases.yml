@@ -11,7 +11,6 @@ dev:
     - redis               # start the local redis
     - mongo               # start the local mongod
     - env:dev             # disable the clustering, enable logging, etc
-    - env:app
     - bgShell:nodemonDev  # start an express server that will be restarted on any server code change
     - watch               # lint & unit test the server code when changed
 
@@ -30,7 +29,6 @@ docs:
 util:createUser:
   description: 'Create an application user'
   tasks:
-    - env:app
     - bgShell:createUser
 
 
@@ -41,7 +39,6 @@ test:
   description: 'Execute ALL the tests'
   tasks:
     - env:dev
-    - env:app
     - mongo:populate
     - mochaTest
 
@@ -64,7 +61,6 @@ test:coverage:
 server:
   description: 'Starts a HTTP server on the dist directory'
   tasks:
-    - env:app
     - nodemon:TFM_API_production
 
 server:stop:
@@ -92,7 +88,6 @@ mongo:setup:
 mongo:populate:
   description: 'Fill the database with the fixtures data'
   tasks:
-    - env:app
     - bgShell:mongod_populate
 
 
