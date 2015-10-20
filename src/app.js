@@ -49,10 +49,6 @@ var createApp = function() {
   app.use(require('response-time')());
   app.use(require('compression')());
 
-  // setup the routes
-  var routeHandlers = require('./routeHandlers');
-  app.get('/', routeHandlers.root);
-
 
   // SETUP THE PAGINATION MIDDLEWARE
   // =============================================================================
