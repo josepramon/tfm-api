@@ -23,7 +23,16 @@ var UserSchema = new Schema({
     type: String,
     unique: true,
     required: true
-  }
+  },
+
+  role: {
+    type: Schema.ObjectId,
+    ref: 'Role',
+    required: true
+  },
+
+  // other user details
+  profile: {}
 
 }, {
 
