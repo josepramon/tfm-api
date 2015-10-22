@@ -38,8 +38,12 @@ var getRoles = function(callback) {
 var createUser = function(userData) {
   var user = new User(userData);
 
-  user.save(function (err) {
-    errorHandler(err);
+  user.save(function (err, model) {
+    if(err) {
+      errorHandler(err);
+    }
+    console.log('User successfully created');
+    process.exit();
   });
 
 };
