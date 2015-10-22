@@ -1,9 +1,7 @@
 var
   _                   = require('underscore'),
   fs                  = require('fs'),
-  debug               = require('debug')('ApiApp:config' + process.pid),
-  defaultSettingsFile = __dirname + '/../../env.default.json',
-  customSettingsFile  = __dirname + '/../../env.json';
+  debug               = require('debug')('ApiApp:config' + process.pid);
 
 
 var loadJsonSync = function(path) {
@@ -27,15 +25,33 @@ var loadJsonSync = function(path) {
 };
 
 
+/**
+ * Application settings loading:
+ *
+ * Parse the defaults and custom overrides
+ */
 var
+  defaultSettingsFile = __dirname + '/../../env.default.json',
+  customSettingsFile  = __dirname + '/../../env.json',
+
   defaultSettings = loadJsonSync(defaultSettingsFile),
   customSettings  = loadJsonSync(customSettingsFile);
 
 
 
 module.exports = _.extend({}, defaultSettings, customSettings, {
+
+  // other application settings
+
+  roles: {
+    admin: 'ADMIN',
+    agent: 'AGENT',
+    user:  'USER'
+  },
+
   pagination: {
     defaultLimit: 20,
     maxLimit:     200
   }
+
 });
