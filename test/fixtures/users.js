@@ -29,9 +29,9 @@ var users = [];
 // default admin
 users.push({
   _id:      id(),
-  username: 'user',
-  password: crypt.hashPassword('user'),
-  email:    'user@user.demo',
+  username: 'admin',
+  password: crypt.hashPassword('admin'),
+  email:    'admin@demo.demo',
   role:     adminRoleId
 });
 
@@ -40,7 +40,7 @@ users.push({
   _id:      id(),
   username: 'agent',
   password: crypt.hashPassword('agent'),
-  email:    'agent@agent.demo',
+  email:    'agent@demo.demo',
   role:     agentRoleId
 });
 
@@ -49,7 +49,7 @@ users.push({
   _id:      id(),
   username: 'user',
   password: crypt.hashPassword('user'),
-  email:    'user@user.demo',
+  email:    'user@demo.demo',
   role:     userRoleId
 });
 
