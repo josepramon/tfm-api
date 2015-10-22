@@ -47,7 +47,7 @@ var
  */
 var getDefaults = function() {
   return defaults;
-}
+};
 
 
 /**
@@ -56,7 +56,7 @@ var getDefaults = function() {
  */
 var setDefaults = function(newDefaults) {
   defaults = newDefaults;
-}
+};
 
 
 /**
@@ -66,7 +66,7 @@ var setDefaults = function(newDefaults) {
  *
  * @param  {Object} settings see http://nodemailer.com
  */
-var setup = function(settings) {
+var setupMailer = function(settings) {
   settings = settings || {};
 
   /* istanbul ignore else */
@@ -94,7 +94,7 @@ var setup = function(settings) {
 
     return true;
   }
-}
+};
 
 
 /**
@@ -121,7 +121,7 @@ var sedmail = function(data, callback) {
     // merge the provided options with the defaults
     data = _.defaults(data, defaults);
 
-    transporter.sendMail(data, callback)
+    transporter.sendMail(data, callback);
   }
 };
 
@@ -129,7 +129,7 @@ var sedmail = function(data, callback) {
 
 module.exports = {
   send:        sedmail,
-  setup:       setup,
+  setup:       setupMailer,
   getDefaults: getDefaults,
   setDefaults: setDefaults
 };
