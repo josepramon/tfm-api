@@ -3,7 +3,8 @@
 var
   mongoose = require('mongoose'),
   Schema   = mongoose.Schema,
-  bcrypt   = require('bcryptjs');
+  bcrypt   = require('bcryptjs'),
+  role     = require('./Role');
 
 
 var UserSchema = new Schema({
