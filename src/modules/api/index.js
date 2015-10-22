@@ -10,19 +10,22 @@ var
   jwt        = require('express-jwt'),
   jwtAuth    = require('src/lib/jwtAuth'),
   errors     = require('src/lib/errors'),
-  routesDir  = __dirname + '/routes/';
+  routesDir  = __dirname + '/routes/',
+  testEnv    = process.env.TEST;
 
 
 // MONGO CONF.
 // =============================================================================
 var mongoConfigParser = require('src/lib/mongoConfigParser');
 
+var db = testEnv ? config.mongo.test : config.mongo.default;
+
 var mongoConn = new mongoConfigParser().setEnv({
-  host     : config.mongo.default.host,
-  port     : config.mongo.default.port,
-  user     : config.mongo.default.user,
-  password : config.mongo.default.password,
-  database : config.mongo.default.database
+  host     : db.host,
+  port     : db.port,
+  user     : db.user,
+  password : db.password,
+  database : db.database
 });
 
 /* istanbul ignore next */

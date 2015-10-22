@@ -38,6 +38,7 @@ util:createUser:
 test:
   description: 'Execute ALL the tests'
   tasks:
+    - env:test
     - env:dev
     - bgShell:load_fixtures
     - mochaTest
