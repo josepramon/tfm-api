@@ -70,12 +70,15 @@ var create = function (user, req, res, next) {
     return next(new Error('User data cannot be empty.'));
   }
 
+  var userRole = user.role || {};
+
   var data = {
     userId: user.id,
     username: user.username,
-    access: user.access, // currently empty
-    name: user.name,     // currently empty
+    name: user.name,
     email: user.email,
+    role: userRole.name,
+    privileges: userRole.privileges,
     token: jsonwebtoken.sign({ id: user.id}, JWT_SECRET, {
       expiresIn: TOKEN_EXPIRATION
     })
