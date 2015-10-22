@@ -8,13 +8,7 @@ module.exports = (function() {
     bcrypt = require('bcryptjs');
 
 
-  var hashPassword = function(password) {
-    var
-      salt = bcrypt.genSaltSync(10),
-      hash = bcrypt.hashSync(password, salt);
 
-    return hash;
-  };
 
 
   // default user
