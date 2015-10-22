@@ -1,7 +1,7 @@
 var
   mongoose          = require('mongoose'),
   mongoConfigParser = require('src/lib/mongoConfigParser'),
-  config            = require('src/config')
+  config            = require('src/config');
 
 
 var mongoConn = new mongoConfigParser().setEnv({
