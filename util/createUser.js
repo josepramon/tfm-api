@@ -103,7 +103,7 @@ var getPromptQuestions = function(roleNames, roles) {
 
 mongoose.set('debug', true);
 mongoose.connection.on('error', function () {
-    console.log('Mongoose connection error', arguments);
+  console.log('Mongoose connection error', arguments);
 });
 
 // Connect to mongo
