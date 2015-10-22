@@ -178,6 +178,8 @@ describe('lib/jwtAuth', function() {
     var reqUser;
 
     before(function(done) {
+      this.timeout(10000);
+
       // store something to redis (in fact redis is mocked,
       // so this happens on memory)
       var
@@ -233,6 +235,7 @@ describe('lib/jwtAuth', function() {
     var reqUser;
 
     before(function(done) {
+      this.timeout(10000);
 
       // It looks like redis-mock has some bug that causes
       // elements to not get destroyed when calling expire.
@@ -244,7 +247,7 @@ describe('lib/jwtAuth', function() {
 
       var
         user = {
-          id      : '0123456789',
+          id       : '0123456789',
           username : 'username',
           name     : 'name',
           email    : 'user@domain.tld'
@@ -306,6 +309,7 @@ describe('lib/jwtAuth', function() {
     var reqUser;
 
     before(function(done) {
+      this.timeout(10000);
 
       // It looks like redis-mock has some bug that causes
       // elements to not get destroyed when calling expire.
