@@ -8,6 +8,7 @@ var
   expect            = require('chai').expect,
   faker             = require('faker'),
   requireHelper     = require('test/_util/require_helper'),
+  Role              = require('src/modules/api/models/Role'),
 
   // file being tested
   User              = requireHelper('modules/api/models/User');
@@ -17,10 +18,25 @@ var
 
 describe('User model', function() {
 
+  var roles = [{}];
+
   this.timeout(10000);
 
   before(function(done) {
-    db.connect(done);
+    db.connect(function() {
+      // retrieve the roles
+      Role.find({}, function(err, userRoles) {
+        roles = userRoles;
+
+        // make sure the indexes are ready
+        // (mongoose creates them on the go)
+        User.ensureIndexes(function (err) {
+          if (err) { return done(err); }
+          done();
+        });
+      });
+    });
+
   });
 
 
@@ -33,7 +49,8 @@ describe('User model', function() {
     var userdata = {
       username: faker.internet.userName(),
       password: faker.internet.password(),
-      email:    faker.internet.email()
+      email:    faker.internet.email(),
+      role:     roles[0].id
     };
 
     var user = new User(userdata);
@@ -53,7 +70,8 @@ describe('User model', function() {
       id :      '000000000000000000000001',
       username: faker.internet.userName(),
       password: faker.internet.password(),
-      email:    faker.internet.email()
+      email:    faker.internet.email(),
+      role:     roles[0].id
     };
 
     var user = new User(userdata);
@@ -75,7 +93,8 @@ describe('User model', function() {
     var userdata = {
       username: faker.internet.userName(),
       password: faker.internet.password(),
-      email:    faker.internet.email()
+      email:    faker.internet.email(),
+      role:     roles[0].id
     };
 
     var user = new User(userdata);
@@ -111,7 +130,8 @@ describe('User model', function() {
   it('should require a username', function(done) {
     var userdata = {
       password: faker.internet.password(),
-      email:    faker.internet.email()
+      email:    faker.internet.email(),
+      role:     roles[0].id
     };
 
     var user = new User(userdata);
@@ -131,7 +151,8 @@ describe('User model', function() {
   it('should require a email', function(done) {
     var userdata = {
       username: faker.internet.userName(),
-      password: faker.internet.password()
+      password: faker.internet.password(),
+      role:     roles[0].id
     };
 
     var user = new User(userdata);
@@ -151,7 +172,8 @@ describe('User model', function() {
   it('should require a password', function(done) {
     var userdata = {
       username: faker.internet.userName(),
-      email:    faker.internet.email()
+      email:    faker.internet.email(),
+      role:     roles[0].id
     };
 
     var user = new User(userdata);
@@ -168,12 +190,33 @@ describe('User model', function() {
   });
 
 
+  it('should require a role', function(done) {
+    var userdata = {
+      username: faker.internet.userName(),
+      email:    faker.internet.email()
+    };
+
+    var user = new User(userdata);
+
+    user.save(function(err, user) {
+      if(err) {
+        expect(err.errors).to.have.property('role');
+        done();
+      } else {
+        user.remove();
+        done(new Error('Model saved successfully'));
+      }
+    });
+  });
+
+
   it('should require a unique username', function(done) {
     var
       userdata = {
         username: faker.internet.userName(),
         password: faker.internet.password(),
-        email:    faker.internet.email()
+        email:    faker.internet.email(),
+        role:     roles[0].id
       },
       user1 = new User(userdata),
       user2 = new User(userdata);
