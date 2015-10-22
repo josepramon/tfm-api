@@ -22,7 +22,16 @@ To run the API, the following components are required:
     - Run `grunt mongo:stop` to stop mongo (the grunt tasks will start/stop it when needed).
 - Create a file called `env.json` and override any of the settings defined in `env.default.json`. This file contains some application parameters that should be configured, like mongo, redis, and mail parameters.
 
-### Mail sending:
+### Database settings:
+
+Database settings should be configured in `env.json`. See `env.default.json` for available options. The API uses redis to store temporary data, and mongo for persistent data.
+
+On the default environment file, there are defined two mongo settings sets:
+
+- **default**: Is the database used normally by the application.
+- **test**: Used while executing the tests, so the regular data is not wiped out.
+
+### Mail settings:
 
 Mail settings should be configured in `env.json`. Mail sending is handled by the [Nodemailer library](http://nodemailer.com/). The configuration should be something like:
 
