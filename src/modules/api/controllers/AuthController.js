@@ -61,7 +61,7 @@ var AuthController = {
       return next(new errors.Unauthorized());
     }
 
-    User.findOne({username: req.user.username}).populate('profile').exec(function(err, user) {
+    User.findOne({username: req.user.username}).populate('role').exec(function(err, user) {
 
       /* istanbul ignore next */
       if (err || !user) {

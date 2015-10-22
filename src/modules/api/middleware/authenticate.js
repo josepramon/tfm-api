@@ -23,7 +23,7 @@ var authenticate = function (req, res, next) {
 
 
   process.nextTick(function () {
-    User.findOne({username: username}).populate('profile').exec(function(err, user) {
+    User.findOne({username: username}).populate('role').exec(function(err, user) {
       if (err || !user) {
         return next( new errors.Unauthorized('Invalid username or password') );
       }
