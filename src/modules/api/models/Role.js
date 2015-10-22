@@ -24,7 +24,7 @@ var UserRoleSchema = new Schema({
 });
 
 /* istanbul ignore next */
-var UserRoleModel = mongoose.models.UserRole ?
+var UserRoleModel = mongoose.models.Role ?
   mongoose.model('Role') : mongoose.model('Role', UserRoleSchema);
 
 module.exports = UserRoleModel;
