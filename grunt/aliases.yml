@@ -39,7 +39,7 @@ test:
   description: 'Execute ALL the tests'
   tasks:
     - env:dev
-    - mongo:populate
+    - bgShell:load_fixtures
     - mochaTest
 
 test:coverage:
@@ -86,9 +86,9 @@ mongo:setup:
     - bgShell:mongod_setup
 
 mongo:populate:
-  description: 'Fill the database with the fixtures data'
+  description: 'Fill the database with the initial data'
   tasks:
-    - bgShell:mongod_populate
+    - bgShell:load_data
 
 
 # some aliases for redis

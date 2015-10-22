@@ -33,8 +33,15 @@ module.exports = (grunt) ->
       cwd: './db/mongo'
     bg: false
 
-  mongod_populate:
-    cmd: 'node ./util/populateDB.js'
+  # Loads initial data needed for the app operation
+  # (like role definitions and other)
+  load_data:
+    cmd: 'node ./util/populateDB.js default data'
+    bg: false
+
+  # Fake data loading for the tests
+  load_fixtures:
+    cmd: 'node ./util/populateDB.js test test/fixtures'
     bg: false
 
 
@@ -50,4 +57,4 @@ module.exports = (grunt) ->
   # utils
   createUser:
     bg: false
-    cmd: 'node ./util/createUser.js ' + ( if grunt.option('default') then '--default' else '')
+    cmd: 'node ./util/createUser.js'

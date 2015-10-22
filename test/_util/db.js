@@ -5,11 +5,11 @@ var
 
 
 var mongoConn = new mongoConfigParser().setEnv({
-  host     : config.mongo.host,
-  port     : config.mongo.port,
-  user     : config.mongo.user,
-  password : config.mongo.password,
-  database : config.mongo.database
+  host     : config.mongo.test.host,
+  port     : config.mongo.test.port,
+  user     : config.mongo.test.user,
+  password : config.mongo.test.password,
+  database : config.mongo.test.database
 });
 
 module.exports = {

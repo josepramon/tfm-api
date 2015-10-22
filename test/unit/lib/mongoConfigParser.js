@@ -135,7 +135,7 @@ describe('lib/mongoConfigParser', function() {
 
       expect(mongoConn.host).to.be.equal('localhost');
       expect(mongoConn.port).to.be.equal(27017);
-      expect(mongoConn.database).to.be.equal('tfmAPI');
+      expect(mongoConn.database).to.be.equal('tfmAPI_test');
       expect(mongoConn.user).to.be.null;
       expect(mongoConn.password).to.be.null;
 

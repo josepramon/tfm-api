@@ -18,11 +18,11 @@ var
 var mongoConfigParser = require('src/lib/mongoConfigParser');
 
 var mongoConn = new mongoConfigParser().setEnv({
-  host     : config.mongo.host,
-  port     : config.mongo.port,
-  user     : config.mongo.user,
-  password : config.mongo.password,
-  database : config.mongo.database
+  host     : config.mongo.default.host,
+  port     : config.mongo.default.port,
+  user     : config.mongo.default.user,
+  password : config.mongo.default.password,
+  database : config.mongo.default.database
 });
 
 /* istanbul ignore next */
