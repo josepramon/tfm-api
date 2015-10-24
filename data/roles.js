@@ -5,24 +5,47 @@ var
   config = require('../src/config');
 
 exports.roles = [
+
   // admin role
+  // ---------------------------------
   {
     id:         id(),
     name:       config.roles.admin,
-    privileges: {}
+    privileges: {
+
+      // unlimited access
+      knowledge_base: true
+
+    }
   },
 
   // agent role
+  // ---------------------------------
   {
     id:         id(),
     name:       config.roles.agent,
-    privileges: {}
+    privileges: {
+
+      // unlimited access
+      knowledge_base: true
+
+    }
   },
 
   // user role
+  // ---------------------------------
   {
     id:         id(),
     name:       config.roles.user,
-    privileges: {}
+    privileges: {
+
+      // readonly
+      knowledge_base: {
+        actions: {
+          read: true
+        }
+      }
+
+    }
   }
 ];

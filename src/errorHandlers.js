@@ -17,6 +17,10 @@ var errors = {
     code:    404,
     message: 'Not found'
   },
+  accessDenied: {
+    code:    401,
+    message: 'Access denied'
+  },
   validation: {
     code:    422,
     message: 'Validation Error'
@@ -123,8 +127,13 @@ var _errorResponseFromCustomHttpError = function(err) {
   if(err.message) {
     message = err.message;
   } else {
-    message = (err.code === 404) ?
-      errors.notFound.message : /* istanbul ignore next */ errors.default.message;
+    if(err.code === 404) {
+      message = errors.notFound.message;
+    } else if(err.code === 401) {
+      message = errors.accessDenied.message;
+    } else {
+      message = errors.default.message;
+    }
   }
 
   return {error: {

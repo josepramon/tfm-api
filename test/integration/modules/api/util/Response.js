@@ -26,9 +26,7 @@
 //     db.connect(function() {
 //       existingArticle = new Article({
 //         title:  'some-new-article-1',
-//         slug:   'some-new-article-1',
-//         owner:  objectid('000000000000000000000001'),
-//         author: objectid('000000000000000000000001'),
+//         slug:   'some-new-article-1'
 //       });
 
 //       existingArticle.save(function(err) {

@@ -24,24 +24,6 @@ class Request {
 
 
   /**
-   * Getter for the data 'owner' (the client)
-   *
-   * All the documents have a 'owner' attribute to filter out the data
-   * from other clients. Currently, this method just returns the user id
-   * from the token.
-   *
-   * @todo  I think we should add another key to the user obj. (something like
-   *        clientId) and use that so multiple different users con login for a
-   *        given client.
-   *
-   * @return {ObjectId} the 'owner' id
-   */
-  getOwnerFromAuth() {
-    return this.req.user.userId;
-  }
-
-
-  /**
    * @param {Number} maxDepth maximum nested expansion level (by default 1)
    * @return {Object}         the attributes to expand
    */

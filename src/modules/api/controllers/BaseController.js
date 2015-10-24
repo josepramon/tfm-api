@@ -143,9 +143,7 @@ class BaseController
   // =============================================================================
 
   _buildCriteria(request) {
-    var criteria = {
-      owner: request.getOwnerFromAuth()
-    };
+    var criteria = {};
 
     if(request.req.params.id) {
       criteria._id = request.req.params.id;
@@ -168,7 +166,6 @@ class BaseController
     }
 
     return _.extend(
-      { owner: request.req.user.userId },
       defaults,
       _.pick(request.req.body, safeAttrs)
     );
