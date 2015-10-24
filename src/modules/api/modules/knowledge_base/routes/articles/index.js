@@ -3,8 +3,19 @@
 module.exports = function(router) {
 
   var
-    ArticlesController = require('../../controllers/ArticlesController'),
-    controller         = new ArticlesController();
+    _                    = require('lodash'),
+    PrivilegesMiddleware = require('src/modules/api/middleware/privilegesAccessFilter').middleware,
+    ArticlesController   = require('../../controllers/ArticlesController'),
+    controller           = new ArticlesController();
+
+
+  // Setup the middleware applied to the put, patch, delete actions
+  // to restrict the access only to allowed users
+  var requiredPermissions = {
+    // require global access to the module
+    knowledge_base: true
+  };
+  var accessControlFilter = _.partial(PrivilegesMiddleware, requiredPermissions);
 
 
   router.route('/knowledge_base/articles')
@@ -15,6 +26,10 @@ module.exports = function(router) {
    * KnowledgeBase/Articles
    * Articles API endpoint
    */
+
+    /**
+     * @apiDefine knowledge_base  Global module access for `knowledge_base` is required.
+     */
 
 
     /**
@@ -179,6 +194,8 @@ module.exports = function(router) {
      * @apiUse KnowledgeBase_Articles_CommonApiResponseHeader
      * @apiUse KnowledgeBase_Articles_SingleEntityResponse
      *
+     * @apiPermission knowledge_base
+     *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
      *     {
@@ -283,6 +300,8 @@ module.exports = function(router) {
      * @apiUse KnowledgeBase_Articles_CommonApiResponseHeader
      * @apiUse KnowledgeBase_Articles_SingleEntityResponse
      *
+     * @apiPermission knowledge_base
+     *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
      *     {
@@ -310,7 +329,7 @@ module.exports = function(router) {
      *     }
      *
      */
-    .put(controller.update.bind(controller))
+    .put(accessControlFilter, controller.update.bind(controller))
 
 
     /**
@@ -340,6 +359,8 @@ module.exports = function(router) {
      * @apiUse KnowledgeBase_Articles_CommonApiResponseHeader
      * @apiUse KnowledgeBase_Articles_SingleEntityResponse
      *
+     * @apiPermission knowledge_base
+     *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
      *     {
@@ -367,7 +388,7 @@ module.exports = function(router) {
      *     }
      *
      */
-    .patch(controller.updatePartial.bind(controller))
+    .patch(accessControlFilter, controller.updatePartial.bind(controller))
 
 
     /**
@@ -383,6 +404,8 @@ module.exports = function(router) {
      *
      * @apiUse KnowledgeBase_Articles_CommonApiResponseHeader
      * @apiUse KnowledgeBase_Articles_SingleEntityResponse
+     *
+     * @apiPermission knowledge_base
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -409,7 +432,7 @@ module.exports = function(router) {
      *     }
      *
      */
-    .delete(controller.delete.bind(controller));
+    .delete(accessControlFilter, controller.delete.bind(controller));
 
 
 };
