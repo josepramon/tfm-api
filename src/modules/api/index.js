@@ -1,8 +1,6 @@
 'use strict';
 
 var
-  fs         = require('fs'),
-  glob       = require('glob'),
   express    = require('express'),
   mongoose   = require('mongoose'),
   debug      = require('debug')('ApiApp:API:' + process.pid),
@@ -10,7 +8,7 @@ var
   jwt        = require('express-jwt'),
   jwtAuth    = require('src/lib/jwtAuth'),
   errors     = require('src/lib/errors'),
-  routesDir  = __dirname + '/routes/',
+  loadRoutes = require('src/lib/routeLoader'),
   testEnv    = process.env.TEST;
 
 
@@ -85,13 +83,7 @@ router.get('/', function(req, res, next) {
 });
 
 // load the routes
-glob(routesDir + '**/*.js', function (err, files) {
-  files.forEach(function(routesFile) {
-    var route = routesFile.substr(0, routesFile.lastIndexOf('.'));
-    debug('Adding route:' + route);
-    require(route)(router);
-  });
-});
+loadRoutes(__dirname + '/routes/**/*.js', router);
 
 
 module.exports = router;
