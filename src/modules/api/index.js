@@ -30,12 +30,12 @@ var mongoConn = new mongoConfigParser().setEnv({
 
 /* istanbul ignore next */
 mongoose.connection.on('error', function () {
-    debug('Mongoose connection error');
+  debug('Mongoose connection error');
 });
 
 /* istanbul ignore next */
 mongoose.connection.once('open', function callback() {
-    debug('Mongoose connected to the database');
+  debug('Mongoose connected to the database');
 });
 
 // connect
@@ -46,13 +46,17 @@ mongoose.connect(mongoConn.getConnectionString(), mongoConn.getConnectionOptions
 // =============================================================================
 var router = express.Router();
 
-// auth free routes
-var excluded = {path: [
-  /api\/?$/i,
-  /api\/auth\/?$/i
-]};
-
 // Setup the authentication using JWT
+// This middleware will be applied to ALL the routes except the ones deffined in
+// src/config/publicRoutes. It checks the request headers for the presence of an
+// authentication header, and then it validates the user.
+// Additional middlewares deffined later can add additional restricions on each
+// route, like restricting the access based on the user role or whatever.
+
+// auth free routes
+var excluded = {path: config.publicRoutes};
+
+// Setup
 router.use( jwt({ secret: config.jwtSecret }).unless(excluded) );
 router.use( jwtAuth.middleware().unless(excluded) );
 
@@ -81,9 +85,9 @@ router.get('/', function(req, res, next) {
 });
 
 // load the routes
-glob(routesDir + '**/*.js', function (er, files) {
+glob(routesDir + '**/*.js', function (err, files) {
   files.forEach(function(routesFile) {
-    var route = routesFile.substr(0, routesFile.indexOf('.'));
+    var route = routesFile.substr(0, routesFile.lastIndexOf('.'));
     debug('Adding route:' + route);
     require(route)(router);
   });

@@ -1,7 +1,8 @@
 var
-  _                   = require('underscore'),
-  fs                  = require('fs'),
-  debug               = require('debug')('ApiApp:config' + process.pid);
+  _     = require('underscore'),
+  fs    = require('fs'),
+  glob  = require('glob'),
+  debug = require('debug')('ApiApp:config' + process.pid);
 
 
 var loadJsonSync = function(path) {
@@ -26,6 +27,19 @@ var loadJsonSync = function(path) {
 
 
 /**
+ * Application params
+ */
+var
+  applicationParams = {},
+  paramFiles = glob.sync(__dirname + '/params/**/*.js');
+
+paramFiles.forEach(function (file) {
+  var filePath = file.substr(0, file.lastIndexOf('.'));
+  applicationParams = _.extend(applicationParams, require(filePath));
+});
+
+
+/**
  * Application settings loading:
  *
  * Parse the defaults and custom overrides
@@ -39,19 +53,4 @@ var
 
 
 
-module.exports = _.extend({}, defaultSettings, customSettings, {
-
-  // other application settings
-
-  roles: {
-    admin: 'ADMIN',
-    agent: 'AGENT',
-    user:  'USER'
-  },
-
-  pagination: {
-    defaultLimit: 20,
-    maxLimit:     200
-  }
-
-});
+module.exports = _.extend({}, defaultSettings, customSettings, applicationParams);
