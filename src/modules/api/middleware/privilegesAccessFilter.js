@@ -41,7 +41,7 @@ var
  * and/or a `modules` object, that allows creating nested structures.
  *
  * The user (retrieved from `req.user`) should have a `privileges` attribute,
- * must contain the required privileges.
+ * and should contain the required privileges.
  *
  * If the resource requires some specific privilege, like:
  *
@@ -61,10 +61,10 @@ var
  * }
  * ```
  *
- * the access will be garanted, because the user permission is global.
+ * the access will be granted, because the user permission is global.
  *
  * See the tests to see how this exactly works
- * (there are a ton of examples with all lot of possible combinations).
+ * (there are a ton of examples with a lot of possible combinations).
  *
  */
 var checkPrivilegesMiddleware = function(requiredPermissions, req, res, next) {
@@ -103,25 +103,29 @@ var isAllowed = function(requiredPermissions, userPermissions) {
       return false;
     }
 
-    if(!userPermissions[key]) {
+    var
+      requestedPermission = val,
+      userPermission      = userPermissions[key];
+
+    if(!userPermission) {
       // if the user privileges does not contain the node, deny the access
       return false;
 
-    } else if(_.isBoolean(val)) {
+    } else if(_.isBoolean(requestedPermission)) {
 
       // global (boolean) privilege required
-      if(_.isBoolean(userPermissions[key])) {
+      if(_.isBoolean(userPermission)) {
         // the user privilege is also global, allow access if the values match
-        return (val && userPermissions[key]);
+        return (requestedPermission && userPermission);
 
       } else {
         // the required privilege is global, but the user has an specific one, so denied
         return false;
       }
 
-    } else if(_.isBoolean(userPermissions[key])) {
+    } else if(_.isBoolean(userPermission)) {
       // specific permission required, but the user has a global (boolean) one
-      return userPermissions[key];
+      return userPermission;
 
     } else {
 
@@ -132,14 +136,14 @@ var isAllowed = function(requiredPermissions, userPermissions) {
         modules = true;
 
       // check actions
-      if(val.actions) {
-        actions = isActionsAllowed(val.actions, userPermissions[key].actions);
+      if(requestedPermission.actions) {
+        actions = isActionsAllowed(requestedPermission.actions, userPermission.actions);
       }
 
       // check nested modules
-      if(val.modules) {
+      if(requestedPermission.modules) {
         // recurse
-        modules = isAllowed(val.modules, userPermissions[key].modules);
+        modules = isAllowed(requestedPermission.modules, userPermission.modules);
       }
 
       return actions && modules;
