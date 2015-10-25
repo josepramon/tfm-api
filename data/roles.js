@@ -14,6 +14,9 @@ exports.roles = [
     privileges: {
 
       // unlimited access
+      users: true,
+
+      // unlimited access
       knowledge_base: true
 
     }
