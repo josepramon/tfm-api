@@ -1,22 +1,22 @@
 'use strict';
 
+var
+  _                    = require('lodash'),
+  PrivilegesMiddleware = require('src/modules/api/middleware/privilegesAccessFilter').middleware,
+  ArticlesController   = require('../../controllers/ArticlesController'),
+  controller           = new ArticlesController();
+
+
+// Setup the middleware applied to the put, patch, delete actions
+// to restrict the access only to allowed users
+var requiredPermissions = {
+  // require global access to the module
+  knowledge_base: true
+};
+var accessControlFilter = _.partial(PrivilegesMiddleware, requiredPermissions);
+
+
 module.exports = function(router) {
-
-  var
-    _                    = require('lodash'),
-    PrivilegesMiddleware = require('src/modules/api/middleware/privilegesAccessFilter').middleware,
-    ArticlesController   = require('../../controllers/ArticlesController'),
-    controller           = new ArticlesController();
-
-
-  // Setup the middleware applied to the put, patch, delete actions
-  // to restrict the access only to allowed users
-  var requiredPermissions = {
-    // require global access to the module
-    knowledge_base: true
-  };
-  var accessControlFilter = _.partial(PrivilegesMiddleware, requiredPermissions);
-
 
   router.route('/knowledge_base/articles')
 

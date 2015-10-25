@@ -1,11 +1,11 @@
 'use strict';
 
+var
+  TagsController = require('../../controllers/TagsController'),
+  controller     = new TagsController();
+
+  
 module.exports = function(router) {
-
-  var
-    TagsController = require('../../controllers/TagsController'),
-    controller     = new TagsController();
-
 
   router.route('/knowledge_base/tags')
 
