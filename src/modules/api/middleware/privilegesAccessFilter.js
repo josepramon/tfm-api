@@ -1,3 +1,5 @@
+'use strict';
+
 var
   _      = require('lodash'),
   errors = require('src/lib/errors');
