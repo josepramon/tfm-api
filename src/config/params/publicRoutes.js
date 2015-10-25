@@ -23,7 +23,7 @@ module.exports = {
 
     // REGISTRATION
     // -------------------------------------------------------------------------
-    { url: /api\/user\/?$/i, methods: ['POST'] },
+    { url: /api\/users\/?$/i, methods: ['POST'] },
 
 
     // KNOWLEDGE BASE:
