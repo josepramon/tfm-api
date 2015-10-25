@@ -19,9 +19,9 @@ var getRoleIdByUniqueName = function(roleName) {
 
 // Get the role id's to set the appropiate relations
 var
-  adminRoleId = getRoleIdByUniqueName(config.roles.admin),
-  agentRoleId = getRoleIdByUniqueName(config.roles.agent),
-  userRoleId  = getRoleIdByUniqueName(config.roles.user);
+  adminRoleId   = getRoleIdByUniqueName(config.roles.admin),
+  managerRoleId = getRoleIdByUniqueName(config.roles.manager),
+  userRoleId    = getRoleIdByUniqueName(config.roles.user);
 
 // Create the users
 var users = [];
@@ -35,13 +35,13 @@ users.push({
   role:     adminRoleId
 });
 
-// default agent
+// default manager
 users.push({
   _id:      id(),
-  username: 'agent',
-  password: crypt.hashPassword('agent'),
-  email:    'agent@demo.demo',
-  role:     agentRoleId
+  username: 'manager',
+  password: crypt.hashPassword('manager'),
+  email:    'manager@demo.demo',
+  role:     managerRoleId
 });
 
 // default user

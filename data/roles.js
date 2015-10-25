@@ -22,11 +22,11 @@ exports.roles = [
     }
   },
 
-  // agent role
+  // manager role
   // ---------------------------------
   {
     id:         id(),
-    name:       config.roles.agent,
+    name:       config.roles.manager,
     privileges: {
 
       // unlimited access
