@@ -45,6 +45,7 @@ var UserSchema = new Schema({
       delete ret._id;
 
       // filter out some attributes from the output
+      delete ret.__v;
       delete ret.password;
     }
   },
@@ -92,6 +93,9 @@ UserSchema.pre('save', function (next) {
 
 // Custom methods and attributes
 // ----------------------------------
+// Custom methods and attributes
+// ----------------------------------
+UserSchema.statics.safeAttrs = ['username', 'password', 'email'];
 UserSchema.methods.getRefs = function() { return []; };
 
 //Password verification
@@ -109,6 +113,7 @@ UserSchema.methods.comparePassword = function (passw, cb) {
 // Register the plugins
 // ----------------------------------
 UserSchema.plugin( require('mongoose-paginate') );
+UserSchema.plugin( require('mongoose-deep-populate')(mongoose) );
 UserSchema.plugin( require('mongoose-time')() );
 
 
