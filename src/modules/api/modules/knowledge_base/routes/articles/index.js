@@ -129,6 +129,7 @@ module.exports = function(router) {
      *         }
      *       },
      *       "data": [
+     *         {
      *           "body": "Article body",
      *           "excerpt": "Article excerpt",
      *           "slug": "article-slug-1",
@@ -200,25 +201,15 @@ module.exports = function(router) {
      *     HTTP/1.1 200 OK
      *     {
      *       "meta": {
-     *         "url": "http://localhost:9001/knowledge_base/articles/5582cedfbc15803005798b8f"
+     *         "url": "http://localhost:9001/auth/users/562d694276663150095d9143"
      *       },
      *       "data": {
-     *         "body": "Article body",
-     *         "excerpt": "Article excerpt",
-     *         "slug": "article-slug-16",
-     *         "title": "Article title",
      *         "updated_at": 1434636000,
      *         "created_at": 1434636000,
-     *         "commentable": true,
-     *         "publish_date": 1434540,
-     *         "published": true,
-     *         "id": "5582cedfbc15803005798b8f",
-     *         "tags": {
-     *           "meta": {
-     *             "url": "http://localhost:9000/api/knowledge_base/articles/5582cedfbc15803005798b8f/tags",
-     *             "count": 0
-     *           }
-     *         }
+     *         "role": "562bb8139e6d738cf1756094",
+     *         "username": "someName",
+     *         "email": "somename@somedomain.com",
+     *         "id": "562d694276663150095d9143"
      *       }
      *     }
      *
