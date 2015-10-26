@@ -18,7 +18,7 @@ module.exports = {
 
     // PASSWORD RECOVERY
     // -------------------------------------------------------------------------
-    /api\/auth\/recover(\/[a-f\d]{24})?\/?$/i,
+    /api\/auth\/recover(\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})?\/?$/i,
 
 
     // END USERS REGISTRATION
