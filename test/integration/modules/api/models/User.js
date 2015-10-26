@@ -49,7 +49,7 @@ describe('User model', function() {
     var userdata = {
       username: faker.internet.userName(),
       password: faker.internet.password(),
-      email:    faker.internet.email(),
+      email:    faker.internet.email().toLowerCase(),
       role:     roles[0].id
     };
 
@@ -70,7 +70,7 @@ describe('User model', function() {
       id :      '000000000000000000000001',
       username: faker.internet.userName(),
       password: faker.internet.password(),
-      email:    faker.internet.email(),
+      email:    faker.internet.email().toLowerCase(),
       role:     roles[0].id
     };
 
@@ -93,7 +93,7 @@ describe('User model', function() {
     var userdata = {
       username: faker.internet.userName(),
       password: faker.internet.password(),
-      email:    faker.internet.email(),
+      email:    faker.internet.email().toLowerCase(),
       role:     roles[0].id
     };
 
@@ -130,7 +130,7 @@ describe('User model', function() {
   it('should require a username', function(done) {
     var userdata = {
       password: faker.internet.password(),
-      email:    faker.internet.email(),
+      email:    faker.internet.email().toLowerCase(),
       role:     roles[0].id
     };
 
@@ -172,7 +172,7 @@ describe('User model', function() {
   it('should require a password', function(done) {
     var userdata = {
       username: faker.internet.userName(),
-      email:    faker.internet.email(),
+      email:    faker.internet.email().toLowerCase(),
       role:     roles[0].id
     };
 
@@ -193,7 +193,7 @@ describe('User model', function() {
   it('should require a role', function(done) {
     var userdata = {
       username: faker.internet.userName(),
-      email:    faker.internet.email()
+      email:    faker.internet.email().toLowerCase()
     };
 
     var user = new User(userdata);
@@ -215,7 +215,7 @@ describe('User model', function() {
       userdata = {
         username: faker.internet.userName(),
         password: faker.internet.password(),
-        email:    faker.internet.email(),
+        email:    faker.internet.email().toLowerCase(),
         role:     roles[0].id
       },
       user1 = new User(userdata),
