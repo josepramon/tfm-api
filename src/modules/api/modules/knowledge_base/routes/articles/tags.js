@@ -1,12 +1,12 @@
 'use strict';
 
+var
+  ArticlesTagsController = require('../../controllers/ArticlesTagsController'),
+  controller             = new ArticlesTagsController(),
+  tagArticlesMiddleware  = require('../../middleware/tagArticles');
+
+  
 module.exports = function(router) {
-
-  var
-    ArticlesTagsController = require('../../controllers/ArticlesTagsController'),
-    controller             = new ArticlesTagsController(),
-    tagArticlesMiddleware  = require('../../middleware/tagArticles');
-
 
   router.route('/knowledge_base/articles/:articleId/tags')
 

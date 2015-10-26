@@ -21,9 +21,9 @@ module.exports = {
     /api\/auth\/recover(\/[a-f\d]{24})?\/?$/i,
 
 
-    // REGISTRATION
+    // END USERS REGISTRATION
     // -------------------------------------------------------------------------
-    { url: /api\/user\/?$/i, methods: ['POST'] },
+    { url: /api\/auth\/users\/?$/i, methods: ['POST'] },
 
 
     // KNOWLEDGE BASE:

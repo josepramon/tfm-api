@@ -82,7 +82,9 @@ router.get('/', function(req, res, next) {
   res.json({ message: 'hooray! welcome to our api!' });
 });
 
-// load the routes
+// load the routes:
+// some routes (like the auth related ones) have some weird names
+// (starting with numbers) because they must be loaded in a specific order
 loadRoutes(__dirname + '/routes/**/*.js', router);
 
 

@@ -13,17 +13,23 @@ exports.roles = [
     name:       config.roles.admin,
     privileges: {
 
-      // unlimited access
+      // users management: unlimited access
+      users: true,
+
+      // managers (agents) management: unlimited access
+      managers:true,
+
+      // knowledge base articles: unlimited access
       knowledge_base: true
 
     }
   },
 
-  // agent role
+  // manager role
   // ---------------------------------
   {
     id:         id(),
-    name:       config.roles.agent,
+    name:       config.roles.manager,
     privileges: {
 
       // unlimited access

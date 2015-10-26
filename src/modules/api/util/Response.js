@@ -66,7 +66,12 @@ class Response {
     pagination = this.paginationParams ?
       _.extend(this.request.options, this.paginationParams) : null;
 
-    metaNode = new ResponseMeta(this.request.requestURL, pagination);
+    // set the url for the meta node
+    var metaUrl = (this.request.req && this.request.req.method === 'POST' && data._id) ?
+      this.request.requestURL + '/' + data._id :
+      this.request.requestURL;
+
+    metaNode = new ResponseMeta(metaUrl, pagination);
 
     // create the data formatter
     expands = this.expandsURLMap ? this.request.getExpands(this.expandsURLMap.depth-1): [];

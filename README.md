@@ -16,11 +16,12 @@ To run the API, the following components are required:
 
 - Install dependencies executing: `npm install`
 - Mongo:
-    - Run `grunt mongo:setup` to create the data and logs directories and the PID file, and set the propper permissions. *This is optional, see the README.md file inside the db directory*.
+    - Run `grunt mongo:setup` to create the data and logs directories and the PID file, and set the proper permissions. *This is optional, see the README.md file inside the db directory*.
     - Start Mongo by executing `grunt mongo`.
-    - Run `grunt mongo:populate` to load the fake data.
-    - Run `grunt mongo:stop` to stop mongo (the grunt tasks will start/stop it when needed).
-- Create a file called `env.json` and override any of the settings defined in `env.default.json`. This file contains some application parameters that should be configured, like mongo, redis, and mail parameters.
+- Create a file called `env.json` and override any of the settings defined in `env.default.json`. This file contains some application parameters that should be configured, like Mongo, Redis, and mail parameters.
+- With Mongo running, execute `grunt setup` to load some required data into Mongo, create some needed files, etc.
+- Execute `grunt` to start the server.
+
 
 ### Database settings:
 

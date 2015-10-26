@@ -4,7 +4,12 @@ var
   mongoose = require('mongoose'),
   Schema   = mongoose.Schema,
   bcrypt   = require('bcryptjs'),
+  dateUtil = require('../../../lib/dateUtil'),
   role     = require('./Role');
+
+// register some additional schema types
+var mongooseTypes = require('mongoose-types');
+mongooseTypes.loadTypes(mongoose);
 
 
 var UserSchema = new Schema({
@@ -21,7 +26,7 @@ var UserSchema = new Schema({
   },
 
   email: {
-    type: String,
+    type: mongoose.SchemaTypes.Email,
     unique: true,
     required: true
   },
@@ -45,7 +50,12 @@ var UserSchema = new Schema({
       delete ret._id;
 
       // filter out some attributes from the output
+      delete ret.__v;
       delete ret.password;
+
+      // convert the dates to timestamps
+      ret.created_at   = dateUtil.dateToTimestamp(ret.created_at);
+      ret.updated_at   = dateUtil.dateToTimestamp(ret.updated_at);
     }
   },
   toObject: {
@@ -92,6 +102,7 @@ UserSchema.pre('save', function (next) {
 
 // Custom methods and attributes
 // ----------------------------------
+UserSchema.statics.safeAttrs = ['username', 'password', 'email'];
 UserSchema.methods.getRefs = function() { return []; };
 
 //Password verification
@@ -109,6 +120,7 @@ UserSchema.methods.comparePassword = function (passw, cb) {
 // Register the plugins
 // ----------------------------------
 UserSchema.plugin( require('mongoose-paginate') );
+UserSchema.plugin( require('mongoose-deep-populate')(mongoose) );
 UserSchema.plugin( require('mongoose-time')() );
 
 
