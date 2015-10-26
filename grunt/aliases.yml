@@ -31,6 +31,9 @@ util:createUser:
   tasks:
     - bgShell:createUser
 
+setup:
+  tasks:
+    - bgShell:load_data
 
 
 # TEST RELATED TASKS
@@ -85,11 +88,6 @@ mongo:setup:
   description: 'Initial mongodb server setup (create dirs, logs, etc)'
   tasks:
     - bgShell:mongod_setup
-
-mongo:populate:
-  description: 'Fill the database with the initial data'
-  tasks:
-    - bgShell:load_data
 
 
 # some aliases for redis
