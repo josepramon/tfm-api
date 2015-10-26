@@ -4,6 +4,8 @@ var
   _               = require('underscore'),
   debug           = require('debug')('ApiApp:mail:' + process.pid),
   nodemailer      = require('nodemailer'),
+  hbs             = require('nodemailer-express-handlebars'),
+  htmlToText      = require('nodemailer-html-to-text').htmlToText,
 
   /**
    * Mail transport
@@ -72,28 +74,34 @@ var setupMailer = function(settings) {
   /* istanbul ignore else */
   if(!_.keys(settings).length) {
     // empty config, so no mailing
-    debug('WARNING: mail settings not available. No mails will be sent.');
-
-    transporter = null;
-
-    return false;
+    var stubTransport = require('nodemailer-stub-transport');
+    settings = stubTransport;
 
   } else {
 
-    /* istanbul ignore next */
-    if(settings.service === 'direct') {
-      settings = {};
+    if(settings.service === 'sendgrid') {
+      var sgTransport = require('nodemailer-sendgrid-transport');
+      settings = sgTransport(settings);
+
+    } else if(settings.service === 'direct') {
+      settings = undefined;
+
     } else if(!settings.service) {
 
       // no service, assume a smtp config.
       var smtpTransport = require('nodemailer-smtp-transport');
       settings = smtpTransport(settings);
     }
-
-    transporter = nodemailer.createTransport(settings);
-
-    return true;
   }
+
+  transporter = nodemailer.createTransport(settings);
+
+  // attach content plugins
+  transporter.use('compile', hbs({
+    viewPath: 'src/modules/api/views',
+    extName:  '.hbs'
+  }));
+  transporter.use('compile', htmlToText({}));
 };
 
 
@@ -103,24 +111,13 @@ var setupMailer = function(settings) {
  * @param  {Function} callback callback, receives two params: error, info
  */
 var sedmail = function(data, callback) {
-  /* istanbul ignore else */
+  // merge the provided options with the defaults
+  data = _.defaults(data, defaults);
+
   if(!transporter) {
-
-    // if email settings has not been provided, just call the success callback
-    callback(null, {
-      messageId: null,
-      envelope:  null,
-      accepted:  null,
-      rejected:  null,
-      pending:   null,
-      response:  null
-    });
-
+    // for the tests
+    callback(null);
   } else {
-
-    // merge the provided options with the defaults
-    data = _.defaults(data, defaults);
-
     transporter.sendMail(data, callback);
   }
 };
