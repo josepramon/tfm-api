@@ -6,7 +6,7 @@ var
 
   InjectParamsMiddleware = require('src/modules/api/middleware/bodyParamsInjector').middleware,
 
-   AddFiltersMiddleware   = require('src/modules/api/middleware/addFilters').middleware,
+  AddFiltersMiddleware   = require('src/modules/api/middleware/addFilters').middleware,
 
   // restrict access to the routes based on the user privileges
   PrivilegesMiddleware   = require('src/modules/api/middleware/privilegesAccessFilter').middleware,
@@ -52,9 +52,9 @@ module.exports = function(router) {
      * @apiDefine auth_users  Global module access for `auth_users` is required.
      */
 
-     /**
-      * @apiDefine auth_users_self  A user can only access to their own record (ADMINS have access to all).
-      */
+    /**
+     * @apiDefine auth_users_self  A user can only access to their own record (ADMINS have access to all).
+     */
 
 
     /**
