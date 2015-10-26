@@ -17,6 +17,10 @@ var errors = {
     code:    404,
     message: 'Not found'
   },
+  badRequest: {
+    code:    400,
+    message: 'Bad request'
+  },
   accessDenied: {
     code:    401,
     message: 'Access denied'
@@ -131,6 +135,8 @@ var _errorResponseFromCustomHttpError = function(err) {
       message = errors.notFound.message;
     } else if(err.code === 401) {
       message = errors.accessDenied.message;
+    } else if(err.code === 400) {
+      message = errors.badRequest.message;
     } else {
       message = errors.default.message;
     }
