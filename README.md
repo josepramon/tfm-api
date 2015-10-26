@@ -39,31 +39,51 @@ Mail settings should be configured in `env.json`. Mail sending is handled by the
 ```json
 {
   "mail": {
-    "service": 'gmail',
+    "service": "Gmail",
     "auth": {
-        "user": 'sender@gmail.com',
-        "pass": 'password'
+        "user": "sender@gmail.com",
+        "pass": "password"
     },
     "sender": "Some name <sender@gmail.com"
   }
 }
 ```
 
-Nodemailer supports various services. See the full list [here](https://github.com/andris9/nodemailer-wellknown#supported-services). It's also possible to setup a regular SMTP connection, with a configuration like:
+Nodemailer supports various services. See the full list [here](https://github.com/andris9/nodemailer-wellknown#supported-services).  
+
+It's also possible to setup a regular SMTP connection, with a configuration like:
 
 ```json
 {
   "mail": {
-    "host": 'localhost',
+    "host": "localhost",
     "port": 25,
     "auth": {
-        "user": 'username',
-        "pass": 'password'
-    }
+        "user": "username",
+        "pass": "password"
+    },
     "sender": "Some name <sender@gmail.com"
   }
 }
 ```
+
+**Warning**: some services are really tricky to setup (for example, Gmail).
+
+In my tests, i've found the easiest way to setup this is creating a free account on [Sendgrid](http://sendgrid.com) and then create an API key [here](https://sendgrid.com/docs/Classroom/Send/api_keys.html).  
+The config should be something like:
+
+```json
+{
+  "mail": {
+    "service": "sendgrid",
+    "auth": {
+        "api_key": "your_api_key"
+    },
+    "sender": "Some name <sender@gmail.com"
+  }
+}
+```
+
 
 The `sender` field is the default sender for all the mails originating from the API.
 
