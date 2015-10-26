@@ -4,6 +4,7 @@ var
   mongoose = require('mongoose'),
   Schema   = mongoose.Schema,
   bcrypt   = require('bcryptjs'),
+  dateUtil = require('src/lib/dateUtil'),
   role     = require('./Role');
 
 
@@ -47,6 +48,10 @@ var UserSchema = new Schema({
       // filter out some attributes from the output
       delete ret.__v;
       delete ret.password;
+
+      // convert the dates to timestamps
+      ret.created_at   = dateUtil.dateToTimestamp(ret.created_at);
+      ret.updated_at   = dateUtil.dateToTimestamp(ret.updated_at);
     }
   },
   toObject: {
