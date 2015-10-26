@@ -98,8 +98,6 @@ UserSchema.pre('save', function (next) {
 
 // Custom methods and attributes
 // ----------------------------------
-// Custom methods and attributes
-// ----------------------------------
 UserSchema.statics.safeAttrs = ['username', 'password', 'email'];
 UserSchema.methods.getRefs = function() { return []; };
 
