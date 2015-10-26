@@ -4,7 +4,7 @@ var
   mongoose = require('mongoose'),
   Schema   = mongoose.Schema,
   bcrypt   = require('bcryptjs'),
-  dateUtil = require('src/lib/dateUtil'),
+  dateUtil = require('../../../lib/dateUtil'),
   role     = require('./Role');
 
 // register some additional schema types
