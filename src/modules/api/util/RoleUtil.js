@@ -5,7 +5,7 @@ var
   async    = require('async'),
   ObjectId = require('mongoose').Types.ObjectId,
   config   = require('src/config'),
-  cache    = require('./cache'),
+  cache    = require('./Cache'),
   Role     = require('../models/Role'),
 
   cachePrefix = 'role_';
