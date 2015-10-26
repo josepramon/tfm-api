@@ -77,7 +77,25 @@ describe('bodyParamsInjector', function() {
     ], function(err) {
       done();
     });
+  });
 
+
+  it('should process the parameter values before setting them', function(done) {
+
+    var
+      req     = {},
+      params  = {
+        foo: function(callback) {
+          return callback('parsedParam');
+        }
+      },
+      override = true;
+
+    injectParams(params, override, req, null, function() {
+      expect(req.body).to.be.an('object');
+      expect(req.body).to.deep.equal({foo: 'parsedParam'});
+      done();
+    });
   });
 
 });

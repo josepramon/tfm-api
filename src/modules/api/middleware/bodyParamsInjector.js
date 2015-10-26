@@ -1,6 +1,9 @@
 'use strict';
 
-var _ = require('lodash');
+var
+  _     = require('lodash'),
+  async = require('async');
+
 
 /**
  * Inject additional parameters to the req.body
@@ -19,13 +22,31 @@ var _ = require('lodash');
 var injectParams = function(params, override, req, res, next) {
   req.body = req.body || {};
 
-  if(override) {
-    _.extend(req.body, params);
-  } else {
-    _.defaults(req.body, params);
-  }
+  // the filters values might be functions (to retrieve stuff from the DB,
+  // or for whatever reason). So execute them if any.
+  async.forEachOf(params, function (value, key, cb) {
 
-  next();
+    if(!_.isFunction(value)) {
+      cb();
+    } else {
+      value(function(data) {
+        params[key] = data;
+        cb();
+      });
+    }
+
+  }, function(err) {
+    /* istanbul ignore next */
+    if (err) { return next(err); }
+
+    if(override) {
+      _.extend(req.body, params);
+    } else {
+      _.defaults(req.body, params);
+    }
+
+    next();
+  });
 };
 
 

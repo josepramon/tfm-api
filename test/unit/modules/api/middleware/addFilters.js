@@ -81,4 +81,22 @@ describe('addFilters', function() {
   });
 
 
+  it('should process the filter values before setting them', function(done) {
+
+    var
+      req      = {},
+      filters  = {
+        foo: function(callback) {
+          return callback('parsedFilter');
+        }
+      },
+      override = true;
+
+    addFilters(filters, override, req, null, function() {
+      expect(req.filters).to.be.an('object');
+      expect(req.filters).to.deep.equal({foo: 'parsedFilter'});
+      done();
+    });
+  });
+
 });
