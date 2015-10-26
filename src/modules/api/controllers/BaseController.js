@@ -149,6 +149,10 @@ class BaseController
       criteria._id = request.req.params.id;
     }
 
+    if(request.req.filters) {
+      _.extend(criteria, request.req.filters);
+    }
+
     return criteria;
   }
 
