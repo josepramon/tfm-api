@@ -7,6 +7,10 @@ var
   dateUtil = require('src/lib/dateUtil'),
   role     = require('./Role');
 
+// register some additional schema types
+var mongooseTypes = require('mongoose-types');
+mongooseTypes.loadTypes(mongoose);
+
 
 var UserSchema = new Schema({
 
@@ -22,7 +26,7 @@ var UserSchema = new Schema({
   },
 
   email: {
-    type: String,
+    type: mongoose.SchemaTypes.Email,
     unique: true,
     required: true
   },
