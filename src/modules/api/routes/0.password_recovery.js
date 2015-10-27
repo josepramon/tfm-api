@@ -49,7 +49,9 @@ module.exports = function(router) {
    *
    * @apiUse Auth_PasswordReset_CommonApiResponseHeader
    * @apiSuccess {Object} data      The request data
-   * @apiSuccess {String} data._id  The request id
+   * @apiSuccess {String} data.success  Boolean
+   * @apiSuccess {String} data.message  A descriptive message
+   * @apiSuccess {String} data.user     The user id
    *
    * @apiSuccessExample {json} Success-Response:
    *     HTTP/1.1 200 OK
@@ -58,7 +60,9 @@ module.exports = function(router) {
    *         "url": "http://localhost:9000/api/auth/recover/83b3bf20-b2ad-4f6d-85c3-d43848495281"
    *       },
    *       "data": {
-   *         "_id": "83b3bf20-b2ad-4f6d-85c3-d43848495281"
+   *         "success": true,
+   *         "message": "Password reset request created successfully",
+   *         "user": "562e3b0c930b26b7755d0d76"
    *       }
    *     }
    *

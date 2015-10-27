@@ -49,7 +49,13 @@ class PasswordRecoveryController
         /* istanbul ignore next */
         if (err) { return next(err); }
 
-        response.formatOutput(passwordChangeRequest, function(err, output) {
+        var success = {
+          success: true,
+          message: 'Password reset request created successfully',
+          user:    model.id
+        };
+
+        response.formatOutput(success, function(err, output) {
           /* istanbul ignore next */
           if (err) { return next(err); }
           res.json(output);
