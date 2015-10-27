@@ -1,8 +1,9 @@
 'use strict';
 
 var
-  authMiddleware = require('../middleware/authenticate'),
-  AuthController = require('../controllers/AuthController');
+  authMiddleware                  = require('../middleware/authenticate'),
+  restrictByApplicationMiddleware = require('../middleware/restrictByApplication'),
+  AuthController                  = require('../controllers/AuthController');
 
 
 // AUTH RELATED ROUTES
@@ -63,7 +64,7 @@ module.exports = function(router) {
    *       }
    *     }
    */
-  router.route('/auth').post(authMiddleware, AuthController.login);
+  router.route('/auth').post(restrictByApplicationMiddleware, authMiddleware, AuthController.login);
 
 
   /**
