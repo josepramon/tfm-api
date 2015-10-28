@@ -3,7 +3,7 @@
 var
   _      = require('underscore'),
   faker  = require('faker'),
-  id     = require('pow-mongodb-fixtures').createObjectId,
+  id     = require('mongodb').ObjectID,
   crypt  = require('../../src/lib/crypt'),
   config = require('../../src/config');
 
@@ -28,7 +28,7 @@ var users = [];
 
 // default admin
 users.push({
-  _id:      id(),
+  _id:      new id(),
   username: 'admin',
   password: crypt.hashPassword('admin1234'),
   email:    'admin@demo.demo',
@@ -37,7 +37,7 @@ users.push({
 
 // default manager
 users.push({
-  _id:      id(),
+  _id:      new id(),
   username: 'manager',
   password: crypt.hashPassword('manager1234'),
   email:    'manager@demo.demo',
@@ -46,7 +46,7 @@ users.push({
 
 // default user
 users.push({
-  _id:      id(),
+  _id:      new id(),
   username: 'user',
   password: crypt.hashPassword('user1234'),
   email:    'user@demo.demo',

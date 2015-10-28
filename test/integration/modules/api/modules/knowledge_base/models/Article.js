@@ -8,7 +8,7 @@ var
   mocha             = require('mocha'),
   expect            = require('chai').expect,
   faker             = require('faker'),
-  id                = require('pow-mongodb-fixtures').createObjectId,
+  id                = require('mongodb').ObjectID,
   requireHelper     = require('test/_util/require_helper'),
 
   // file being tested
@@ -34,7 +34,6 @@ describe('Knowledge Base Article model', function() {
 
 
   it('should save the article', function(done) {
-    var defaultUserId = id('000000000000000000000001');
     var articleData = {
       title:   faker.lorem.sentence(),
       body:    faker.lorem.paragraphs(2),
@@ -52,7 +51,6 @@ describe('Knowledge Base Article model', function() {
 
 
   it('should transform the virtual attributes when /saving/fetching', function(done) {
-    var defaultUserId = id('000000000000000000000001');
     var articleData = {
       title:        faker.lorem.sentence(),
       body:         faker.lorem.paragraphs(2),

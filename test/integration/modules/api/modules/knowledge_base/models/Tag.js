@@ -8,7 +8,7 @@ var
   mocha             = require('mocha'),
   expect            = require('chai').expect,
   faker             = require('faker'),
-  id                = require('pow-mongodb-fixtures').createObjectId,
+  id                = require('mongodb').ObjectID,
   requireHelper     = require('test/_util/require_helper'),
 
   // file being tested
@@ -36,7 +36,6 @@ describe('Knowledge Base Tag model', function() {
 
   it('should save the tag', function(done) {
     var
-      defaultUserId = id('000000000000000000000001'),
       name = faker.lorem.words(1).join(),
       tagData = {
         name:        name,
@@ -56,7 +55,6 @@ describe('Knowledge Base Tag model', function() {
 
   it('should transform the virtual attributes when /saving/fetching', function(done) {
     var
-      defaultUserId = id('000000000000000000000001'),
       name = faker.lorem.words(1).join(),
       tagData = {
         name:        name,
