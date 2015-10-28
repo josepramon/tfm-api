@@ -32,12 +32,14 @@ var validateAccessByApp = function (req, res, next) {
     User.findOne({username: username}).populate('role').exec(function(err, user) {
       if (err || !user) { return next( new errors.Unauthorized(errMessage) ); }
 
-      var application = config.applications[applicationID];
+      var
+        application = config.applications[applicationID],
+        role = user.role || {};
 
       if(!application) {
         // unrecognised app, continue
         return next();
-      } else if(application.allowedRoles.indexOf(user.role) > -1) {
+      } else if(application.allowedRoles.indexOf(role.name) > -1) {
         // access allowed
         return next();
       } else {
