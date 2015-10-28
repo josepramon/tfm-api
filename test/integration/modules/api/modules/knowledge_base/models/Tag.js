@@ -41,8 +41,7 @@ describe('Knowledge Base Tag model', function() {
       tagData = {
         name:        name,
         slug:        name,
-        description: faker.lorem.paragraph(),
-        owner:       defaultUserId
+        description: faker.lorem.paragraph()
       };
 
     var tag = new Tag(tagData);
@@ -62,8 +61,7 @@ describe('Knowledge Base Tag model', function() {
       tagData = {
         name:        name,
         slug:        name,
-        description: faker.lorem.paragraph(),
-        owner:       defaultUserId
+        description: faker.lorem.paragraph()
       };
 
     var tag = new Tag(tagData);
@@ -81,14 +79,13 @@ describe('Knowledge Base Tag model', function() {
 
 
   it('should unlink tagged articles when deleting', function(done) {
-    var tag, article, ownerId = id('000000000000000000000001');
+    var tag, article;
 
     async.series([
       function(cb) {  // create a tag
         tag = new Tag({
           name:  'someRandomTag5646445',
-          slug:  'someRandomTag5646445',
-          owner: ownerId
+          slug:  'someRandomTag5646445'
         });
         tag.save(cb);
       },
@@ -98,8 +95,6 @@ describe('Knowledge Base Tag model', function() {
           title:   faker.lorem.sentence(),
           body:    faker.lorem.paragraphs(2),
           slug:    'some-random-slug-45454545454',
-          author:  ownerId,
-          owner:   ownerId,
           tags:    [tag._id]
         });
 
