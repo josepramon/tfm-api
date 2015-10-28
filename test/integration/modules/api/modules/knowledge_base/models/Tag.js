@@ -8,7 +8,7 @@ var
   mocha             = require('mocha'),
   expect            = require('chai').expect,
   faker             = require('faker'),
-  id                = require('pow-mongodb-fixtures').createObjectId,
+  id                = require('mongodb').ObjectID,
   requireHelper     = require('test/_util/require_helper'),
 
   // file being tested
@@ -36,13 +36,11 @@ describe('Knowledge Base Tag model', function() {
 
   it('should save the tag', function(done) {
     var
-      defaultUserId = id('000000000000000000000001'),
       name = faker.lorem.words(1).join(),
       tagData = {
         name:        name,
         slug:        name,
-        description: faker.lorem.paragraph(),
-        owner:       defaultUserId
+        description: faker.lorem.paragraph()
       };
 
     var tag = new Tag(tagData);
@@ -57,13 +55,11 @@ describe('Knowledge Base Tag model', function() {
 
   it('should transform the virtual attributes when /saving/fetching', function(done) {
     var
-      defaultUserId = id('000000000000000000000001'),
       name = faker.lorem.words(1).join(),
       tagData = {
         name:        name,
         slug:        name,
-        description: faker.lorem.paragraph(),
-        owner:       defaultUserId
+        description: faker.lorem.paragraph()
       };
 
     var tag = new Tag(tagData);
@@ -81,14 +77,13 @@ describe('Knowledge Base Tag model', function() {
 
 
   it('should unlink tagged articles when deleting', function(done) {
-    var tag, article, ownerId = id('000000000000000000000001');
+    var tag, article;
 
     async.series([
       function(cb) {  // create a tag
         tag = new Tag({
           name:  'someRandomTag5646445',
-          slug:  'someRandomTag5646445',
-          owner: ownerId
+          slug:  'someRandomTag5646445'
         });
         tag.save(cb);
       },
@@ -98,8 +93,6 @@ describe('Knowledge Base Tag model', function() {
           title:   faker.lorem.sentence(),
           body:    faker.lorem.paragraphs(2),
           slug:    'some-random-slug-45454545454',
-          author:  ownerId,
-          owner:   ownerId,
           tags:    [tag._id]
         });
 

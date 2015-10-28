@@ -70,11 +70,13 @@ var create = function (user, req, res, next) {
     return next(new Error('User data cannot be empty.'));
   }
 
-  var userRole = user.role || {};
+  var
+    userObj   = user.toJSON ? user.toJSON() : user,
+    userRole  = user.role || {};
 
   var data = {
     id:         user.id,
-    userModel:  user,
+    userObj:    userObj,
     role:       userRole.name,
     privileges: userRole.privileges,
 

@@ -58,14 +58,6 @@ var UserSchema = new Schema({
       ret.role       = role.name,
       ret.privileges = role.privileges,
 
-      // format the profile (define it as a relation, for flexibility)
-      ret.profile = {
-        meta: {
-          url: null
-        },
-        data: doc.profile
-      };
-
       // convert the dates to timestamps
       ret.created_at   = dateUtil.dateToTimestamp(ret.created_at);
       ret.updated_at   = dateUtil.dateToTimestamp(ret.updated_at);

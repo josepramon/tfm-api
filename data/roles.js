@@ -1,7 +1,7 @@
 'use strict';
 
 var
-  id     = require('pow-mongodb-fixtures').createObjectId,
+  id     = require('mongodb').ObjectID,
   config = require('../src/config');
 
 exports.roles = [
@@ -9,7 +9,7 @@ exports.roles = [
   // admin role
   // ---------------------------------
   {
-    id:         id(),
+    id:         new id(),
     name:       config.roles.admin,
     privileges: {
 
@@ -31,7 +31,7 @@ exports.roles = [
   // manager role
   // ---------------------------------
   {
-    id:         id(),
+    id:         new id(),
     name:       config.roles.manager,
     privileges: {
 
@@ -44,7 +44,7 @@ exports.roles = [
   // user role
   // ---------------------------------
   {
-    id:         id(),
+    id:         new id(),
     name:       config.roles.user,
     privileges: {
 

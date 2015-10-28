@@ -20,7 +20,7 @@ describe('API authentication', function() {
 
   var defaultUser = {
     username: 'user',
-    password: 'user',
+    password: 'user1234',
     email: 'user@demo.demo'
   };
 
