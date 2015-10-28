@@ -141,7 +141,7 @@ class AuthController
     return {
       meta: { url: null },
       data: profile
-    }
+    };
   }
 
 }
