@@ -20,40 +20,40 @@ var
 
 // Setup the middleware applied to the list/create/delete actions
 // to restrict the access only to allowed users
-var requiredPermissions = { managers: true };
+var requiredPermissions = { admins: true };
 var accessControlFilter = _.partial(PrivilegesMiddleware, requiredPermissions);
 
 
 // Get the users role id (used on the next middlewares)
 var
   RoleUtil = require('../util/RoleUtil'),
-  roleId   = RoleUtil.getIdCb( config.roles.manager );
+  roleId   = RoleUtil.getIdCb( config.roles.admin );
 
 
 // When creating a user, preset the role
 var setRole = _.partial(InjectParamsMiddleware, { role: roleId }, true);
 
 // Filters
-var managersFilter = _.partial(AddFiltersMiddleware, { role: roleId }, true);
+var adminsFilter = _.partial(AddFiltersMiddleware, { role: roleId }, true);
 
 
 module.exports = function(router) {
 
-  router.route('/auth/managers')
+  router.route('/auth/admins')
 
   /**
-   * @apiDefine auth_managers
+   * @apiDefine auth_admins
    *
-   * Auth/Managers
-   * Managers API endpoint
+   * Auth/Admins
+   * Admins API endpoint
    */
 
     /**
-     * @apiDefine auth_managers  Global module access for `auth_managers` is required.
+     * @apiDefine auth_admins  Global module access for `auth_admins` is required.
      */
 
     /**
-     * @apiDefine auth_managers_self  A user can only access to their own record (ADMINS have access to all).
+     * @apiDefine auth_admins_self  A user can only access to their own record (ADMINS have access to all).
      */
 
 
@@ -118,26 +118,26 @@ module.exports = function(router) {
 
 
     /**
-     * @api {get} /auth/managers List the users
+     * @api {get} /auth/admins List the users
      * @apiName List
      * @apiDescription List all the users (with an USER role)
-     * @apiGroup auth_managers
+     * @apiGroup auth_admins
      *
      * @apiUse Auth_Managers_CommonApiParams
      *
      * @apiExample Example usage:
-     * curl -4 -i http://localhost:9000/api/auth/managers --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NGVlNjE3NTQ2NWVhZWUzNWNkMjM3ZWQiLCJpYXQiOjE0Mjc4MTczNTksImV4cCI6MTQyNzgyMDk1OX0.M3BboY6U9RJlX1ulVG7e9xRVrVdY3qVhvp3jmZaOCJ8"
+     * curl -4 -i http://localhost:9000/api/auth/admins --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NGVlNjE3NTQ2NWVhZWUzNWNkMjM3ZWQiLCJpYXQiOjE0Mjc4MTczNTksImV4cCI6MTQyNzgyMDk1OX0.M3BboY6U9RJlX1ulVG7e9xRVrVdY3qVhvp3jmZaOCJ8"
      *
      * @apiUse Auth_Managers_CommonApiResponseHeader
      * @apiUse Auth_Managers_MultipleEntityResponse
      *
-     * @apiPermission auth_managers
+     * @apiPermission auth_admins
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
      *     {
      *       "meta" : {
-     *         "url": "http://localhost:9000/api/auth/managers",
+     *         "url": "http://localhost:9000/api/auth/admins",
      *         "paginator": {
      *           "total_entries": 100,
      *           "total_pages": 5,
@@ -166,13 +166,13 @@ module.exports = function(router) {
      *     }
      *
      */
-    .get(accessControlFilter, managersFilter, controller.getAll.bind(controller))
+    .get(accessControlFilter, adminsFilter, controller.getAll.bind(controller))
 
 
     /**
-     * @api {post} /auth/managers Create (register) a new user
+     * @api {post} /auth/admins Create (register) a new user
      * @apiName Create
-     * @apiGroup auth_managers
+     * @apiGroup auth_admins
      *
      * @apiParam {String} username       Username, must be unique.
      * @apiParam {String} password       Password.
@@ -180,7 +180,7 @@ module.exports = function(router) {
      * @apiUse Auth_Managers_CommonApiParams
      *
      * @apiExample Example usage:
-     * curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'username=foo&password=bar&email=someEmail@domain.tld' http://localhost:9000/api/auth/managers
+     * curl -X POST -H "Content-Type: application/x-www-form-urlencoded" -d 'username=foo&password=bar&email=someEmail@domain.tld' http://localhost:9000/api/auth/admins
      *
      * @apiUse Auth_Managers_CommonApiResponseHeader
      * @apiUse Auth_Managers_SingleEntityResponse
@@ -189,7 +189,7 @@ module.exports = function(router) {
      *     HTTP/1.1 200 OK
      *     {
      *       "meta": {
-     *         "url": "http://localhost:9001/auth/managers/5582cedfbc15803005798b8f"
+     *         "url": "http://localhost:9001/auth/admins/5582cedfbc15803005798b8f"
      *       },
      *       "data": {
      *         "email": "demo2@demo.com",
@@ -207,29 +207,29 @@ module.exports = function(router) {
 
 
 
-  router.route('/auth/managers/:id')
+  router.route('/auth/admins/:id')
 
     /**
-     * @api {get} /auth/managers/:id Get an user
+     * @api {get} /auth/admins/:id Get an user
      * @apiName Get
      * @apiDescription Get the user with that id
-     * @apiGroup auth_managers
+     * @apiGroup auth_admins
      *
      * @apiUse Auth_Managers_CommonApiParams
      *
      * @apiExample Example usage:
-     * curl -4 -i http://localhost:9000/api/auth/managers/551c31d0430d78991f5931e1 --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NGVlNjE3NTQ2NWVhZWUzNWNkMjM3ZWQiLCJpYXQiOjE0Mjc4MTczNTksImV4cCI6MTQyNzgyMDk1OX0.M3BboY6U9RJlX1ulVG7e9xRVrVdY3qVhvp3jmZaOCJ8"
+     * curl -4 -i http://localhost:9000/api/auth/admins/551c31d0430d78991f5931e1 --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NGVlNjE3NTQ2NWVhZWUzNWNkMjM3ZWQiLCJpYXQiOjE0Mjc4MTczNTksImV4cCI6MTQyNzgyMDk1OX0.M3BboY6U9RJlX1ulVG7e9xRVrVdY3qVhvp3jmZaOCJ8"
      *
      * @apiUse Auth_Managers_CommonApiResponseHeader
      * @apiUse Auth_Managers_SingleEntityResponse
      *
-     * @apiPermission auth_managers_self
+     * @apiPermission auth_admins_self
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
      *     {
      *       "meta": {
-     *         "url": "http://localhost:9001/auth/managers/5581f70e4901e5baa84a9652"
+     *         "url": "http://localhost:9001/auth/admins/5581f70e4901e5baa84a9652"
      *       },
      *       "data": {
      *         "id": "562e18f5ea83189f4497e01a",
@@ -245,10 +245,10 @@ module.exports = function(router) {
     .get(userRestrictToItself, controller.getOne.bind(controller))
 
     /**
-     * @api {put} /auth/managers/:id Update a user
+     * @api {put} /auth/admins/:id Update a user
      * @apiName Update
      * @apiDescription Update the user with this id
-     * @apiGroup auth_managers
+     * @apiGroup auth_admins
      *
      * @apiParam {String} username       Username, must be unique.
      * @apiParam {String} password       Password.
@@ -256,18 +256,18 @@ module.exports = function(router) {
      * @apiUse Auth_Managers_CommonApiParams
      *
      * @apiExample Example usage:
-     * curl -X PUT -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSIsImlhdCI6MTQzNDYzMzgwNCwiZXhwIjoxNDM0NjM3NDA0fQ.IwPItcFLIDzA1MvwDXNYjVF0PxVcQ_Mft5wAU-2D8bY" -H "Content-Type: application/x-www-form-urlencoded" -d 'username=foo&password=bar&email=someEmail@domain.tld' http://localhost:9000/api/auth/managers/5581f70e4901e5baa84a9652
+     * curl -X PUT -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSIsImlhdCI6MTQzNDYzMzgwNCwiZXhwIjoxNDM0NjM3NDA0fQ.IwPItcFLIDzA1MvwDXNYjVF0PxVcQ_Mft5wAU-2D8bY" -H "Content-Type: application/x-www-form-urlencoded" -d 'username=foo&password=bar&email=someEmail@domain.tld' http://localhost:9000/api/auth/admins/5581f70e4901e5baa84a9652
      *
      * @apiUse Auth_Managers_CommonApiResponseHeader
      * @apiUse Auth_Managers_SingleEntityResponse
      *
-     * @apiPermission auth_managers_self
+     * @apiPermission auth_admins_self
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
      *     {
      *       "meta": {
-     *         "url": "http://localhost:9001/auth/managers/5581f70e4901e5baa84a9652"
+     *         "url": "http://localhost:9001/auth/admins/5581f70e4901e5baa84a9652"
      *       },
      *       "data": {
      *         "id": "562e18f5ea83189f4497e01a",
@@ -283,10 +283,10 @@ module.exports = function(router) {
     .put(userRestrictToItself, controller.update.bind(controller))
 
     /**
-     * @api {patch} /auth/managers/:id Partial update a user
+     * @api {patch} /auth/admins/:id Partial update a user
      * @apiName Patch
      * @apiDescription Update the user with this id. Only provided values will be applied
-     * @apiGroup auth_managers
+     * @apiGroup auth_admins
      *
      * @apiParam {String} [username]       Username, must be unique.
      * @apiParam {String} [password]       Password.
@@ -294,18 +294,18 @@ module.exports = function(router) {
      * @apiUse Auth_Managers_CommonApiParams
      *
      * @apiExample Example usage:
-     * curl -X PATCH -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSIsImlhdCI6MTQzNjg4MjM5NSwiZXhwIjoxNDM2ODg1OTk1fQ.-ezinK068LnnUgotT7FVg2QRu4vGM2KAmBwK55kxj7M" -H "Content-Type: application/x-www-form-urlencoded" -d 'email=someEmail@domain.tld' 'http://localhost:9000/api/auth/managers/55a4fc5b356e6df4d223618e'
+     * curl -X PATCH -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSIsImlhdCI6MTQzNjg4MjM5NSwiZXhwIjoxNDM2ODg1OTk1fQ.-ezinK068LnnUgotT7FVg2QRu4vGM2KAmBwK55kxj7M" -H "Content-Type: application/x-www-form-urlencoded" -d 'email=someEmail@domain.tld' 'http://localhost:9000/api/auth/admins/55a4fc5b356e6df4d223618e'
      *
      * @apiUse Auth_Managers_CommonApiResponseHeader
      * @apiUse Auth_Managers_SingleEntityResponse
      *
-     * @apiPermission auth_managers_self
+     * @apiPermission auth_admins_self
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
      *     {
      *       "meta": {
-     *         "url": "http://localhost:9001/auth/managers/5581f70e4901e5baa84a9652"
+     *         "url": "http://localhost:9001/auth/admins/5581f70e4901e5baa84a9652"
      *       },
      *       "data": {
      *         "id": "562e18f5ea83189f4497e01a",
@@ -321,15 +321,15 @@ module.exports = function(router) {
     .patch(userRestrictToItself, controller.updatePartial.bind(controller))
 
     /**
-     * @api {delete} /auth/managers/:id Delete a user
+     * @api {delete} /auth/admins/:id Delete a user
      * @apiName Delete
      * @apiDescription Delete the user with this id
-     * @apiGroup auth_managers
+     * @apiGroup auth_admins
      *
      * @apiUse Auth_Managers_CommonApiParams
      *
      * @apiExample Example usage:
-     * curl -4 -i -X DELETE http://localhost:9000/api/auth/managers/551c31d0430d78991f5931e1 --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NGVlNjE3NTQ2NWVhZWUzNWNkMjM3ZWQiLCJpYXQiOjE0Mjc4MTczNTksImV4cCI6MTQyNzgyMDk1OX0.M3BboY6U9RJlX1ulVG7e9xRVrVdY3qVhvp3jmZaOCJ8"
+     * curl -4 -i -X DELETE http://localhost:9000/api/auth/admins/551c31d0430d78991f5931e1 --header "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NGVlNjE3NTQ2NWVhZWUzNWNkMjM3ZWQiLCJpYXQiOjE0Mjc4MTczNTksImV4cCI6MTQyNzgyMDk1OX0.M3BboY6U9RJlX1ulVG7e9xRVrVdY3qVhvp3jmZaOCJ8"
      *
      * @apiUse Auth_Managers_CommonApiResponseHeader
      * @apiUse Auth_Managers_SingleEntityResponse
@@ -351,6 +351,6 @@ module.exports = function(router) {
      *     }
      *
      */
-    .delete(accessControlFilter, controller.delete.bind(controller));
+    .delete(userRestrictToItself, controller.delete.bind(controller));
 
 };

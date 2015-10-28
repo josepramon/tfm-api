@@ -19,6 +19,9 @@ exports.roles = [
       // managers (agents) management: unlimited access
       managers:true,
 
+      // admins management: unlimited access
+      admins:true,
+
       // knowledge base articles: unlimited access
       knowledge_base: true
 
