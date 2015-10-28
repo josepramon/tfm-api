@@ -107,24 +107,41 @@ class AuthController
 
   _formatUResponse(req) {
     var
-      request     = new Request(req),
-      userData    = req.user,
-      roleBaseURL = this._getRoleURL(userData.role);
+      request  = new Request(req),
+      userData = req.user,
+      userObj  = userData.userObj,
+      userURL  = this._getUserURL(request.requestBaseURL, userData.userObj);
+
+    userObj.profile = this._formatProfile(userObj);
+
     return {
       token:     userData.token,
       token_exp: userData.token_exp,
       token_iat: userData.token_iat,
       user: {
         meta: {
-          url: request.requestBaseURL + roleBaseURL + userData.userModel.id
+          url: userURL
         },
-        data: userData.userModel.toJSON()
+        data: userObj
       }
     };
   }
 
-  _getRoleURL(roleName) {
-    return '/auth/' + roleName.toLowerCase() + 's/';
+  _getUserURL(apiBase, user) {
+    if(user.id && user.role) {
+      return apiBase + '/auth/' + user.role.toLowerCase() + 's/' + user.id;
+    } else {
+      return null;
+    }
+  }
+
+  // format the profile as a relation
+  _formatProfile(user) {
+    var profile = user.profile || {};
+    return {
+      meta: { url: null },
+      data: profile
+    }
   }
 
 }

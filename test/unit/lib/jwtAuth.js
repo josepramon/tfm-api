@@ -135,9 +135,9 @@ describe('lib/jwtAuth', function() {
         expect(req.user).to.have.property('token_iat');
         expect(req.user).to.have.property('role');
         expect(req.user).to.have.property('privileges');
-        expect(req.user).to.have.property('userModel');
+        expect(req.user).to.have.property('userObj');
 
-        var userData = req.user.userModel;
+        var userData = req.user.userObj;
 
         expect(userData.id).to.equal(user.id);
         expect(userData.username).to.equal(user.username);
@@ -167,9 +167,9 @@ describe('lib/jwtAuth', function() {
           expect(data).to.have.property('token');
           expect(data).to.have.property('token_exp');
           expect(data).to.have.property('token_iat');
-          expect(data).to.have.property('userModel');
+          expect(data).to.have.property('userObj');
 
-          var userData = data.userModel;
+          var userData = data.userObj;
 
           expect(userData.id).to.equal(user.id);
           expect(userData.username).to.equal(user.username);
@@ -194,9 +194,8 @@ describe('lib/jwtAuth', function() {
       // so this happens on memory)
       var
         user = {
-          id      : '0123456789',
+          id       : '0123456789',
           username : 'username',
-          name     : 'name',
           email    : 'user@domain.tld'
         },
         req  = {},
@@ -229,7 +228,7 @@ describe('lib/jwtAuth', function() {
       jwtAuth.retrieve(reqUser.token, function(err, data) {
         expect(err).to.be.null;
         expect(data).to.be.an('object');
-        expect(data).to.have.property('userModel');
+        expect(data).to.have.property('userObj');
         expect(data).to.have.property('token');
         done();
       });
