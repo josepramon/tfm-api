@@ -16,19 +16,20 @@ var
 
 
 
-var AuthController = {
-
-  login: function(req, res, next) {
+class AuthController
+{
+  login(req, res, next) {
     // auth handling implemented in the Authenticated middleware
-    (new Response()).formatOutput(req.user, function(err, output) {
+
+    (new Response()).formatOutput(this._formatUResponse(req), function(err, output) {
       /* istanbul ignore next */
       if (err) { return next(err); }
       res.json(output);
     });
-  },
+  }
 
 
-  logout: function(req, res, next) {
+  logout(req, res, next) {
 
     jwtAuth.retrieve(req.params.token, function(err, data) {
       /* istanbul ignore next */
@@ -51,17 +52,17 @@ var AuthController = {
         return next(new errors.Unauthorized());
       }
     });
-  },
+  }
 
 
-  tokenRenew: function(req, res, next) {
+  tokenRenew(req, res, next) {
 
     /* istanbul ignore next */
     if(req.params.token !== req.user.token) {
       return next(new errors.Unauthorized());
     }
 
-    User.findOne({username: req.user.username}).populate('role').exec(function(err, user) {
+    User.findOne({id: req.user.userId}).populate('role').exec(function(err, user) {
 
       /* istanbul ignore next */
       if (err || !user) {
@@ -71,7 +72,13 @@ var AuthController = {
       jwtAuth.create(user, req, res, function() {
         jwtAuth.expire(req.headers);
 
-        (new Response()).formatOutput(req.user, function(err, output) {
+        var response = {
+          token:     req.user.token,
+          token_exp: req.user.token_exp,
+          token_iat: req.user.token_iat
+        };
+
+        (new Response()).formatOutput(response, function(err, output) {
           /* istanbul ignore next */
           if (err) { return next(err); }
           res.json(output);
@@ -79,11 +86,10 @@ var AuthController = {
       });
 
     });
+  }
 
-  },
 
-
-  tokenVerify: function(req, res, next) {
+  tokenVerify(req, res, next) {
     /* istanbul ignore next */
     if(req.params.token !== req.user.token) {
       return next(new errors.Unauthorized());
@@ -98,7 +104,30 @@ var AuthController = {
     });
   }
 
-};
+
+  _formatUResponse(req) {
+    var
+      request     = new Request(req),
+      userData    = req.user,
+      roleBaseURL = this._getRoleURL(userData.role);
+    return {
+      token:     userData.token,
+      token_exp: userData.token_exp,
+      token_iat: userData.token_iat,
+      user: {
+        meta: {
+          url: request.requestBaseURL + roleBaseURL + userData.userModel.id
+        },
+        data: userData.userModel.toJSON()
+      }
+    };
+  }
+
+  _getRoleURL(roleName) {
+    return '/auth/' + roleName.toLowerCase() + 's/';
+  }
+
+}
 
 
 module.exports = AuthController;

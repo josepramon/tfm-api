@@ -73,12 +73,11 @@ var create = function (user, req, res, next) {
   var userRole = user.role || {};
 
   var data = {
-    userId: user.id,
-    username: user.username,
-    name: user.name,
-    email: user.email,
-    role: userRole.name,
+    id:         user.id,
+    userModel:  user,
+    role:       userRole.name,
     privileges: userRole.privileges,
+
     token: jsonwebtoken.sign({ id: user.id}, JWT_SECRET, {
       expiresIn: TOKEN_EXPIRATION
     })

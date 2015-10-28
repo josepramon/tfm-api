@@ -3,7 +3,8 @@
 var
   authMiddleware                  = require('../middleware/authenticate'),
   restrictByApplicationMiddleware = require('../middleware/restrictByApplication'),
-  AuthController                  = require('../controllers/AuthController');
+  AuthController                  = require('../controllers/AuthController'),
+  controller                      = new AuthController();
 
 
 // AUTH RELATED ROUTES
@@ -64,7 +65,7 @@ module.exports = function(router) {
    *       }
    *     }
    */
-  router.route('/auth').post(restrictByApplicationMiddleware, authMiddleware, AuthController.login);
+  router.route('/auth').post(restrictByApplicationMiddleware, authMiddleware, controller.login.bind(controller));
 
 
   /**
@@ -102,7 +103,7 @@ module.exports = function(router) {
    *       }
    *     }
    */
-  router.route('/auth/:token').delete(AuthController.logout);
+  router.route('/auth/:token').delete(controller.logout.bind(controller));
 
 
   /**
@@ -150,7 +151,7 @@ module.exports = function(router) {
    *       }
    *     }
    */
-  router.route('/auth/:token').put(AuthController.tokenRenew);
+  router.route('/auth/:token').put(controller.tokenRenew.bind(controller));
 
 
   /**
@@ -188,6 +189,6 @@ module.exports = function(router) {
    *       }
    *     }
    */
-  router.route('/auth/:token').get(AuthController.tokenVerify);
+  router.route('/auth/:token').get(controller.tokenVerify.bind(controller));
 
 };
