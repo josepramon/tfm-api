@@ -35,7 +35,7 @@ describe('userRestrictToItself', function() {
           id: 4
         },
         user: {
-          userId: 8
+          id: 8
         }
       },
       res = {};
@@ -56,7 +56,7 @@ describe('userRestrictToItself', function() {
           id: 8
         },
         user: {
-          userId: 8
+          id: 8
         }
       },
       res = {};
@@ -75,7 +75,7 @@ describe('userRestrictToItself', function() {
           id: 4
         },
         user: {
-          userId: 8,
+          id: 8,
           role: config.roles.admin
         }
       },

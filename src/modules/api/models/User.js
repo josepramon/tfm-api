@@ -107,7 +107,7 @@ UserSchema.pre('save', function (next) {
 
 // Custom methods and attributes
 // ----------------------------------
-UserSchema.statics.safeAttrs = ['username', 'password', 'email'];
+UserSchema.statics.safeAttrs = ['username', 'email', 'profile'];
 UserSchema.methods.getRefs = function() { return []; };
 
 //Password verification
@@ -118,6 +118,27 @@ UserSchema.methods.comparePassword = function (passw, cb) {
       return cb(err);
     }
     cb(null, isMatch);
+  });
+};
+
+
+UserSchema.methods.setPassword = function setPassword (newPassword, oldPassword, cb) {
+  var self = this;
+
+  this.comparePassword(oldPassword, function(err, match) {
+    /* istanbul ignore next */
+    if (err) {
+      return cb(err);
+    }
+
+    if(match) {
+      self.password = newPassword;
+    } else {
+      var validationError = new Error('Incorrect password');
+
+      self.invalidate('oldPassword', validationError);
+    }
+    cb(null);
   });
 };
 

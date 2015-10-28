@@ -153,7 +153,7 @@ var retrieve = function (id, done) {
       });
     } else {
       var data = JSON.parse(reply);
-      debug('User data fetched from redis store for user: %s', data.username);
+      debug('User data fetched from redis store');
 
       /* istanbul ignore else */
       if (_.isEqual(data.token, id)) {

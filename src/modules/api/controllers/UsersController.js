@@ -48,7 +48,7 @@ class UsersController extends BaseController
       response = new Response(request, this.expandsURLMap),
 
       // options for the waterfall functs.
-      waterfallOptions = {},
+      waterfallOptions = null,
 
       // mass assignable attrs.
       newAttrs = this._getAssignableAttributes(request);
@@ -60,6 +60,10 @@ class UsersController extends BaseController
 
         if(request.req.body.role) {
           model.role = request.req.body.role;
+        }
+
+        if(request.req.body.password) {
+          model.password = request.req.body.password;
         }
 
         callback(null, model, waterfallOptions);
@@ -96,7 +100,7 @@ class UsersController extends BaseController
       criteria = this._buildCriteria(request),
 
       // options for the waterfall functs.
-      waterfallOptions = {},
+      waterfallOptions = this._buildWaterfallOptions(req.body),
 
       // mass assignable attrs.
       newAttrs = this._getAssignableAttributes(request, patch);
@@ -115,6 +119,7 @@ class UsersController extends BaseController
           callback(null, userModel, waterfallOptions);
         });
       },
+      this._updatePassword,
       this._validate,
       this._save
 
@@ -131,6 +136,39 @@ class UsersController extends BaseController
       });
     });
   }
+
+
+
+
+  // Aux. "private" methods
+  // =============================================================================
+
+  _buildWaterfallOptions(postData) {
+    var options = {};
+
+    if(!_.isUndefined(postData.password)) {
+      options.password = {
+        newPassword: postData.password,
+        oldPassword: postData.oldPassword || ''
+      };
+    }
+    return options;
+  }
+
+
+  _updatePassword(model, options, callback) {
+    if(_.isUndefined(options.password)) {
+      callback(null, model, options);
+    } else {
+      var p = options.password;
+
+      // this will validate the old password and trigger an error if appropiate
+      model.setPassword(p.newPassword, p.oldPassword, function(err) {
+        callback(err, model, options);
+      });
+    }
+  }
+
 
 }
 
