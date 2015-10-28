@@ -18,7 +18,7 @@ var userRestrictToItself = function(req, res, next) {
 
   var
     authenticatedUser   = req.user,
-    authenticatedUserId = authenticatedUser.userId,
+    authenticatedUserId = authenticatedUser.id,
     requestedUserId     = req.params.id;
 
 
