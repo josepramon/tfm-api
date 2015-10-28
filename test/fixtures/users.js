@@ -30,7 +30,7 @@ var users = [];
 users.push({
   _id:      id(),
   username: 'admin',
-  password: crypt.hashPassword('admin'),
+  password: crypt.hashPassword('admin1234'),
   email:    'admin@demo.demo',
   role:     adminRoleId
 });
@@ -39,7 +39,7 @@ users.push({
 users.push({
   _id:      id(),
   username: 'manager',
-  password: crypt.hashPassword('manager'),
+  password: crypt.hashPassword('manager1234'),
   email:    'manager@demo.demo',
   role:     managerRoleId
 });
@@ -48,7 +48,7 @@ users.push({
 users.push({
   _id:      id(),
   username: 'user',
-  password: crypt.hashPassword('user'),
+  password: crypt.hashPassword('user1234'),
   email:    'user@demo.demo',
   role:     userRoleId
 });

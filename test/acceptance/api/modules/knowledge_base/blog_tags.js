@@ -49,7 +49,7 @@
 //     request(app)
 //       .post('/api/auth')
 //       .set('Accept', 'application/json')
-//       .send({ username: 'admin', password: 'admin' })
+//       .send({ username: 'admin', password: 'admin1234' })
 //       .end(function(err, res) {
 //         authHeader = 'Bearer ' + res.body.data.token;
 //         done();
