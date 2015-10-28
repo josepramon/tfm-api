@@ -62,7 +62,7 @@ class AuthController
       return next(new errors.Unauthorized());
     }
 
-    User.findOne({id: req.user.userId}).populate('role').exec(function(err, user) {
+    User.findOne({_id: req.user.id}).populate('role').exec(function(err, user) {
 
       /* istanbul ignore next */
       if (err || !user) {
