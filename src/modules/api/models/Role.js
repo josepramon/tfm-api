@@ -21,6 +21,25 @@ var UserRoleSchema = new Schema({
 
   privileges: Schema.Types.Mixed
 
+}, {
+
+  toJSON: {
+    virtuals: true,
+    transform: function(doc, ret) {
+      // transform _id to id
+      ret.id = ret._id;
+      delete ret._id;
+    }
+  },
+  toObject: {
+    virtuals: true,
+    transform: /* istanbul ignore next */ function(doc, ret) {
+      // transform id to _id
+      ret._id = ret.id;
+      delete ret.id;
+    }
+  }
+
 });
 
 /* istanbul ignore next */

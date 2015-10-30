@@ -9,7 +9,7 @@ exports.roles = [
   // admin role
   // ---------------------------------
   {
-    id:         new id(),
+    _id:        new id(),
     name:       config.roles.admin,
     privileges: {
 
@@ -31,7 +31,7 @@ exports.roles = [
   // manager role
   // ---------------------------------
   {
-    id:         new id(),
+    _id:        new id(),
     name:       config.roles.manager,
     privileges: {
 
@@ -44,7 +44,7 @@ exports.roles = [
   // user role
   // ---------------------------------
   {
-    id:         new id(),
+    _id:        new id(),
     name:       config.roles.user,
     privileges: {
 
