@@ -78,27 +78,38 @@ class PasswordRecoveryController
       if (!userId) { return next(new errors.NotFound()); }
 
       var
-        query = {_id: userId},
-        args  = { password: req.body.password },
-        opts  = { runValidators: true };
+        criteria = {_id: userId},
+        newAttrs = { password: req.body.password };
 
-      User.update(query, args, opts, function(err) {
+
+      User.findOne(criteria).exec(function(err, userModel) {
         /* istanbul ignore next */
-        if (err) { return next(err); }
+        if (err)           { return next(err); }
+        /* istanbul ignore next */
+        if (!userModel) { return next(new errors.NotFound()); }
 
-        // expire the request
-        cache.expire(recoveryId, 0);
+        // set the new password
+        userModel.set(newAttrs);
 
-        var success = {
-          success: true,
-          message: 'Password changed successfully',
-          user:    userId
-        };
-
-        response.formatOutput(success, function(err, output) {
+        // save the model
+        userModel.save(function(err) {
           /* istanbul ignore next */
           if (err) { return next(err); }
-          res.json(output);
+
+          // expire the request
+          cache.expire(recoveryId, 0);
+
+          var success = {
+            success: true,
+            message: 'Password changed successfully',
+            user:    userId
+          };
+
+          response.formatOutput(success, function(err, output) {
+            /* istanbul ignore next */
+            if (err) { return next(err); }
+            res.json(output);
+          });
         });
       });
     });
@@ -158,7 +169,7 @@ class PasswordRecoveryController
       baseUrl = config.sites.admin;
     }
 
-    url = baseUrl + '/#auth/recover/' + changeId;
+    url = baseUrl + '/#user/recover-password/' + changeId;
 
     var mailData = {
       to:       userModel.email,
