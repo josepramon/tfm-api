@@ -151,7 +151,7 @@ class PasswordRecoveryController
     var baseUrl, url;
 
     // compose the url
-    baseUrl = config.sites.user;
+    baseUrl = config.sites.users;
 
     if(userModel.role && userModel.role.name && (userModel.role.name !== config.roles.user)) {
       // the user is an admin or a manager, change the base url

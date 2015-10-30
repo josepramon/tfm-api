@@ -4,6 +4,7 @@ var
   mongoose = require('mongoose'),
   Schema   = mongoose.Schema,
   bcrypt   = require('bcryptjs'),
+  gravatar = require('gravatar'),
   dateUtil = require('../../../lib/dateUtil'),
   role     = require('./Role');
 
@@ -102,6 +103,23 @@ UserSchema.pre('save', function (next) {
   } else {
     return next();
   }
+});
+
+// Gravatar middleware on UserSchema
+// Sets a the user avatar from gravatar (if no custom avatar supplied)
+// before saving the model to the database
+UserSchema.pre('save', function (next) {
+  var user = this;
+
+  if(!user.profile) {
+    user.profile = {};
+  }
+
+  if(!user.profile.avatar) {
+    user.profile.avatar = gravatar.url(user.email)
+  }
+
+  next();
 });
 
 
