@@ -116,7 +116,7 @@ UserSchema.pre('save', function (next) {
   }
 
   if(!user.profile.avatar) {
-    user.profile.avatar = gravatar.url(user.email)
+    user.profile.avatar = gravatar.url(user.email);
   }
 
   next();
