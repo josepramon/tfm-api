@@ -1,5 +1,8 @@
 'use strict';
 
+var debug = require('debug')('ApiApp:Error:');
+
+
 var HTTPerrors = [
   100,101,
   200,201,202,203,204,205,206,
@@ -90,6 +93,8 @@ var getPathNameFromMongoUniqueIndexError = function(errMessage) {
  */
 var appErrorHandler = function(err, req, res, next) {
   var errResponse;
+
+  debug('appErrorHandler', err);
 
   // normalize the code
   if(err.code) {
