@@ -121,7 +121,7 @@ class PasswordRecoveryController
 
   /**
    * Creates a password change request
-   * A request is a temporary record (on redis) identified
+   * A request is a temporary record (on redis)
    */
   _createPasswordChangeRequest(userModel, callback) {
     var
