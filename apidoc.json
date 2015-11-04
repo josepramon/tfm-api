@@ -1,0 +1,15 @@
+{
+  "order": [
+    "ROOT",
+    "Auth",
+    "List",
+    "Get",
+    "Create",
+    "Update",
+    "Patch",
+    "Delete"
+  ],
+  "header": {
+    "filename": "doc/_api/header.md"
+  }
+}

@@ -42,18 +42,18 @@ module.exports = function(router) {
   router.route('/auth/admins')
 
   /**
-   * @apiDefine auth_admins
+   * @apiDefine Auth_Admins
    *
    * Auth/Admins
    * Admins API endpoint
    */
 
     /**
-     * @apiDefine auth_admins  Global module access for `auth_admins` is required.
+     * @apiDefine permission_auth_admins  Global module access for `Auth_Admins` is required.
      */
 
     /**
-     * @apiDefine auth_admins_self  A user can only access to their own record (ADMINS have access to all).
+     * @apiDefine permission_auth_admins_self  A user can only access to their own record (ADMINS have access to all).
      */
 
 
@@ -121,7 +121,7 @@ module.exports = function(router) {
      * @api {get} /auth/admins List the users
      * @apiName List
      * @apiDescription List all the users (with an USER role)
-     * @apiGroup auth_admins
+     * @apiGroup Auth_Admins
      *
      * @apiUse Auth_Managers_CommonApiParams
      *
@@ -131,7 +131,7 @@ module.exports = function(router) {
      * @apiUse Auth_Managers_CommonApiResponseHeader
      * @apiUse Auth_Managers_MultipleEntityResponse
      *
-     * @apiPermission auth_admins
+     * @apiPermission permission_auth_admins
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -172,7 +172,7 @@ module.exports = function(router) {
     /**
      * @api {post} /auth/admins Create (register) a new user
      * @apiName Create
-     * @apiGroup auth_admins
+     * @apiGroup Auth_Admins
      *
      * @apiParam {String} username       Username, must be unique.
      * @apiParam {String} password       Password.
@@ -213,7 +213,7 @@ module.exports = function(router) {
      * @api {get} /auth/admins/:id Get an user
      * @apiName Get
      * @apiDescription Get the user with that id
-     * @apiGroup auth_admins
+     * @apiGroup Auth_Admins
      *
      * @apiUse Auth_Managers_CommonApiParams
      *
@@ -223,7 +223,7 @@ module.exports = function(router) {
      * @apiUse Auth_Managers_CommonApiResponseHeader
      * @apiUse Auth_Managers_SingleEntityResponse
      *
-     * @apiPermission auth_admins_self
+     * @apiPermission permission_auth_admins_self
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -248,7 +248,7 @@ module.exports = function(router) {
      * @api {put} /auth/admins/:id Update a user
      * @apiName Update
      * @apiDescription Update the user with this id
-     * @apiGroup auth_admins
+     * @apiGroup Auth_Admins
      *
      * @apiParam {String} username       Username, must be unique.
      * @apiParam {String} password       Password.
@@ -261,7 +261,7 @@ module.exports = function(router) {
      * @apiUse Auth_Managers_CommonApiResponseHeader
      * @apiUse Auth_Managers_SingleEntityResponse
      *
-     * @apiPermission auth_admins_self
+     * @apiPermission permission_auth_admins_self
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -286,7 +286,7 @@ module.exports = function(router) {
      * @api {patch} /auth/admins/:id Partial update a user
      * @apiName Patch
      * @apiDescription Update the user with this id. Only provided values will be applied
-     * @apiGroup auth_admins
+     * @apiGroup Auth_Admins
      *
      * @apiParam {String} [username]       Username, must be unique.
      * @apiParam {String} [password]       Password.
@@ -299,7 +299,7 @@ module.exports = function(router) {
      * @apiUse Auth_Managers_CommonApiResponseHeader
      * @apiUse Auth_Managers_SingleEntityResponse
      *
-     * @apiPermission auth_admins_self
+     * @apiPermission permission_auth_admins_self
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -324,7 +324,7 @@ module.exports = function(router) {
      * @api {delete} /auth/admins/:id Delete a user
      * @apiName Delete
      * @apiDescription Delete the user with this id
-     * @apiGroup auth_admins
+     * @apiGroup Auth_Admins
      *
      * @apiUse Auth_Managers_CommonApiParams
      *

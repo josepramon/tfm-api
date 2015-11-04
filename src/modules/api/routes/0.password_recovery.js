@@ -12,9 +12,9 @@ var
 module.exports = function(router) {
 
   /**
-   * @apiDefine auth_passwordReset
+   * @apiDefine Auth_PasswordReset
    *
-   * Auth/PaasswordReset
+   * Auth/PasswordReset
    * Password reset API endpoint
    */
 
@@ -31,7 +31,7 @@ module.exports = function(router) {
   /**
    * @api {post} /auth/recover Create a password reset request
    * @apiName Create
-   * @apiGroup auth_passwordReset
+   * @apiGroup Auth_PasswordReset
    *
    * @apiDescription Creates a password reset requests that allows the user
    * to set a new password without providing the previous one. In order to
@@ -72,7 +72,7 @@ module.exports = function(router) {
   /**
    * @api {put} /auth/recover/:id Set a new password for the user associated to the password reset request
    * @apiName Update
-   * @apiGroup auth_passwordReset
+   * @apiGroup Auth_PasswordReset
    *
    * @apiDescription Creates a password reset requests that allows the user
    * to set a new password without providing the previous one. In order to

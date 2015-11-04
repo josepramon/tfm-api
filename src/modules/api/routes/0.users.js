@@ -15,7 +15,10 @@ var
   userRestrictToItself   = require('src/modules/api/middleware/userRestrictToItself').middleware,
 
   UsersController        = require('../controllers/UsersController'),
-  controller             = new UsersController();
+  controller             = new UsersController(),
+
+  UsersActivationController = require('../controllers/UsersActivationController'),
+  activationController      = new UsersActivationController(true);
 
 
 // Setup the middleware applied to the list actions
@@ -49,11 +52,11 @@ module.exports = function(router) {
    */
 
     /**
-     * @apiDefine auth_users  Global module access for `auth_users` is required.
+     * @apiDefine permission_auth_users  Global module access for `Auth_Users` is required.
      */
 
     /**
-     * @apiDefine auth_users_self  A user can only access to their own record (ADMINS have access to all).
+     * @apiDefine permission_auth_users_self  A user can only access to their own record (ADMINS have access to all).
      */
 
 
@@ -131,7 +134,7 @@ module.exports = function(router) {
      * @apiUse Auth_Users_CommonApiResponseHeader
      * @apiUse Auth_Users_MultipleEntityResponse
      *
-     * @apiPermission auth_users
+     * @apiPermission permission_auth_users
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -203,7 +206,7 @@ module.exports = function(router) {
      *     }
      *
      */
-    .post(setRole, controller.create.bind(controller));
+    .post(setRole, activationController.create.bind(activationController));
 
 
 
@@ -223,7 +226,7 @@ module.exports = function(router) {
      * @apiUse Auth_Users_CommonApiResponseHeader
      * @apiUse Auth_Users_SingleEntityResponse
      *
-     * @apiPermission auth_users_self
+     * @apiPermission permission_auth_users_self
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -261,7 +264,7 @@ module.exports = function(router) {
      * @apiUse Auth_Users_CommonApiResponseHeader
      * @apiUse Auth_Users_SingleEntityResponse
      *
-     * @apiPermission auth_users_self
+     * @apiPermission permission_auth_users_self
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -299,7 +302,7 @@ module.exports = function(router) {
      * @apiUse Auth_Users_CommonApiResponseHeader
      * @apiUse Auth_Users_SingleEntityResponse
      *
-     * @apiPermission auth_users_self
+     * @apiPermission permission_auth_users_self
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -334,7 +337,7 @@ module.exports = function(router) {
      * @apiUse Auth_Users_CommonApiResponseHeader
      * @apiUse Auth_Users_SingleEntityResponse
      *
-     * @apiPermission auth_users_self
+     * @apiPermission permission_auth_users_self
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
