@@ -92,7 +92,7 @@ var create = function (user, req, res, next) {
   data.token_exp = decoded.exp;
   data.token_iat = decoded.iat;
 
-  debug('Token generated for user: %s, token: %s', data.username, data.token);
+  debug('Token generated for user: %s, token: %s', user.username, data.token);
 
   client.set(data.token, JSON.stringify(data), function (err, reply) {
     /* istanbul ignore next */
