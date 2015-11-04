@@ -26,6 +26,11 @@ module.exports = {
     { url: /api\/auth\/users\/?$/i, methods: ['POST'] },
 
 
+    // ACCOUNT ACTIVATION
+    // -------------------------------------------------------------------------
+    { url: /api\/auth\/activate\/(users|managers)\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\/?$/i, methods: ['PATCH'] },
+
+
     // KNOWLEDGE BASE:
     // -------------------------------------------------------------------------
     // only list and read are public (any other action requires auth)
