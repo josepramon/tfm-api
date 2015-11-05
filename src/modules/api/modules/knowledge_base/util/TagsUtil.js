@@ -13,63 +13,6 @@ var
   Article = require('../models/Article');
 
 
-  /**
-   * Sets the articles for a tag
-   *
-   * Sets the tag articles, linking them (bidirectionally),
-   *
-   * @param {Tag}      tag      The Tag model
-   * @param {mixed}    articles An article object or an array of articles
-   * @param {Function} next     Callback
-   */
-var setTagArticles = function(tag, articles, callback) {
-  var
-    currentArticles    = tag.articles /* istanbul ignore next */ || [],
-    articleIdsToLink   = articles.map(_getObjId),
-    currentArticleIds  = currentArticles.map(_getObjId),
-    articleIdsToUnlink = _.difference(currentArticleIds, articleIdsToLink),
-    actions            = [];
-
-  if(articleIdsToUnlink.length) {
-    actions.push({
-      criteria: { _id: {$in: articleIdsToUnlink} },
-      update:   { $pull: { 'tags': tag.id } }
-    });
-  }
-
-  if(articleIdsToLink.length) {
-    actions.push({
-      criteria: { _id: {$in: articleIdsToLink} },
-      update:   { $addToSet: { 'tags': tag.id } }
-    });
-  }
-
-  if(!actions.length) {
-    callback(null, tag);
-  } else {
-    async.each(actions, function(action, cb) {
-      Article.update(action.criteria, action.update, {multi: true}, function(err, numAffected) {
-        /* istanbul ignore next */
-        if(err) { return cb(err); }
-        cb(null);
-      });
-
-    }, function(err) {
-      /* istanbul ignore next */
-      if(err) { return callback(err); }
-
-      tag.articles = _.unique(_.difference(currentArticleIds.concat(articleIdsToLink), articleIdsToUnlink));
-
-      tag.save(function(err, tag) {
-        /* istanbul ignore next */
-        if(err) { return callback(err); }
-        callback(null, tag);
-      });
-    });
-  }
-};
-
-
 /**
  * Sets the tags for an article
  *
@@ -80,7 +23,7 @@ var setTagArticles = function(tag, articles, callback) {
  * @param {mixed}    tags    A tag object or an array of tags
  * @param {Function} next    Callback
  */
-var setArticleTags = function(article, tags, next) {
+var setTags = function(article, tags, next) {
   async.waterfall([
 
     function setup(callback) {
@@ -98,7 +41,9 @@ var setArticleTags = function(article, tags, next) {
     },
 
     _createUnexistingTags,
+
     _updateTagsArticles,
+
     _updateArticleTags,
 
   ], function asyncComplete(err, model) {
@@ -236,8 +181,7 @@ var _getObjId = function(obj) {
 
 
 module.exports = {
-  setArticleTags:        setArticleTags,
-  setTagArticles:        setTagArticles,
+  setTags:               setTags,
   _createUnexistingTags: _createUnexistingTags,
   _updateTagsArticles:   _updateTagsArticles,
   _updateArticleTags:    _updateArticleTags,

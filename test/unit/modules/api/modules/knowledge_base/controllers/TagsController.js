@@ -16,7 +16,7 @@ var
 
 describe('TagsController', function() {
 
-  var ArticleTagsUtilStub, ArticleTagsUtilSpy;
+  var ArticlesUtilStub, ArticlesUtilSpy;
 
   before(function(done) {
     mockery.enable({
@@ -25,15 +25,15 @@ describe('TagsController', function() {
       useCleanCache: true
     });
 
-    ArticleTagsUtilStub = {};
-    ArticleTagsUtilStub.setTagArticles = function(model, tags, next) {
+    ArticlesUtilStub = {};
+    ArticlesUtilStub.setArticles = function(model, tags, next) {
       next(null, model);
     };
-    ArticleTagsUtilSpy = sinon.spy(ArticleTagsUtilStub, 'setTagArticles');
+    ArticlesUtilSpy = sinon.spy(ArticlesUtilStub, 'setArticles');
 
-    mockery.registerMock('../util/ArticleTagsUtil', ArticleTagsUtilStub);
+    mockery.registerMock('../util/ArticlesUtil', ArticlesUtilStub);
 
-    // must be loaded after mocking ArticleTagsUtil
+    // must be loaded after mocking TagsUtil
     TagsController = requireHelper('modules/api/modules/knowledge_base/controllers/TagsController');
 
     done();
@@ -41,7 +41,7 @@ describe('TagsController', function() {
 
 
   beforeEach(function(done) {
-    ArticleTagsUtilSpy.reset();
+    ArticlesUtilSpy.reset();
     done();
   });
 
@@ -112,7 +112,7 @@ describe('TagsController', function() {
         optionsParam = {foo:'bar'};
 
       (new TagsController())._setArticles(modelParam, optionsParam, function(err, model, options) {
-        expect(ArticleTagsUtilSpy.called).to.be.false;
+        expect(ArticlesUtilSpy.called).to.be.false;
         expect(modelParam).to.deep.equal(model);
         expect(optionsParam).to.deep.equal(options);
         done();
@@ -121,21 +121,21 @@ describe('TagsController', function() {
 
     it('should accept a single tag', function(done) {
       (new TagsController())._setArticles({}, { articles: {id: 1234} }, function(err, model, options) {
-        expect(ArticleTagsUtilSpy.called).to.be.true;
+        expect(ArticlesUtilSpy.called).to.be.true;
         done();
       });
     });
 
     it('should accept an array of tags tag', function(done) {
       (new TagsController())._setArticles({}, { articles: [{id: 1234},{id: 4567}] }, function(err, model, options) {
-        expect(ArticleTagsUtilSpy.called).to.be.true;
+        expect(ArticlesUtilSpy.called).to.be.true;
         done();
       });
     });
 
     it('should accept an JSON string', function(done) {
       (new TagsController())._setArticles({}, { articles: '[{"id": 1234},{"id": 4567}]' }, function(err, model, options) {
-        expect(ArticleTagsUtilSpy.called).to.be.true;
+        expect(ArticlesUtilSpy.called).to.be.true;
         done();
       });
     });
