@@ -14,7 +14,7 @@ for(var i=0, l=10; i < l; i++) {
   data.push({
     name        : name,
     slug        : slug(name),
-    description : faker.lorem.paragraph,
+    description : faker.lorem.paragraph(),
     articles    : [],
     created_at  : date,
     updated_at  : date
