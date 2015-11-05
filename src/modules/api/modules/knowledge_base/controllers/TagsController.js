@@ -14,7 +14,7 @@ var
   Response        = require(apiBasePath + '/util/Response'),
   ExpandsURLMap   = require(apiBasePath + '/util/ExpandsURLMap'),
   slugger         = require(apiBasePath + '/util/slugger'),
-  ArticleTagsUtil = require(moduleBasePath + '/util/ArticleTagsUtil'),
+  ArticlesUtil    = require(moduleBasePath + '/util/ArticlesUtil'),
 
   // Base class
   BaseController  = require(apiBasePath + '/controllers/BaseController'),
@@ -24,12 +24,13 @@ var
 
 
 /**
- * TagsController
+ * Tags Controller
  */
 class TagsController extends BaseController
 {
   constructor() {
     super();
+
     /**
      * @type {Model}
      */
@@ -42,21 +43,18 @@ class TagsController extends BaseController
      */
     this.expandsURLMap = new ExpandsURLMap({
       "articles": {
-        "route": "/blog/tags/:parentId/articles",
+        "route": "/knowledge_base/tags/:parentId/articles",
         "expands": {
-          "author": {
-            "route": "/authors/:itemId"
-          },
           "tags": {
-            "route": "/blog/articles/:parentId/tags",
+            "route": "/knowledge_base/articles/:parentId/tags",
             "expands": {
               "articles": {
-                "route": "/blog/tags/:parentId/articles"
-              },
-              "author": {
-                "route": "/authors/:itemId"
+                "route": "/knowledge_base/tags/:parentId/articles"
               }
             }
+          },
+          "category": {
+            "route": "/knowledge_base/categories/:itemId"
           }
         }
       }
@@ -69,6 +67,7 @@ class TagsController extends BaseController
    */
   create(req, res, next) {
     var
+      Model    = this.Model,
       request  = new Request(req),
       response = new Response(request, this.expandsURLMap),
 
@@ -81,11 +80,11 @@ class TagsController extends BaseController
 
     async.waterfall([
       function setup(callback) {
-        var model = new Tag(newAttrs);
+        var model = new Model(newAttrs);
         callback(null, model, waterfallOptions);
       },
       this._validate,
-      this._setSlug,
+      this._setSlug.bind(this),
       this._setArticles,
       this._save
 
@@ -111,6 +110,7 @@ class TagsController extends BaseController
     var patch = arguments.length > 3 && arguments[3] === true;
 
     var
+      Model    = this.Model,
       request  = new Request(req),
       response = new Response(request, this.expandsURLMap),
 
@@ -125,7 +125,7 @@ class TagsController extends BaseController
 
     async.waterfall([
       function setup(callback) {
-        Tag.findOne(criteria).exec(function(err, tagModel) {
+        Model.findOne(criteria).exec(function(err, tagModel) {
           /* istanbul ignore next */
           if (err)           { return callback(err); }
           /* istanbul ignore next */
@@ -150,7 +150,7 @@ class TagsController extends BaseController
         });
       },
       this._validate,
-      this._setSlug,
+      this._setSlug.bind(this),
       this._setArticles,
       this._save
 
@@ -186,7 +186,7 @@ class TagsController extends BaseController
     if(_.isUndefined(options.slug) || model.slug === options.slug) {
       callback(null, model, options);
     } else {
-      slugger(Tag, model.name, options.slug, function(err, tagSlug) {
+      slugger(this.Model, model.name, options.slug, function(err, tagSlug) {
         /* istanbul ignore next */
         if (err) { return callback(err); }
 
@@ -211,7 +211,7 @@ class TagsController extends BaseController
         }
       }
 
-      ArticleTagsUtil.setTagArticles(model, articles, function(err, model) {
+      ArticlesUtil.setArticles(model, articles, function(err, model) {
         /* istanbul ignore next */
         if(err) { return callback(err); }
         callback(null, model, options);
