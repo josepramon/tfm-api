@@ -65,7 +65,7 @@ glob(dataDir + '**/*.js', function (er, files) {
 });
 
 // load the data into the db
-loader.clearAllAndLoad(data, function(err) {
+loader.clearAndLoad(data, function(err) {
   if (err) {
     console.log(err);
   }

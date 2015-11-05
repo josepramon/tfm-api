@@ -4,7 +4,7 @@ var
   mongoose = require('mongoose'),
   Schema   = mongoose.Schema,
   dateUtil = require('src/lib/dateUtil'),
-  Tag;
+  Tag, Category;
 
 
 var ArticleSchema = new Schema({
@@ -15,6 +15,7 @@ var ArticleSchema = new Schema({
   commentable  : { type: Boolean, default: false},
 
   tags         : [{ type: Schema.ObjectId, ref: 'KBTag' }],
+  category     : { type: Schema.ObjectId, ref: 'KBCategory' },
 
   published    : { type: Boolean, default: false},
   published_at : { type: Date, default: Date.now },
@@ -75,17 +76,38 @@ ArticleSchema.pre('remove', function (next) {
     });
   }
 });
+ArticleSchema.pre('remove', function (next) {
+  var
+    article  = this,
+    criteria = { _id: article.category },
+    update   = { $pull: { 'articles': article._id } };
+
+
+  if(!article.category) {
+    next();
+  } {
+    // requiring at runtime to avoid circular dependencies
+    Category = Category || require('./Category');
+
+    Category.update(criteria, update, {multi:true}, function(err, numAffected) {
+      /* istanbul ignore next */
+      if(err) { return next(err); }
+      next();
+    });
+  }
+});
 
 
 // Secondary indexes
 // ----------------------------------
 ArticleSchema.index({ tags: 1 });
+ArticleSchema.index({ category: 1 });
 
 
 // Custom methods and attributes
 // ----------------------------------
 ArticleSchema.statics.safeAttrs = ['title', 'excerpt', 'body', 'published', 'publish_date', 'commentable'];
-ArticleSchema.methods.getRefs = function() { return ['tags']; };
+ArticleSchema.methods.getRefs = function() { return ['tags', 'category']; };
 
 
 // Register the plugins

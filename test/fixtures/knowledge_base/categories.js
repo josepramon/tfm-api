@@ -8,7 +8,7 @@ var
 
 for(var i=0, l=10; i < l; i++) {
   var
-    name = faker.lorem.words(1).join(),
+    name = faker.commerce.department(),
     date = faker.date.recent();
 
   data.push({
@@ -22,4 +22,4 @@ for(var i=0, l=10; i < l; i++) {
 }
 
 
-exports['knowledge_base.tags'] = data;
+exports['knowledge_base.categories'] = data;
