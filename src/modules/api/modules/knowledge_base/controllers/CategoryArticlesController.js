@@ -29,7 +29,7 @@ class CategoryArticlesController extends ArticlesController
     var criteria = super._buildCriteria(request);
 
     /* istanbul ignore else */
-    if(request.req.params.tagId) {
+    if(request.req.params.categoryId) {
       criteria.category = request.req.params.categoryId;
     }
 
