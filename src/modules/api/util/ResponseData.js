@@ -80,6 +80,8 @@ class ResponseData {
   _formatItem(item, expands, stack) {
     stack = stack || [];
 
+    if(!item) { return {}; }
+
     var
       // model refs
       expandable = (item.getRefs) ? item.getRefs() : [],
