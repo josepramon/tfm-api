@@ -326,7 +326,7 @@ describe('lib/jwtAuth', function() {
 
       var
         user = {
-          id      : '0123456789',
+          id       : '0123456789',
           username : 'username',
           name     : 'name',
           email    : 'user@domain.tld'

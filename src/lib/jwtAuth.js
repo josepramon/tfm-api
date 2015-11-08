@@ -223,7 +223,6 @@ var middleware = function () {
   var func = verify;
   func.unless = unless;
   return func;
-
 };
 
 
