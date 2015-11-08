@@ -123,6 +123,24 @@ class Request {
     return sortOpts;
   }
 
+
+  get filters() {
+    var filters = null;
+    // parse the filters, something like:
+    // ?filter=filterName:params,anotherFilterName:params
+    // the filter might contain no params
+    if(this.req.query.filter) {
+      filters = {};
+      this.req.query.filter.split(',').forEach(function(filter) {
+        let filterParts = filter.split(':');
+        filters[filterParts[0]] = filterParts[1];
+      });
+    }
+
+
+    return filters;
+  }
+
 }
 
 

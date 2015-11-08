@@ -142,6 +142,9 @@ class BaseController
   // (actually they're not private so can be easily tested)
   // =============================================================================
 
+  /**
+   * Query builder for mongoose
+   */
   _buildCriteria(request) {
     var criteria = {};
 
@@ -149,14 +152,44 @@ class BaseController
       criteria._id = request.req.params.id;
     }
 
-    if(request.req.filters) {
-      _.extend(criteria, request.req.filters);
+    if(request.filters) {
+      _.extend(criteria, this._parseFilters(request.filters));
     }
 
     return criteria;
   }
 
 
+  /**
+   * Filters parsing for the querys
+   *
+   * The requests might contain filters like
+   * `?filter=filterName:params,anotherFilterName:params`
+   * to limit the results.
+   *
+   * By default, the method enables filtering using regular expressions
+   * on the model safe attributes. This method should be extended/overrided
+   * in any controller that extends this class to implement custom filters.
+   */
+  _parseFilters(filters) {
+    var
+      safeAttrs       = this.Model.safeAttrs,
+      acceptedFilters = _.pick(filters, safeAttrs);
+
+    var ret = _.reduce(acceptedFilters, function(memo, v, k) {
+      if(v) {
+        memo[k] = { $regex: v };
+      }
+      return memo;
+    }, {});
+
+    return ret;
+  }
+
+
+  /**
+   * Determines the attributes that can be mass assigned to the model
+   */
   _getAssignableAttributes(request, patch) {
     var
       defaults  = {},
@@ -176,6 +209,9 @@ class BaseController
   }
 
 
+  /**
+   * Model validation
+   */
   _validate(model, options, callback) {
     model.validate(function (err) {
       /* istanbul ignore next */
@@ -185,6 +221,9 @@ class BaseController
   }
 
 
+  /**
+   * Model save
+   */
   _save(model, options, callback) {
     model.save(function(err) {
       /* istanbul ignore next */
