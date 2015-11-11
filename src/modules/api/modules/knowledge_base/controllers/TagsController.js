@@ -14,6 +14,7 @@ var
   Response        = require(apiBasePath + '/util/Response'),
   ExpandsURLMap   = require(apiBasePath + '/util/ExpandsURLMap'),
   slugger         = require(apiBasePath + '/util/slugger'),
+  filters         = require(apiBasePath + '/util/filters'),
   ArticlesUtil    = require(moduleBasePath + '/util/ArticlesUtil'),
 
   // Base class
@@ -179,6 +180,35 @@ class TagsController extends BaseController
     if(!_.isUndefined(slug))     { options.slug = slug; }
     if(!_.isUndefined(articles)) { options.articles = articles; }
     return options;
+  }
+
+
+  /**
+   * Filters parsing for the querys
+   *
+   * The requests might contain filters like
+   * `?filter=filterName:params,anotherFilterName:params`
+   * to limit the results.
+   *
+   * By default, the method defined on the BaseController allows filtering
+   * on the model 'safe' attributes.
+   *
+   * Define some additional filters.
+   */
+  _parseFilters(request) {
+    var
+      that           = this,
+      multiRelationFilters = {
+        articles:    'articles',
+        hasArticles: 'articles'
+      },
+      defaultFilters = super._parseFilters(request);
+
+    var additionalFilters = _.reduce(multiRelationFilters, function(memo, attribute, filterName) {
+      return _.extend(memo, filters.getRelationSizeFilter(request.filters, filterName, attribute));
+    }, {});
+
+    return _.extend({}, defaultFilters, additionalFilters);
   }
 
 

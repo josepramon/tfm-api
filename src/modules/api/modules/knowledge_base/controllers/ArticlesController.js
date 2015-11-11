@@ -14,6 +14,7 @@ var
   Response        = require(apiBasePath + '/util/Response'),
   ExpandsURLMap   = require(apiBasePath + '/util/ExpandsURLMap'),
   slugger         = require(apiBasePath + '/util/slugger'),
+  filters         = require(apiBasePath + '/util/filters'),
 
   // utilities to manage the bidirectional relations
   CategoryUtil    = require(moduleBasePath + '/util/CategoryUtil'),
@@ -200,6 +201,54 @@ class ArticlesController extends BaseController
   // Aux. "private" methods
   // (actually they're not private so can be easily tested)
   // =============================================================================
+
+  /**
+   * Filters parsing for the querys
+   *
+   * The requests might contain filters like
+   * `?filter=filterName:params,anotherFilterName:params`
+   * to limit the results.
+   *
+   * By default, the method defined on the BaseController allows filtering
+   * on the model 'safe' attributes.
+   *
+   * Define some additional filters.
+   */
+  _parseFilters(request) {
+
+    var
+      that = this,
+
+      multiRelationFilters = {
+        tags:        'tags',
+        hasTags:     'tags'
+      },
+
+      singleRelationFilters = {
+        hasCategory: 'category'
+      },
+
+      // get the regular filters (on safe attributes)
+      defaultFilters = super._parseFilters(request);
+
+    // get any filters applied on relations (based on the presence of them or its size)
+    var additionalFilters = _.reduce(multiRelationFilters, function(memo, attribute, filterName) {
+      return _.extend(memo, filters.getRelationSizeFilter(request.filters, filterName, attribute));
+    }, {});
+
+    additionalFilters = _.reduce(singleRelationFilters, function(memo, attribute, filterName) {
+      return _.extend(memo, filters.hasRelationFilter(request.filters, filterName, attribute));
+    }, additionalFilters);
+
+    // add the isPublished filter (based on the published attribute and the publish date)
+    if(_.has(request.filters, 'isPublished')) {
+      var publishedFilter = {};
+      additionalFilters = _.extend(additionalFilters, filters.getPublishedFilter(request.filters));
+    }
+
+    return _.extend({}, defaultFilters, additionalFilters);
+  }
+
 
   _buildWaterfallOptions(slug, tags, category) {
     var options = {};

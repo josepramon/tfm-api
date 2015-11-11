@@ -6,7 +6,8 @@ var
   errors        = require('src/lib/errors'),
   Request       = require('../util/Request'),
   Response      = require('../util/Response'),
-  ExpandsURLMap = require('../util/ExpandsURLMap');
+  ExpandsURLMap = require('../util/ExpandsURLMap'),
+  filters       = require('../util/filters');
 
 
 /**
@@ -153,7 +154,7 @@ class BaseController
     }
 
     if(request.filters) {
-      _.extend(criteria, this._parseFilters(request.filters));
+      _.extend(criteria, this._parseFilters(request));
     }
 
     return criteria;
@@ -168,22 +169,19 @@ class BaseController
    * to limit the results.
    *
    * By default, the method enables filtering using regular expressions
-   * on the model safe attributes. This method should be extended/overrided
+   * on the model safe attributes, and with the special 'search' filter,
+   * that allows filtering by the presence of some string in multiple attributes
+   * (using a 'text' index deffined in the collection).
+   *
+   * This method should be extended/overrided
    * in any controller that extends this class to implement custom filters.
    */
-  _parseFilters(filters) {
+  _parseFilters(request) {
     var
-      safeAttrs       = this.Model.safeAttrs,
-      acceptedFilters = _.pick(filters, safeAttrs);
+      safeAttrsFilters = filters.getSafeAttributesFilters(request.filters, this.Model),
+      searchFilters    = filters.getSearchFilters(request.filters);
 
-    var ret = _.reduce(acceptedFilters, function(memo, v, k) {
-      if(v) {
-        memo[k] = { $regex: v };
-      }
-      return memo;
-    }, {});
-
-    return ret;
+    return _.extend({}, safeAttrsFilters, searchFilters);
   }
 
 
