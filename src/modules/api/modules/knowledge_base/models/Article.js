@@ -102,7 +102,18 @@ ArticleSchema.pre('remove', function (next) {
 // ----------------------------------
 ArticleSchema.index({ tags: 1 });
 ArticleSchema.index({ category: 1 });
-
+ArticleSchema.index({
+  title:   'text',
+  excerpt: 'text',
+  body:    'text'
+}, {
+  weights: {
+    title:   10,
+    excerpt: 5,
+    body:    5
+  },
+  name: 'ArticlesTextIndex'
+});
 
 // Custom methods and attributes
 // ----------------------------------

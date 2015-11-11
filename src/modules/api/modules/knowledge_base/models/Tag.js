@@ -63,6 +63,16 @@ TagSchema.pre('remove', function (next) {
 // Secondary indexes
 // ----------------------------------
 TagSchema.index({ articles: 1 });
+TagSchema.index({
+  name:        'text',
+  description: 'text'
+}, {
+  weights: {
+    name:        10,
+    description: 5
+  },
+  name: 'TagsTextIndex'
+});
 
 
 // Custom methods and attributes

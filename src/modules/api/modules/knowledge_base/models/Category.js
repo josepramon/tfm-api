@@ -63,6 +63,16 @@ CategorySchema.pre('remove', function (next) { // canviar això (no és N:N), i 
 // Secondary indexes
 // ----------------------------------
 CategorySchema.index({ articles: 1 });
+CategorySchema.index({
+  name:        'text',
+  description: 'text'
+}, {
+  weights: {
+    name:        10,
+    description: 5
+  },
+  name: 'CategoriesTextIndex'
+});
 
 
 // Custom methods and attributes
