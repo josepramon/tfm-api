@@ -164,7 +164,7 @@ class ResponseData {
 
     // get the pagination
     var
-      elems      = _.compact(_.flatten([data.populated(attr)||data[attr]])),
+      elems      = _.compact(_.flatten([data[attr]||data.populated(attr)])),
       totalElems = elems.length;
 
     var

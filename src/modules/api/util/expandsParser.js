@@ -3,6 +3,7 @@
 var
   _          = require('underscore'),
   sortParser = require('./requestSortParser'),
+  stringUtil = require('./string'),
   config     = require('../../../config');
 
 
@@ -21,7 +22,7 @@ var parseExpands = function(expands) {
 
 
 /**
- * Expand parsing (parses the options for that expand, currently just the pagination opts)
+ * Expand parsing (parses the options for that expand)
  * @param  {Object} populationOpts  Already parsed expands object
  * @param  {String} expand          The new expand to parse
  * @return {Object}                 The original parsed expands object
@@ -42,8 +43,12 @@ var _parseExpand = function(populationOpts, expand) {
   opts.skip = opts.limit * (page - 1);
 
   populationOpts[key] = {
-    options: _.omit(opts, ['page'])
+    options: _.omit(opts, ['page', 'filter'])
   };
+
+  if(opts.filter) {
+    populationOpts[key].match = opts.filter;
+  }
 
   return populationOpts;
 };
@@ -85,6 +90,16 @@ var _parseExpandOpt = function(opts, rawOpt) {
       case 'sort':
         opts.sort = _.extend(opts.sort || {}, sortParser.parse(args));
         break;
+
+      case 'filter':
+        var parsedOpt;
+        try {
+          parsedOpt = JSON.parse(stringUtil.unescapeQueryParam(args));
+        } catch(e) {}
+
+        if(parsedOpt) {
+          opts.filter = parsedOpt;
+        }
     }
   }
   return opts;

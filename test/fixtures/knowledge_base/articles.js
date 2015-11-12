@@ -6,17 +6,22 @@ var
   data   = [];
 
 
+var nl2p = function(str) {
+  return str.replace(/\\r/g, '').split('\n').map(function(p) {
+    return '<p>'+p+'</p>';
+  }).join('\n');
+};
+
 for(var i=0, l=10; i < l; i++) {
   var
     title = faker.lorem.sentence(),
-    body  = faker.lorem.paragraphs(6),
     date  = faker.date.recent();
 
   data.push({
     title        : title,
     slug         : slug(title),
-    excerpt      : body.split('\n \r\t')[0],
-    body         : body,
+    excerpt      : nl2p(faker.lorem.paragraphs(2)),
+    body         : nl2p(faker.lorem.paragraphs(6)),
     published    : true,
     published_at : date,
     commentable  : true,

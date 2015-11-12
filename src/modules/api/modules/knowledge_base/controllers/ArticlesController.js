@@ -242,7 +242,6 @@ class ArticlesController extends BaseController
 
     // add the isPublished filter (based on the published attribute and the publish date)
     if(_.has(request.filters, 'isPublished')) {
-      var publishedFilter = {};
       additionalFilters = _.extend(additionalFilters, filters.getPublishedFilter(request.filters));
     }
 

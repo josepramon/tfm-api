@@ -184,7 +184,7 @@ class TagsController extends BaseController
 
 
   /**
-   * Filters parsing for the querys
+   * Filters parsing for the queryes
    *
    * The requests might contain filters like
    * `?filter=filterName:params,anotherFilterName:params`
@@ -207,6 +207,13 @@ class TagsController extends BaseController
     var additionalFilters = _.reduce(multiRelationFilters, function(memo, attribute, filterName) {
       return _.extend(memo, filters.getRelationSizeFilter(request.filters, filterName, attribute));
     }, {});
+
+    // if there's any filter for the nested collections, enable it
+    // this is a special filter, because it is not applied to the initial query,
+    // but instead in the relations population
+    if(_.has(request.filters, 'articles.isPublished')) {
+      filters.setNestedArticlesPublishedFilter({isPublished: request.filters['articles.isPublished']}, request);
+    }
 
     return _.extend({}, defaultFilters, additionalFilters);
   }

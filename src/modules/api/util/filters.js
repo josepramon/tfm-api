@@ -53,7 +53,6 @@ module.exports = {
 
     if(filterValue) {
 
-
       publishedFilter = {$and: [
         { 'published': true },
         { $or: [
@@ -73,6 +72,38 @@ module.exports = {
     return publishedFilter;
   },
 
+
+  /**
+   * Custom filter for published articles (on nested collections)
+   *
+   * TODO: this is extremely hacky, and should be implemented properly
+   */
+  setNestedArticlesPublishedFilter: function(filters, request) {
+
+    // get the filter
+    var filter = this.getPublishedFilter(filters);
+
+    // encode it
+    filter = stringUtil.escapeQueryParam(JSON.stringify(filter));
+
+    // translate the filter to a include directive...
+    var expands = request.parseExpands(request.req.query.include);
+
+    var articlesExpandIndex = _.findIndex(expands, function(expand) {
+      var expandPath = expand.split(':')[0];
+      return expandPath === 'articles';
+    });
+
+    var filterVal = ':filter(' + filter + ')';
+
+    if(articlesExpandIndex > -1) {
+      expands[articlesExpandIndex] += filterVal;
+    } else {
+      expands.push('articles' + filterVal);
+    }
+
+    request.req.query.include = expands;
+  },
 
 
   /**

@@ -23,17 +23,7 @@ class Request {
   }
 
 
-  /**
-   * @param {Number} maxDepth maximum nested expansion level (by default 1)
-   * @return {Object}         the attributes to expand
-   */
-  getExpands(maxDepth) {
-    maxDepth = maxDepth || 1;
-
-    var
-      expands       = this.req.query.include,
-      filteredSpans = {};
-
+  parseExpands(expands) {
     if(!Array.isArray(expands)) {
       expands = [expands];
     }
@@ -43,6 +33,21 @@ class Request {
       return memo.concat(expandParts);
     }, []);
     expands = _.unique(expands);
+
+    return expands;
+  }
+
+
+  /**
+   * @param {Number} maxDepth maximum nested expansion level (by default 1)
+   * @return {Object}         the attributes to expand
+   */
+  getExpands(maxDepth) {
+    maxDepth = maxDepth || 1;
+
+    var
+      expands       = this.parseExpands(this.req.query.include),
+      filteredSpans = {};
 
     if(expands.length) {
       // filter out the expands to a maximum depth
