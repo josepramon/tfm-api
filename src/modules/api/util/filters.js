@@ -31,7 +31,6 @@ module.exports = {
   getSearchFilters: function(filters) {
     if(filters.search) {
       var q = stringUtil.unescapeQueryParam(filters.search);
-      console.log('q', q);
       return { $text: { $search: q, $language: 'none' } };
     }
     return {};
