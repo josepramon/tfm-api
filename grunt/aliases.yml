@@ -10,7 +10,7 @@ dev:
   tasks:
     - redis               # start the local redis
     - mongo               # start the local mongod
-    - env:dev             # disable the clustering, enable logging, etc
+    - env:dev             # enable logging, etc
     - bgShell:nodemonDev  # start an express server that will be restarted on any server code change
     - watch               # lint & unit test the server code when changed
 
