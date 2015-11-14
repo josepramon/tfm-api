@@ -90,6 +90,10 @@ The `sender` field is the default sender for all the mails originating from the 
 
 ## Usage:
 
+To start the API in *production mode*, un `npm start`. To stop it, `npm stop`.
+
+To start the API in *development mode*, use one of the gunt tasks. In development mode, logs are written to *stdout* and the application files are *watched*, so if anything changes the app is automatically restarted.
+
 The gruntfile has 2 primary tasks, the default one and one called *dev*.
 
 The default one starts a simple HTTP server to serve the API.
