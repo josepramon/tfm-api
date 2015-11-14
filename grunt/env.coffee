@@ -4,3 +4,6 @@ module.exports =
 
   dev:
     DEV: true
+
+  test:
+    TEST: true

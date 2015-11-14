@@ -1,38 +1,66 @@
-module.exports = (function() {
-  'use strict';
+'use strict';
 
-  var
-    faker  = require('faker'),
-    data   = [],
-    id     = require('pow-mongodb-fixtures').createObjectId,
-    bcrypt = require('bcryptjs');
+var
+  _      = require('underscore'),
+  faker  = require('faker'),
+  id     = require('mongodb').ObjectID,
+  crypt  = require('../../src/lib/crypt'),
+  config = require('../../src/config');
 
+// User roles
+var roles = exports.roles = require('../../data/roles').roles;
 
-  var hashPassword = function(password) {
-    var
-      salt = bcrypt.genSaltSync(10),
-      hash = bcrypt.hashSync(password, salt);
-
-    return hash;
-  };
-
-
-  // default user
-  data.push({
-    _id:      id('000000000000000000000001'),
-    username: 'demo',
-    password: hashPassword('demo'),
-    email:    'demo@demo.demo'
+var getRoleIdByUniqueName = function(roleName) {
+  var role = _.find(roles, function(role) {
+    return role.name === roleName;
   });
+  return role ? role.id : null;
+};
 
-  for(var i=0, l=10; i < l; i++) {
-    data.push({
-      username : faker.internet.userName(),
-      password : hashPassword(faker.internet.password()),
-      email    : faker.internet.email()
-    });
-  }
+// Get the role id's to set the appropiate relations
+var
+  adminRoleId   = getRoleIdByUniqueName(config.roles.admin),
+  managerRoleId = getRoleIdByUniqueName(config.roles.manager),
+  userRoleId    = getRoleIdByUniqueName(config.roles.user);
 
-  return data;
+// Create the users
+var users = [];
 
-})();
+// default admin
+users.push({
+  _id:      new id(),
+  username: 'admin',
+  password: crypt.hashPassword('admin1234'),
+  email:    'admin@demo.demo',
+  role:     adminRoleId
+});
+
+// default manager
+users.push({
+  _id:      new id(),
+  username: 'manager',
+  password: crypt.hashPassword('manager1234'),
+  email:    'manager@demo.demo',
+  role:     managerRoleId
+});
+
+// default user
+users.push({
+  _id:      new id(),
+  username: 'user',
+  password: crypt.hashPassword('user1234'),
+  email:    'user@demo.demo',
+  role:     userRoleId
+});
+
+// create more random users
+for(var i=0, l=10; i < l; i++) {
+  users.push({
+    username : faker.internet.userName(),
+    password : crypt.hashPassword(faker.internet.password()),
+    email    : faker.internet.email(),
+    role     : userRoleId
+  });
+}
+
+exports.users = users;

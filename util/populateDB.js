@@ -1,12 +1,41 @@
 'use strict';
 
+// MONGO DATABASE DATA LOADING:
+// -----------------------------------------------------------------------------
+// Usage: node ./util/populateDB.js connectionName pathToDataFiles
+//
+// Where `connectionName` is a named connection in `env.json` or `env.default.json`
+// and `pathToDataFiles` is the path to the directory containing the data files,
+// relative to the project root.
 var
-  fs          = require('fs'),
-  path        = require('path'),
-  glob        = require('glob'),
-  config      = require('../src/config'),
-  fixturesDir = path.normalize(__dirname + '/../test/fixtures/');
+  _      = require('underscore'),
+  fs     = require('fs'),
+  path   = require('path'),
+  glob   = require('glob'),
+  config = require('../src/config'),
+  db, dataDir;
 
+
+// GET THE DIRECTORY WHERE THE DATA IS DEFINED
+// =============================================================================
+var args = process.argv.slice(2);
+
+var err = function(msg) {
+  console.log('ERROR:', msg);
+  process.exit();
+};
+
+if(args.length >= 2) {
+  db = config.mongo[args[0]];
+  if(!db) {
+    err('"connectionName" not recognised.');
+  }
+
+  dataDir = path.normalize(__dirname + '/../' + args[1] + '/');
+
+} else {
+  err('not enough parameters supplied.');
+}
 
 // MONGO CONF:
 // Get the connection params for the mongo instance
@@ -14,78 +43,29 @@ var
 var mongoConfigParser = require('../src/lib/mongoConfigParser');
 
 var mongoConn = new mongoConfigParser().setEnv({
-  host     : config.mongo.host,
-  port     : config.mongo.port,
-  user     : config.mongo.user,
-  password : config.mongo.password,
-  database : config.mongo.database
+  host     : db.host,
+  port     : db.port,
+  user     : db.user,
+  password : db.password,
+  database : db.database
 });
 
 // DATA LOAD:
-// The collections must be defined inside the fixtures directory, one file
-// per collection. The file name corresponds to the collection name.
-// The file can be json file with the collection defined as an array or a node
-// module that generates the collection.
-//
-// Example 1 (fixtures/foo.json):
-// -------------------------------
-//
-// [
-//   {
-//     "name": "ItemName 1",
-//     "description": "ItemDescription 1",
-//     "active": true
-//   },
-//   {
-//     "name": "ItemName 2",
-//     "description": "ItemDescription 2",
-//     "active": true
-//   }
-// ]
-//
-// Example 2 (fixtures/bar.js):
-// -------------------------------
-//
-// module.exports = (function() {
-//   'use strict';
-//
-//   var
-//     faker = require('faker'),
-//     data = [];
-//
-//
-//   for(var i=0, l=100; i < l; i++) {
-//     data.push({
-//       "name"        : faker.company.companyName(),
-//       "description" : faker.company.catchPhrase(),
-//     });
-//   }
-//
-//   return data;
-//
-// })();
-//
 // =============================================================================
 var
   loader = require('pow-mongodb-fixtures').connect(mongoConn.getConnectionString(), mongoConn.getConnectionOptions()),
   data   = {};
 
 
-glob(fixturesDir + '**/*.js', function (er, files) {
-  files.forEach(function(fixture) {
-    var
-      fileNoExt      = fixture.substr(0, fixture.indexOf('.')).replace(fixturesDir,''),
-      collectionName = fileNoExt.replace('/', '.');
-
-    data[collectionName] = require(fixturesDir + fileNoExt);
-
-    console.log('Loading "' + collectionName + '" collection. Inserting ' + data[collectionName].length + ' items.');
+glob(dataDir + '**/*.js', function (er, files) {
+  files.forEach(function(file) {
+    var fileNoExt = file.substr(0, file.indexOf('.')).replace(dataDir,'');
+    data = _.extend(data, require(dataDir + fileNoExt));
   });
 });
 
-
-// load the fixtures into the db
-loader.clearAllAndLoad(data, function(err) {
+// load the data into the db
+loader.clearAndLoad(data, function(err) {
   if (err) {
     console.log(err);
   }

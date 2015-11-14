@@ -19,9 +19,9 @@ describe('API authentication', function() {
   this.timeout(10000);
 
   var defaultUser = {
-    username: 'demo',
-    password: 'demo',
-    email: 'demo@demo.demo'
+    username: 'user',
+    password: 'user1234',
+    email: 'user@demo.demo'
   };
 
 
@@ -34,12 +34,24 @@ describe('API authentication', function() {
         .end(function(err, res) {
           var responseData = res.body.data;
 
-          expect(objectid.isValid(responseData.userId)).to.be.true;
-          expect(responseData.username).to.equal(defaultUser.username);
-          expect(responseData.email).to.equal(defaultUser.email);
           expect(responseData.token_exp).to.be.a('number');
           expect(responseData.token_iat).to.be.a('number');
           expect(responseData.token).to.be.a('string');
+
+          var user = responseData.user;
+          expect(user).to.be.an('object');
+
+          expect(user).to.have.property('meta');
+          expect(user.meta).to.be.an('object');
+          expect(user.meta).to.have.property('url');
+
+          expect(user).to.have.property('data');
+          expect(user.data).to.be.an('object');
+
+          expect(objectid.isValid(user.data.id)).to.be.true;
+          expect(user.data.username).to.equal(defaultUser.username);
+          expect(user.data.email).to.equal(defaultUser.email);
+
           done();
         });
     });
@@ -228,9 +240,6 @@ describe('API authentication', function() {
             responseData = res.body.data,
             token        = responseData.token;
 
-          expect(objectid.isValid(responseData.userId)).to.be.true;
-          expect(responseData.username).to.equal(defaultUser.username);
-          expect(responseData.email).to.equal(defaultUser.email);
           expect(responseData.token_exp).to.be.a('number');
           expect(responseData.token_iat).to.be.a('number');
           expect(token).to.be.a('string');

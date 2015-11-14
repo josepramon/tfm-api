@@ -64,19 +64,8 @@ describe('BaseController', function() {
       request = {
         req: {
           params: {}
-        },
-        getOwnerFromAuth() { return 1; }
+        }
       };
-      done();
-    });
-
-
-    it('should return an object with an "owner" key', function(done) {
-      var controller = new BaseController();
-
-      var criteria = controller._buildCriteria(request);
-      expect(criteria).to.have.property('owner');
-      expect(criteria.owner).to.equal(1);
       done();
     });
 
@@ -126,7 +115,6 @@ describe('BaseController', function() {
       controller.Model = model;
 
       expect(controller._getAssignableAttributes(request)).to.deep.equal({
-        owner: 1,
         foo: undefined,
         bar: 'bar'
       });
@@ -139,7 +127,6 @@ describe('BaseController', function() {
       controller.Model = model;
 
       expect(controller._getAssignableAttributes(request, true)).to.deep.equal({
-        owner: 1,
         bar: 'bar'
       });
       done();

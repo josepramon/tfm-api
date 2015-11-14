@@ -48,19 +48,6 @@ describe('modules/api/util/Request', function() {
   });
 
 
-  it('should return the data owner from the authorisation', function(done) {
-    // mock the req. object
-    var req = {
-      user: {
-        userId: 1234
-      }
-    };
-
-    expect((new Request(req).getOwnerFromAuth())).to.equal(1234);
-    done();
-  });
-
-
   it('should return an empty object if no expands are requested', function(done) {
     // mock the req. object
     var req = {

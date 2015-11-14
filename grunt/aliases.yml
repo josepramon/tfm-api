@@ -31,6 +31,9 @@ util:createUser:
   tasks:
     - bgShell:createUser
 
+setup:
+  tasks:
+    - bgShell:load_data
 
 
 # TEST RELATED TASKS
@@ -38,8 +41,9 @@ util:createUser:
 test:
   description: 'Execute ALL the tests'
   tasks:
+    - env:test
     - env:dev
-    - mongo:populate
+    - bgShell:load_fixtures
     - mochaTest
 
 test:coverage:
@@ -84,11 +88,6 @@ mongo:setup:
   description: 'Initial mongodb server setup (create dirs, logs, etc)'
   tasks:
     - bgShell:mongod_setup
-
-mongo:populate:
-  description: 'Fill the database with the fixtures data'
-  tasks:
-    - bgShell:mongod_populate
 
 
 # some aliases for redis

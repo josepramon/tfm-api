@@ -122,7 +122,6 @@ describe('lib/jwtAuth', function() {
         user = {
           id      : '0123456789',
           username : 'username',
-          name     : 'name',
           email    : 'user@domain.tld'
         },
         req  = {},
@@ -131,16 +130,19 @@ describe('lib/jwtAuth', function() {
 
       jwtAuth.create(user, req, res, function(err) {
         expect(err).to.be.undefined;
-        expect(req).to.have.property('user');
-
-        expect(req.user.userId).to.equal(user.id);
-        expect(req.user.username).to.equal(user.username);
-        expect(req.user.name).to.equal(user.name);
-        expect(req.user.email).to.equal(user.email);
-
         expect(req.user).to.have.property('token');
         expect(req.user).to.have.property('token_exp');
         expect(req.user).to.have.property('token_iat');
+        expect(req.user).to.have.property('role');
+        expect(req.user).to.have.property('privileges');
+        expect(req.user).to.have.property('userObj');
+
+        var userData = req.user.userObj;
+
+        expect(userData.id).to.equal(user.id);
+        expect(userData.username).to.equal(user.username);
+        expect(userData.email).to.equal(user.email);
+
         done();
       });
     });
@@ -152,7 +154,6 @@ describe('lib/jwtAuth', function() {
         user = {
           id      : '0123456789',
           username : 'username',
-          name     : 'name',
           email    : 'user@domain.tld'
         },
         req  = {},
@@ -163,8 +164,17 @@ describe('lib/jwtAuth', function() {
         jwtAuth.retrieve(req.user.token, function(err, data) {
           expect(err).to.be.null;
           expect(data).to.be.an('object');
-          expect(data.userId).to.equal(user.id);
-          expect(data.username).to.equal(user.username);
+          expect(data).to.have.property('token');
+          expect(data).to.have.property('token_exp');
+          expect(data).to.have.property('token_iat');
+          expect(data).to.have.property('userObj');
+
+          var userData = data.userObj;
+
+          expect(userData.id).to.equal(user.id);
+          expect(userData.username).to.equal(user.username);
+          expect(userData.email).to.equal(user.email);
+
           done();
         });
       });
@@ -178,13 +188,14 @@ describe('lib/jwtAuth', function() {
     var reqUser;
 
     before(function(done) {
+      this.timeout(10000);
+
       // store something to redis (in fact redis is mocked,
       // so this happens on memory)
       var
         user = {
-          id      : '0123456789',
+          id       : '0123456789',
           username : 'username',
-          name     : 'name',
           email    : 'user@domain.tld'
         },
         req  = {},
@@ -217,8 +228,7 @@ describe('lib/jwtAuth', function() {
       jwtAuth.retrieve(reqUser.token, function(err, data) {
         expect(err).to.be.null;
         expect(data).to.be.an('object');
-        expect(data).to.have.property('userId');
-        expect(data).to.have.property('username');
+        expect(data).to.have.property('userObj');
         expect(data).to.have.property('token');
         done();
       });
@@ -233,6 +243,7 @@ describe('lib/jwtAuth', function() {
     var reqUser;
 
     before(function(done) {
+      this.timeout(10000);
 
       // It looks like redis-mock has some bug that causes
       // elements to not get destroyed when calling expire.
@@ -244,7 +255,7 @@ describe('lib/jwtAuth', function() {
 
       var
         user = {
-          id      : '0123456789',
+          id       : '0123456789',
           username : 'username',
           name     : 'name',
           email    : 'user@domain.tld'
@@ -306,6 +317,7 @@ describe('lib/jwtAuth', function() {
     var reqUser;
 
     before(function(done) {
+      this.timeout(10000);
 
       // It looks like redis-mock has some bug that causes
       // elements to not get destroyed when calling expire.
@@ -314,7 +326,7 @@ describe('lib/jwtAuth', function() {
 
       var
         user = {
-          id      : '0123456789',
+          id       : '0123456789',
           username : 'username',
           name     : 'name',
           email    : 'user@domain.tld'

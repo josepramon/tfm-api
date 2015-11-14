@@ -21,7 +21,7 @@ var
   cors       = require('cors'),
   config     = require('./config'),
 
-  port       = process.env.PORT || 5000;
+  port       = config.serverPort || process.env.PORT || 5000;
 
 
 
@@ -35,11 +35,11 @@ var setupMailer = function() {
 
   if(mailConfig && mailConfig.sender) {
     mailer.setDefaults({ from: mailConfig.sender });
-    delete mailConfig.sender
+    delete mailConfig.sender;
   }
 
   mailer.setup(mailConfig);
-}
+};
 
 
 /**

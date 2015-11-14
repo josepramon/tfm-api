@@ -70,12 +70,16 @@ var create = function (user, req, res, next) {
     return next(new Error('User data cannot be empty.'));
   }
 
+  var
+    userObj   = user.toJSON ? user.toJSON() : user,
+    userRole  = user.role || {};
+
   var data = {
-    userId: user.id,
-    username: user.username,
-    access: user.access, // currently empty
-    name: user.name,     // currently empty
-    email: user.email,
+    id:         user.id,
+    userObj:    userObj,
+    role:       userRole.name,
+    privileges: userRole.privileges,
+
     token: jsonwebtoken.sign({ id: user.id}, JWT_SECRET, {
       expiresIn: TOKEN_EXPIRATION
     })
@@ -88,7 +92,7 @@ var create = function (user, req, res, next) {
   data.token_exp = decoded.exp;
   data.token_iat = decoded.iat;
 
-  debug('Token generated for user: %s, token: %s', data.username, data.token);
+  debug('Token generated for user: %s, token: %s', user.username, data.token);
 
   client.set(data.token, JSON.stringify(data), function (err, reply) {
     /* istanbul ignore next */
@@ -149,7 +153,7 @@ var retrieve = function (id, done) {
       });
     } else {
       var data = JSON.parse(reply);
-      debug('User data fetched from redis store for user: %s', data.username);
+      debug('User data fetched from redis store');
 
       /* istanbul ignore else */
       if (_.isEqual(data.token, id)) {
@@ -219,7 +223,6 @@ var middleware = function () {
   var func = verify;
   func.unless = unless;
   return func;
-
 };
 
 

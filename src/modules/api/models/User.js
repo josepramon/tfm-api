@@ -3,7 +3,14 @@
 var
   mongoose = require('mongoose'),
   Schema   = mongoose.Schema,
-  bcrypt   = require('bcryptjs');
+  bcrypt   = require('bcryptjs'),
+  gravatar = require('gravatar'),
+  dateUtil = require('../../../lib/dateUtil'),
+  role     = require('./Role');
+
+// register some additional schema types
+var mongooseTypes = require('mongoose-types');
+mongooseTypes.loadTypes(mongoose);
 
 
 var UserSchema = new Schema({
@@ -20,10 +27,19 @@ var UserSchema = new Schema({
   },
 
   email: {
-    type: String,
+    type: mongoose.SchemaTypes.Email,
     unique: true,
     required: true
-  }
+  },
+
+  role: {
+    type: Schema.ObjectId,
+    ref: 'Role',
+    required: true
+  },
+
+  // other user details
+  profile: {}
 
 }, {
 
@@ -35,7 +51,17 @@ var UserSchema = new Schema({
       delete ret._id;
 
       // filter out some attributes from the output
+      delete ret.__v;
       delete ret.password;
+
+      // format the role/privileges nodes
+      role = doc.role || {};
+      ret.role       = role.name,
+      ret.privileges = role.privileges,
+
+      // convert the dates to timestamps
+      ret.created_at   = dateUtil.dateToTimestamp(ret.created_at);
+      ret.updated_at   = dateUtil.dateToTimestamp(ret.updated_at);
     }
   },
   toObject: {
@@ -79,9 +105,27 @@ UserSchema.pre('save', function (next) {
   }
 });
 
+// Gravatar middleware on UserSchema
+// Sets a the user avatar from gravatar (if no custom avatar supplied)
+// before saving the model to the database
+UserSchema.pre('save', function (next) {
+  var user = this;
+
+  if(!user.profile) {
+    user.profile = {};
+  }
+
+  if(!user.profile.avatar) {
+    user.profile.avatar = gravatar.url(user.email);
+  }
+
+  next();
+});
+
 
 // Custom methods and attributes
 // ----------------------------------
+UserSchema.statics.safeAttrs = ['username', 'email', 'profile'];
 UserSchema.methods.getRefs = function() { return []; };
 
 //Password verification
@@ -96,9 +140,31 @@ UserSchema.methods.comparePassword = function (passw, cb) {
 };
 
 
+UserSchema.methods.setPassword = function setPassword (newPassword, oldPassword, cb) {
+  var self = this;
+
+  this.comparePassword(oldPassword, function(err, match) {
+    /* istanbul ignore next */
+    if (err) {
+      return cb(err);
+    }
+
+    if(match) {
+      self.password = newPassword;
+    } else {
+      var validationError = new Error('Incorrect password');
+
+      self.invalidate('oldPassword', validationError);
+    }
+    cb(null);
+  });
+};
+
+
 // Register the plugins
 // ----------------------------------
 UserSchema.plugin( require('mongoose-paginate') );
+UserSchema.plugin( require('mongoose-deep-populate')(mongoose) );
 UserSchema.plugin( require('mongoose-time')() );
 
 

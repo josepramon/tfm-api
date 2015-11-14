@@ -127,7 +127,7 @@ describe('lib/mongoConfigParser', function() {
 
       mockFs({
         'envDir' : {
-          'default.json' : '{ "host" : "localhost", "port" : 27017, "user" : null, "password" : null, "database" : "tfmAPI" }'
+          'default.json' : '{ "host" : "localhost", "port" : 27017, "user" : null, "password" : null, "database" : "tfmAPI_test" }'
         }
       });
 
@@ -135,7 +135,7 @@ describe('lib/mongoConfigParser', function() {
 
       expect(mongoConn.host).to.be.equal('localhost');
       expect(mongoConn.port).to.be.equal(27017);
-      expect(mongoConn.database).to.be.equal('tfmAPI');
+      expect(mongoConn.database).to.be.equal('tfmAPI_test');
       expect(mongoConn.user).to.be.null;
       expect(mongoConn.password).to.be.null;
 
@@ -147,7 +147,7 @@ describe('lib/mongoConfigParser', function() {
 
       mockFs({
         'envDir' : {
-          'default.json' : '{ "host" : "localhost", "port" : 27017, "user" : null, "password" : null, "database" : "tfmAPI" }',
+          'default.json' : '{ "host" : "localhost", "port" : 27017, "user" : null, "password" : null, "database" : "tfmAPI_test" }',
           'defaulthostname.json' : '{ "host" : "defaultHostName", "port" : 1234, "user" : "userName", "password" : "secret", "database" : "whatever" }',
         }
       });
@@ -170,7 +170,7 @@ describe('lib/mongoConfigParser', function() {
 
       mockFs({
         'envDir' : {
-          'default.json' : '{ "host" : "localhost", "port" : 27017, "user" : null, "password" : null, "database" : "tfmAPI" }',
+          'default.json' : '{ "host" : "localhost", "port" : 27017, "user" : null, "password" : null, "database" : "tfmAPI_test" }',
           'nonMatchingRandomName.json' : '{ "host" : "defaultHostName", "port" : 1234, "user" : "userName", "password" : "secret", "database" : "whatever" }',
         }
       });
@@ -181,7 +181,7 @@ describe('lib/mongoConfigParser', function() {
 
       expect(mongoConn.host).to.be.equal('localhost');
       expect(mongoConn.port).to.be.equal(27017);
-      expect(mongoConn.database).to.be.equal('tfmAPI');
+      expect(mongoConn.database).to.be.equal('tfmAPI_test');
       expect(mongoConn.user).to.be.null;
       expect(mongoConn.password).to.be.null;
 

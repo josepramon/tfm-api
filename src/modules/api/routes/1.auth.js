@@ -1,8 +1,10 @@
 'use strict';
 
 var
-  authMiddleware = require('../middleware/authenticate'),
-  AuthController = require('../controllers/AuthController');
+  authMiddleware                  = require('../middleware/authenticate'),
+  restrictByApplicationMiddleware = require('../middleware/restrictByApplication'),
+  AuthController                  = require('../controllers/AuthController'),
+  controller                      = new AuthController();
 
 
 // AUTH RELATED ROUTES
@@ -28,6 +30,11 @@ module.exports = function(router) {
    * @apiSuccess {String} token JWT.
    * @apiSuccess {Number} token_exp Token expiry date (Unix time).
    * @apiSuccess {Number} token_iat Token issue date (Unix time).
+   * @apiSuccess {String} role      User role
+   * @apiSuccess {Object} token_iat Privileges, used to determine on the frontend
+   *                                apps which modules/actions the user has access
+   *                                (additionally the API performs this checks on
+   *                                the API endpoints)
    *
    * @apiSuccessExample {json} Success-Response:
    *     HTTP/1.1 200 OK
@@ -39,7 +46,9 @@ module.exports = function(router) {
    *         "email": "demo@demo.demo",
    *         "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NGVlNjE3NTQ2NWVhZWUzNWNkMjM3ZWQiLCJpYXQiOjE0Mjc4MTQ0ODYsImV4cCI6MTQyNzgxODA4Nn0.pZVBE_GKvJUr4BI7BDeTmIIy9gQ2p3tlrG2pcMcjm3U",
    *         "token_exp": 1427818086,
-   *         "token_iat": 1427814486
+   *         "token_iat": 1427814486,
+   *         "role": "ADMIN",
+   *         "privileges": {}
    *       }
    *     }
    *
@@ -56,7 +65,7 @@ module.exports = function(router) {
    *       }
    *     }
    */
-  router.route('/auth').post(authMiddleware, AuthController.login);
+  router.route('/auth').post(restrictByApplicationMiddleware, authMiddleware, controller.login.bind(controller));
 
 
   /**
@@ -94,7 +103,7 @@ module.exports = function(router) {
    *       }
    *     }
    */
-  router.route('/auth/:token').delete(AuthController.logout);
+  router.route('/auth/:token').delete(controller.logout.bind(controller));
 
 
   /**
@@ -142,7 +151,7 @@ module.exports = function(router) {
    *       }
    *     }
    */
-  router.route('/auth/:token').put(AuthController.tokenRenew);
+  router.route('/auth/:token').put(controller.tokenRenew.bind(controller));
 
 
   /**
@@ -180,6 +189,6 @@ module.exports = function(router) {
    *       }
    *     }
    */
-  router.route('/auth/:token').get(AuthController.tokenVerify);
+  router.route('/auth/:token').get(controller.tokenVerify.bind(controller));
 
 };

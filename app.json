@@ -1,0 +1,10 @@
+{
+  "apps" : [{
+    "name"        : "helpdesk-api",
+    "script"      : "src/app.js",
+    "watch"       : false,
+    "error_file" : "./log/helpdesk-api-err.log",
+    "out_file"   : "./log/helpdesk-api-out.log",
+    "pid_file"   : "./pid/helpdesk-api.pid"
+  }]
+}

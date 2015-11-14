@@ -19,25 +19,23 @@ class Request {
    * @param {Object} the request object, returned by Express
    */
   constructor(request) {
-    this.req = request;
+    this.req        = request;
+    this.customOpts = {};
   }
 
 
-  /**
-   * Getter for the data 'owner' (the client)
-   *
-   * All the documents have a 'owner' attribute to filter out the data
-   * from other clients. Currently, this method just returns the user id
-   * from the token.
-   *
-   * @todo  I think we should add another key to the user obj. (something like
-   *        clientId) and use that so multiple different users con login for a
-   *        given client.
-   *
-   * @return {ObjectId} the 'owner' id
-   */
-  getOwnerFromAuth() {
-    return this.req.user.userId;
+  parseExpands(expands) {
+    if(!Array.isArray(expands)) {
+      expands = [expands];
+    }
+    expands = _.reduce(_.compact(expands), function(memo, expand) {
+      /* istanbul ignore next */
+      var expandParts = expand && _.isString(expand) ? expand.split(',') : [];
+      return memo.concat(expandParts);
+    }, []);
+    expands = _.unique(expands);
+
+    return expands;
   }
 
 
@@ -49,18 +47,8 @@ class Request {
     maxDepth = maxDepth || 1;
 
     var
-      expands       = this.req.query.include,
+      expands       = this.parseExpands(this.req.query.include),
       filteredSpans = {};
-
-    if(!Array.isArray(expands)) {
-      expands = [expands];
-    }
-    expands = _.reduce(_.compact(expands), function(memo, expand) {
-      /* istanbul ignore next */
-      var expandParts = expand && _.isString(expand) ? expand.split(',') : [];
-      return memo.concat(expandParts);
-    }, []);
-    expands = _.unique(expands);
 
     if(expands.length) {
       // filter out the expands to a maximum depth
@@ -100,7 +88,15 @@ class Request {
       opts.sortBy = sort;
     }
 
-    return opts;
+    return _.extend(opts, this.customOpts);
+  }
+
+
+  /**
+   * Adds a custom option used on the mongoose queries
+   */
+  addOption(k,v) {
+    this.customOpts[k] = v;
   }
 
 
@@ -139,6 +135,24 @@ class Request {
     }
 
     return sortOpts;
+  }
+
+
+  get filters() {
+    var filters = null;
+    // parse the filters, something like:
+    // ?filter=filterName:params,anotherFilterName:params
+    // the filter might contain no params
+    if(this.req.query.filter) {
+      filters = {};
+      this.req.query.filter.split(',').forEach(function(filter) {
+        let filterParts = filter.split(':');
+        filters[filterParts[0]] = filterParts[1];
+      });
+    }
+
+
+    return filters;
   }
 
 }

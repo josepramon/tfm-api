@@ -80,6 +80,8 @@ class ResponseData {
   _formatItem(item, expands, stack) {
     stack = stack || [];
 
+    if(!item) { return {}; }
+
     var
       // model refs
       expandable = (item.getRefs) ? item.getRefs() : [],
@@ -162,7 +164,7 @@ class ResponseData {
 
     // get the pagination
     var
-      elems      = _.compact(_.flatten([data.populated(attr)||data[attr]])),
+      elems      = _.compact(_.flatten([data[attr]||data.populated(attr)])),
       totalElems = elems.length;
 
     var

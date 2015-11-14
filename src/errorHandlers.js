@@ -1,5 +1,8 @@
 'use strict';
 
+var debug = require('debug')('ApiApp:Error:');
+
+
 var HTTPerrors = [
   100,101,
   200,201,202,203,204,205,206,
@@ -16,6 +19,14 @@ var errors = {
   notFound: {
     code:    404,
     message: 'Not found'
+  },
+  badRequest: {
+    code:    400,
+    message: 'Bad request'
+  },
+  accessDenied: {
+    code:    401,
+    message: 'Access denied'
   },
   validation: {
     code:    422,
@@ -83,6 +94,8 @@ var getPathNameFromMongoUniqueIndexError = function(errMessage) {
 var appErrorHandler = function(err, req, res, next) {
   var errResponse;
 
+  debug('appErrorHandler', err);
+
   // normalize the code
   if(err.code) {
     err.code = normalizeErrorCode(err);
@@ -123,8 +136,15 @@ var _errorResponseFromCustomHttpError = function(err) {
   if(err.message) {
     message = err.message;
   } else {
-    message = (err.code === 404) ?
-      errors.notFound.message : /* istanbul ignore next */ errors.default.message;
+    if(err.code === 404) {
+      message = errors.notFound.message;
+    } else if(err.code === 401) {
+      message = errors.accessDenied.message;
+    } else if(err.code === 400) {
+      message = errors.badRequest.message;
+    } else {
+      message = errors.default.message;
+    }
   }
 
   return {error: {
