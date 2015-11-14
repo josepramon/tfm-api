@@ -1,6 +1,6 @@
 {
   "name": "TFM-API",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "description": "TFM API server",
   "author": "Josep Ramon Camps Lladó <jrcamps@gmail.com>",
   "homepage": "http://www.mosaiqo.com",
@@ -13,7 +13,6 @@
     "cors": "^2.7.1",
     "debug": "^2.2.0",
     "express": "~4.13.3",
-    "express-cluster": "0.0.4",
     "express-jwt": "^3.1.0",
     "express-paginate": "0.0.9",
     "express-unless": "^0.3.0",
@@ -67,7 +66,6 @@
     "mockery": "^1.4.0",
     "mongodb": "^2.0.47",
     "node-mocks-http": "^1.5.0",
-    "pm2": "^0.15.10",
     "redis-mock": "^0.5.0",
     "sinon": "^1.17.2",
     "supertest": "^1.1.0",
@@ -75,8 +73,7 @@
   },
   "scripts": {
     "test": "grunt test",
-    "start": "pm2 start app.json",
-    "stop": "pm2 stop app.json"
+    "start": "node start src/app.js"
   },
   "private": true,
   "apidoc": {
