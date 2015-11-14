@@ -21,7 +21,7 @@ var
   cors       = require('cors'),
   config     = require('./config'),
 
-  port       = process.env.PORT || 5000;
+  port       = config.serverPort || process.env.PORT || 5000;
 
 
 
