@@ -19,7 +19,8 @@ class Request {
    * @param {Object} the request object, returned by Express
    */
   constructor(request) {
-    this.req = request;
+    this.req        = request;
+    this.customOpts = {};
   }
 
 
@@ -87,7 +88,15 @@ class Request {
       opts.sortBy = sort;
     }
 
-    return opts;
+    return _.extend(opts, this.customOpts);
+  }
+
+
+  /**
+   * Adds a custom option used on the mongoose queries
+   */
+  addOption(k,v) {
+    this.customOpts[k] = v;
   }
 
 

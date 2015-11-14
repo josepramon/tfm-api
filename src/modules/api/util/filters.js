@@ -28,9 +28,15 @@ module.exports = {
    * Filter based on string searching over multiple model attributes
    * (using a 'text' index deffined in the collection).
    */
-  getSearchFilters: function(filters) {
+  getSearchFilters: function(filters, request) {
+
     if(filters.search) {
       var q = stringUtil.unescapeQueryParam(filters.search);
+
+      // override the sort options
+      request.addOption('score', { $meta: 'textScore' });
+      request.addOption('sortBy', { score: { $meta: 'textScore' } });
+
       return { $text: { $search: q, $language: 'none' } };
     }
     return {};

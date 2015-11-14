@@ -67,7 +67,6 @@ class BaseController
       response   = new Response(request, this.expandsURLMap),
       criteria   = this._buildCriteria(request);
 
-
     this.Model.paginate(criteria, request.options, function(err, paginatedResults, pageCount, itemCount) {
       /* istanbul ignore next */
       if (err) { return next(err); }
@@ -179,7 +178,7 @@ class BaseController
   _parseFilters(request) {
     var
       safeAttrsFilters = filters.getSafeAttributesFilters(request.filters, this.Model),
-      searchFilters    = filters.getSearchFilters(request.filters);
+      searchFilters    = filters.getSearchFilters(request.filters, request);
 
     return _.extend({}, safeAttrsFilters, searchFilters);
   }
