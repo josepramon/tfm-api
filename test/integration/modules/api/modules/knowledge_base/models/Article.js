@@ -54,7 +54,7 @@ describe('Knowledge Base Article model', function() {
     var articleData = {
       title:        faker.lorem.sentence(),
       body:         faker.lorem.paragraphs(2),
-      published_at: new Date()
+      publish_date: new Date()
     };
 
     var article = new Article(articleData);

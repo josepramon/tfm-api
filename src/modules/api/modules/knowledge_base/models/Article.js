@@ -18,7 +18,7 @@ var ArticleSchema = new Schema({
   category     : { type: Schema.ObjectId, ref: 'KBCategory' },
 
   published    : { type: Boolean, default: false},
-  published_at : { type: Date, default: Date.now },
+  publish_date : { type: Date, default: Date.now },
 
   created_at   : { type: Date, default: Date.now },
   updated_at   : { type: Date, default: Date.now }
@@ -29,10 +29,6 @@ var ArticleSchema = new Schema({
       // transform _id to id
       ret.id = ret._id;
       delete ret._id;
-
-      // transform published_at to publish_date (WHY ARE WE USING publish_date?)
-      ret.publish_date = ret.published_at;
-      delete ret.published_at;
 
       // filter out some attributes from the output
       delete ret.__v;
@@ -46,12 +42,6 @@ var ArticleSchema = new Schema({
 
   'collection': 'knowledge_base.articles'
 
-});
-
-
-
-ArticleSchema.virtual('publish_date').set(function (date) {
-  this.published_at = dateUtil.timestampToDate(date);
 });
 
 

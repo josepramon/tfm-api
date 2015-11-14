@@ -23,7 +23,7 @@ for(var i=0, l=10; i < l; i++) {
     excerpt      : nl2p(faker.lorem.paragraphs(2)),
     body         : nl2p(faker.lorem.paragraphs(6)),
     published    : true,
-    published_at : date,
+    publish_date : date,
     commentable  : true,
     created_at   : date,
     updated_at   : date
