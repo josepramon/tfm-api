@@ -98,9 +98,9 @@ ArticleSchema.index({
   body:    'text'
 }, {
   weights: {
-    title:   10,
-    excerpt: 5,
-    body:    5
+    title:   5,
+    excerpt: 2,
+    body:    1
   },
   name: 'ArticlesTextIndex'
 });

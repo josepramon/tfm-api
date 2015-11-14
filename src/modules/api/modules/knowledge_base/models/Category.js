@@ -68,8 +68,8 @@ CategorySchema.index({
   description: 'text'
 }, {
   weights: {
-    name:        10,
-    description: 5
+    name:        5,
+    description: 1
   },
   name: 'CategoriesTextIndex'
 });
