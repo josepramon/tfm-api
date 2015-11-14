@@ -26,7 +26,7 @@
     "lodash": "^3.10.1",
     "mongoose": "~4.2.4",
     "mongoose-deep-populate": "^2.0.3",
-    "mongoose-paginate": "^4.2.0",
+    "mongoose-paginate": "josepramon/mongoose-paginate#4.2.1",
     "mongoose-time": "^0.1.0",
     "mongoose-types": "^1.0.3",
     "node-uuid": "^1.4.3",
