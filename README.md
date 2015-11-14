@@ -7,20 +7,27 @@
 
 To run the API, the following components are required:
 
-- node & npm
+- node 4.2 & npm
 - mongo
 - redis
 
 
 ## Setup:
 
-- Install dependencies executing: `npm install`
-- Mongo:
+- Install dependencies executing: `npm install`. On some linux systems, some dependencies must be installed first:
+
+```
+apt-get install -y build-essential openssl libssl-dev pkg-config
+apt-get install -y python-software-properties python g++ make
+apt-get install -y libkrb5-dev
+```
+
+- Mongo (optional):
     - Run `grunt mongo:setup` to create the data and logs directories and the PID file, and set the proper permissions. *This is optional, see the README.md file inside the db directory*.
     - Start Mongo by executing `grunt mongo`.
 - Create a file called `env.json` and override any of the settings defined in `env.default.json`. This file contains some application parameters that should be configured, like Mongo, Redis, and mail parameters.
 - With Mongo running, execute `grunt setup` to load some required data into Mongo, create some needed files, etc.
-- Execute `grunt` to start the server.
+- Execute `npm start` to start the server.
 
 
 ### Database settings:
@@ -90,7 +97,7 @@ The `sender` field is the default sender for all the mails originating from the 
 
 ## Usage:
 
-To start the API in *production mode*, un `npm start`. To stop it, `npm stop`.
+To start the API in *production mode*, un `npm start`.
 
 To start the API in *development mode*, use one of the gunt tasks. In development mode, logs are written to *stdout* and the application files are *watched*, so if anything changes the app is automatically restarted.
 

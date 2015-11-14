@@ -10,11 +10,6 @@ db/redis/dump.rdb
 test/coverage
 doc/api
 
-# deployment/production stuff
-ecosystem.json
-log
-pid
-
 # IDE files
 *.sublime-project
 *.sublime-workspace
