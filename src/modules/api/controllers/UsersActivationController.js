@@ -13,6 +13,7 @@ var
   Request         = require('../util/Request'),
   Response        = require('../util/Response'),
   cache           = require('../util/Cache'),
+  RoleUtil        = require('../util/RoleUtil'),
   User            = require('../models/User');
 
 
@@ -298,29 +299,37 @@ class UsersActivationController
       baseUrl = config.sites.users,
       url;
 
-    if(userModel.role && userModel.role.name && (userModel.role.name !== config.roles.user)) {
-      // the user is an admin or a manager, change the base url
-      baseUrl = config.sites.admin;
-    }
+    // retrieve (from redis if available) the regular user role
+    // to determine the activation url
+    RoleUtil.getRoleByName(config.roles.user, function(err, roleModel) {
+      // if the roles are ObjectIds, convert them to strings for the comparison
+      var
+        roleId     = roleModel.id.toHexString   ? roleModel.id.toHexString()   : roleModel.id,
+        userRoleId = userModel.role.toHexString ? userModel.role.toHexString() : userModel.role;
 
-    url = baseUrl + '/#user/activate/' + activationId;
-
-
-    // set the mail parameters
-    var mailData = {
-      to:       userModel.email,
-      subject:  'Account activation',
-      template: 'mail_activateAccount',
-      context: {
-        activationUrl: url
+      if(userRoleId !== roleId) {
+        // the user is an admin or a manager, change the base url
+        baseUrl = config.sites.admin;
       }
-    };
 
+      url = baseUrl + '/#user/activate/' + activationId;
 
-    // send it
-    mailer.send(mailData, function(err, info) {
-      if(err) { return callback(err); }
-      callback(err, userModel);
+      // set the mail parameters
+      var mailData = {
+        to:       userModel.email,
+        subject:  'Account activation',
+        template: 'mail_activateAccount',
+        context: {
+          activationUrl: url
+        }
+      };
+
+      // send it
+      mailer.send(mailData, function(err, info) {
+        if(err) { return callback(err); }
+        callback(err, userModel);
+      });
+
     });
   }
 
