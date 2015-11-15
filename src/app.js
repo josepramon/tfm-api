@@ -70,6 +70,9 @@ var createApp = function() {
   app.use(require('response-time')());
   app.use(require('compression')());
 
+  // enable being used behind a proxy
+  app.set('trust proxy', 'loopback');
+
 
   // SETUP THE PAGINATION MIDDLEWARE
   // =============================================================================
