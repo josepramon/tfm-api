@@ -165,7 +165,7 @@ class ResponseData {
     // get the pagination
     var
       elems      = data.populated(attr) || data[attr],
-      totalElems = elems && elems.length ? elems.length : 0;
+      totalElems = elems ? _.flatten([elems]).length : 0;
 
     var
       paginationOpts = this._getNestedMetaPaginationOptions(expands, attr, totalElems),
