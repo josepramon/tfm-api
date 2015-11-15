@@ -10,7 +10,7 @@ var
  *
  * @param {Object}  filters  Filters
  * @param {Boolean} override If true, the new filters will override
- *                           any preexisting key with the sam name
+ *                           any preexisting key with the same name
  */
 var addFilters = function(filters, override, req, res, next) {
   req.filters = req.filters || {};
@@ -38,6 +38,28 @@ var addFilters = function(filters, override, req, res, next) {
     } else {
       _.defaults(req.filters, filters);
     }
+
+    var stringifiedFilters, currentFilters;
+
+    stringifiedFilters = _.pairs(req.filters).map(function(pair) {
+      return pair.join(':');
+    }).join(',');
+
+
+    req.query      = req.query || {};
+    currentFilters = req.query.filter || '';
+
+    if(_.isArray(currentFilters)) {
+      currentFilters.push(stringifiedFilters);
+    } else {
+      if(currentFilters === '') {
+        currentFilters = stringifiedFilters;
+      } else {
+        stringifiedFilters += ',' + stringifiedFilters;
+      }
+    }
+
+    req.query.filter = currentFilters;
 
     next();
   });
