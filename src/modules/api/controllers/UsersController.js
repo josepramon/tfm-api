@@ -143,6 +143,20 @@ class UsersController extends BaseController
   // Aux. "private" methods
   // =============================================================================
 
+  _parseFilters(request) {
+    var
+      // get the regular filters (on safe attributes)
+      defaultFilters    = super._parseFilters(request),
+      additionalFilters = {};
+
+    if(_.has(request.filters, 'role')) {
+      additionalFilters = {'role': request.filters.role};
+    }
+
+    return _.extend({}, defaultFilters, additionalFilters);
+
+  }
+
   _buildWaterfallOptions(postData) {
     var options = {};
 
