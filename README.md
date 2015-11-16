@@ -97,9 +97,9 @@ The `sender` field is the default sender for all the mails originating from the 
 
 ## Usage:
 
-To start the API in *production mode*, un `npm start`.
+To start the API in *production mode*, run `npm start`.
 
-To start the API in *development mode*, use one of the gunt tasks. In development mode, logs are written to *stdout* and the application files are *watched*, so if anything changes the app is automatically restarted.
+To start the API in *development mode*, use one of the grunt tasks. In development mode, logs are written to *stdout* and the application files are *watched*, so if anything changes the app is automatically restarted.
 
 The gruntfile has 2 primary tasks, the default one and one called *dev*.
 
@@ -109,3 +109,7 @@ The *dev* task does the same as the default one, and does some additional things
 
 - It starts the mongo server used by the API and redis used to cache stuff (like the JWT).
 - It monitors the server files, so whenever changed, the files are linted, tested and the server is restarted.
+
+## Initial administrator creation:
+
+Run `node ./util/createUser.js` to create the initial administrator. This script can also be used to create agents and regular users (only for testing purposes, regular users and agents should be registered in with the apps).
