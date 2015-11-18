@@ -163,12 +163,13 @@ class BaseController
   /**
    * Filters parsing for the querys
    *
-   * The requests might contain filters like
+   * Filtering for the db queries. The filters might come from the request, defined
+   * in the querystring with something like
    * `?filter=filterName:params,anotherFilterName:params`
-   * to limit the results.
+   * or may be injected from some middleware.
    *
-   * By default, the method enables filtering using regular expressions
-   * on the model safe attributes, and with the special 'search' filter,
+   * By default, the only querystring filters accepted are the ones related to
+   * the model safe attributes, and the special 'search' filter,
    * that allows filtering by the presence of some string in multiple attributes
    * (using a 'text' index deffined in the collection).
    *
@@ -177,10 +178,21 @@ class BaseController
    */
   _parseFilters(request) {
     var
+      // retrieve the filters from the querystring for the 'safe' attributes
       safeAttrsFilters = filters.getSafeAttributesFilters(request.filters, this.Model),
-      searchFilters    = filters.getSearchFilters(request.filters, request);
 
-    return _.extend({}, safeAttrsFilters, searchFilters);
+      // retrieve the search
+      searchFilters = filters.getSearchFilters(request.filters, request),
+
+      // other filters
+      additionalFilters = {};
+
+    // limit by owner (this might come from some middleware)
+    if(_.has(request.filters, 'owner')) {
+      additionalFilters = {'owner': request.filters.owner};
+    }
+
+    return _.extend({}, safeAttrsFilters, searchFilters, additionalFilters);
   }
 
 

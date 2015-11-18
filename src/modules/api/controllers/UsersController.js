@@ -12,7 +12,7 @@ var
   ExpandsURLMap   = require('../util/ExpandsURLMap'),
 
   // Base class
-  BaseController  = require('../controllers/BaseController'),
+  BaseController  = require('./BaseController'),
 
   // Model managed by this controller
   User            = require('../models/User');
@@ -25,6 +25,7 @@ class UsersController extends BaseController
 {
   constructor() {
     super();
+
     /**
      * @type {Model}
      */

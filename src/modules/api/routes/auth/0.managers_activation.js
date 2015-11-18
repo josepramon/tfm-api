@@ -3,8 +3,9 @@
 var
   _                         = require('lodash'),
   config                    = require('src/config'),
-  UsersActivationController = require('../controllers/UsersActivationController'),
-  controller                = new UsersActivationController(true);
+  moduleBasePath            = '../..',
+  UsersActivationController = require(moduleBasePath + '/controllers/UsersActivationController'),
+  controller                = new UsersActivationController(false);
 
 
 
@@ -18,13 +19,13 @@ module.exports = function(router) {
    */
 
   /**
-   * @api {patch} /auth/activate/users/:id Activate an user account
-   * @apiName ActivateUser
+   * @api {patch} /auth/activate/managers/:id Activate a manager account
+   * @apiName ActivateManager
    * @apiGroup Auth_Activate
-   * @apiDescription Activate an user account and set any additional details for that user (like the profile)
+   * @apiDescription Activate a manager account and set any additional details for that user (like the password)
    *
    * @apiExample Example usage:
-   * curl -X PATCH -H "Content-Type: application/x-www-form-urlencoded" 'http://localhost:9000/api/auth/activate/users/55a4fc5b356e6df4d223618e'
+   * curl -X PATCH -H "Content-Type: application/x-www-form-urlencoded" 'http://localhost:9000/api/auth/activate/managers/55a4fc5b356e6df4d223618e'
    *
    * @apiSuccess {Object} meta                 Response metadata
    * @apiSuccess {String} meta.url             Resource url
@@ -41,7 +42,7 @@ module.exports = function(router) {
    *     HTTP/1.1 200 OK
    *     {
    *       "meta": {
-   *         "url": "http://localhost:8000/api/auth/activate/users/e46e68f7-3531-42fa-8b3d-cca3856f746e"
+   *         "url": "http://localhost:8000/api/auth/activate/managers/e46e68f7-3531-42fa-8b3d-cca3856f746e"
    *       },
    *       "data": {
    *         "id": "562e18f5ea83189f4497e01a",
@@ -53,6 +54,6 @@ module.exports = function(router) {
    *     }
    *
    */
-  router.route('/auth/activate/users/:id').patch(controller.activate.bind(controller));
+  router.route('/auth/activate/managers/:id').patch(controller.activate.bind(controller));
 
 };
