@@ -95,6 +95,65 @@ The config should be something like:
 The `sender` field is the default sender for all the mails originating from the API.
 
 
+## Uploads settings:
+
+File uploads can be stored locally or in Amazon S3. The configuration for local uploads, defined in `env.json`, should be something like
+
+```
+{
+  "uploads": {
+    "mode":  "local",
+    "dest":  "/path/to/the/upload/dir",
+    "host":  "localhost:9999",
+    "path":  "uploads",
+    "host":  null
+  }
+}
+```
+
+where:
+
+- *dest*: the destination directory where the files will be stored
+- *host*: host that will serve the files.  
+  On production, the files should not be served by the API, it's better to serve directly form Nginx (or Apache or whatever).  
+  On development mode, this can be set to null, and the API will serve the files from the path defined in the key 'path'.
+- *path*: url path from where the images will be served.
+
+So, for example, with the previous configuration, an uploaded file  `whatever.jpg` will be available at `http://localhost/uploads/whatever.jpg`.
+
+For S3 uploads, the configuration should be something like:
+
+```
+ {
+  "uploads": {
+    "mode":        "s3",
+    "path":        "uploads",
+    "host":        "your-bucket.s3.amazonaws.com"
+    "bucket":      "the-bucket-name",
+    "region":      "eu-central-1"
+  },
+  "s3": {
+    "accessKey":   "your-S3-accessKey",
+    "accessKeyId": "your-S3-accessKeyId"
+  }
+ }
+```
+
+where:
+
+- *uploads.path*: 'directory' for the file.
+- *uploads.host*: host used to access the files (not used for the upload progress but in order to retrieve later the files). Set the value to `your-bucket.3.amazonaws.com` or to your custom domain (requires a CNAME DNS record pointing to AWS, see the [Amazon docs](http://docs.aws.amazon.com/AmazonS3/latest/dev/VirtualHosting.html))
+- *uploads.bucket*: S3 bucket that will store the file uploads.
+
+and
+
+- *s3.accessKey*: S3 access key
+- *s3.accessKeyId*: S3 access key id
+- *uploads.region*: AWS region where the buckets are located.
+
+The _bucket_, _region_ and _host_ keys are defined inside the _uploads_ node instead of the generic _s3_ one so diferent S3 buckets/configurations can be used for diferent purposes.
+
+
 ## Usage:
 
 To start the API in *production mode*, run `npm start`.
