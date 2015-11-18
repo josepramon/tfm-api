@@ -10,7 +10,6 @@ var
   mailer          = require('src/lib/mailer'),
   crypt           = require('src/lib/crypt'),
   Request         = require('../util/Request'),
-  Request         = require('../util/Request'),
   Response        = require('../util/Response'),
   cache           = require('../util/Cache'),
   RoleUtil        = require('../util/RoleUtil'),
