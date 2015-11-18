@@ -3,8 +3,9 @@
 var
   _                      = require('lodash'),
   config                 = require('src/config'),
+  moduleBasePath         = '../..',
 
-  PasswordRecoveryController = require('../controllers/PasswordRecoveryController'),
+  PasswordRecoveryController = require(moduleBasePath + '/controllers/PasswordRecoveryController'),
   controller                 = new PasswordRecoveryController();
 
 

@@ -1,9 +1,10 @@
 'use strict';
 
 var
-  authMiddleware                  = require('../middleware/authenticate'),
-  restrictByApplicationMiddleware = require('../middleware/restrictByApplication'),
-  AuthController                  = require('../controllers/AuthController'),
+  moduleBasePath                  = '../..',
+  authMiddleware                  = require(moduleBasePath + '/middleware/authenticate'),
+  restrictByApplicationMiddleware = require(moduleBasePath + '/middleware/restrictByApplication'),
+  AuthController                  = require(moduleBasePath + '/controllers/AuthController'),
   controller                      = new AuthController();
 
 
