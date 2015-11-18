@@ -39,7 +39,10 @@ var UserSchema = new Schema({
   },
 
   // other user details
-  profile: {}
+  profile: {},
+
+  created_at : { type: Date, default: Date.now },
+  updated_at : { type: Date, default: Date.now }
 
 }, {
 

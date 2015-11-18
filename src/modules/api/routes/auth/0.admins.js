@@ -3,18 +3,19 @@
 var
   _                      = require('lodash'),
   config                 = require('src/config'),
+  moduleBasePath         = '../..',
 
-  InjectParamsMiddleware = require('src/modules/api/middleware/bodyParamsInjector').middleware,
+  InjectParamsMiddleware = require(moduleBasePath + '/middleware/bodyParamsInjector').middleware,
 
-  AddFiltersMiddleware   = require('src/modules/api/middleware/addFilters').middleware,
+  AddFiltersMiddleware   = require(moduleBasePath + '/middleware/addFilters').middleware,
 
   // restrict access to the routes based on the user privileges
-  PrivilegesMiddleware   = require('src/modules/api/middleware/privilegesAccessFilter').middleware,
+  PrivilegesMiddleware   = require(moduleBasePath + '/middleware/privilegesAccessFilter').middleware,
 
   // don't let a user access/modify another user (unless admins)
-  userRestrictToItself   = require('src/modules/api/middleware/userRestrictToItself').middleware,
+  userRestrictToItself   = require(moduleBasePath + '/middleware/userRestrictToItself').middleware,
 
-  UsersController        = require('../controllers/UsersController'),
+  UsersController        = require(moduleBasePath + '/controllers/UsersController'),
   controller             = new UsersController();
 
 
@@ -26,7 +27,7 @@ var accessControlFilter = _.partial(PrivilegesMiddleware, requiredPermissions);
 
 // Get the users role id (used on the next middlewares)
 var
-  RoleUtil = require('../util/RoleUtil'),
+  RoleUtil = require(moduleBasePath + '/util/RoleUtil'),
   roleId   = RoleUtil.getIdCb( config.roles.admin );
 
 

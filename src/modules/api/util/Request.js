@@ -23,6 +23,19 @@ class Request {
     this.customOpts = {};
   }
 
+  /**
+   * Getter for the data 'owner' (the client)
+   *
+   * Soem documents have a 'owner' attribute to filter out the data
+   * from other users. Currently, this method just returns the user id
+   * from the token.
+   *
+   * @return {ObjectId} the 'owner' id
+   */
+  getOwnerFromAuth() {
+    return this.req.user.userId;
+  }
+
 
   parseExpands(expands) {
     if(!Array.isArray(expands)) {

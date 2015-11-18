@@ -90,6 +90,17 @@ var createApp = function() {
   app.use('/api', API);
 
 
+  // Static uploads serving
+  //
+  // If the uploads are enabled, enable static file serving for that files.
+  // On production, the files should not be served by the API, it's better
+  // to serve directly form Nginx (or Apache or whatever).
+  // =============================================================================
+  if(config.uploads && config.uploads.mode === 'local' && !config.uploads.host) {
+    app.use('/'+config.uploads.path, express.static(config.uploads.dest));
+  }
+
+
   // ERROR HANDLING
   // =============================================================================
 

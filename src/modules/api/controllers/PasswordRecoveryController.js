@@ -7,7 +7,6 @@ var
   errors          = require('src/lib/errors'),
   mailer          = require('src/lib/mailer'),
   Request         = require('../util/Request'),
-  Request         = require('../util/Request'),
   Response        = require('../util/Response'),
   cache           = require('../util/Cache'),
   User            = require('../models/User');
