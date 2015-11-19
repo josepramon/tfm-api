@@ -14,9 +14,8 @@ var
   unless       = require('express-unless'),
   jsonwebtoken = require('jsonwebtoken'),
   errors       = require('./errors'),
-  redis        = require('redis'),
   config       = require('src/config'),
-  client       = redis.createClient(config.redis.port, config.redis.host),
+  client       = require('src/lib/db/redis'),
 
   TOKEN_EXPIRATION     = 60 * 60, // 1 hour
   JWT_SECRET           = config.jwtSecret;

@@ -2,9 +2,7 @@
 
 var
   _      = require('lodash'),
-  config = require('src/config'),
-  redis  = require('redis'),
-  client = redis.createClient(config.redis.port, config.redis.host);
+  client = require('src/lib/db/redis');
 
 
 var cacheGet = function(key, callback) {
