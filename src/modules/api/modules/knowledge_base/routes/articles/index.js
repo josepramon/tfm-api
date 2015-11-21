@@ -64,19 +64,20 @@ module.exports = function(router) {
     /**
      * @apiDefine KnowledgeBase_Articles_SingleEntityResponse
      *
-     * @apiSuccess {Object} data                 The Article data
-     * @apiSuccess {String} data.id              Id
-     * @apiSuccess {String} data.title           Title
-     * @apiSuccess {String} data.body            Article body
-     * @apiSuccess {String} data.slug            URL slug
-     * @apiSuccess {String} [data.excerpt]       Excerpt
-     * @apiSuccess {String} data.published       Publish status
-     * @apiSuccess {String} [data.publish_date]  Publish date
-     * @apiSuccess {String} data.created_at      Creation date
-     * @apiSuccess {String} data.updated_at      Last update date
-     * @apiSuccess {String} data.commentable     Commenting enabled
-     * @apiSuccess {String} data.tags            Post tags. Collapsed by default (only a `meta` node with the collection url and the item count).
-     *                                           Can be expanded to the full tag objects (see the `include` parameter)
+     * @apiSuccess {Object}  data                 The Article data
+     * @apiSuccess {String}  data.id              Id
+     * @apiSuccess {String}  data.title           Title
+     * @apiSuccess {String}  data.body            Article body
+     * @apiSuccess {String}  data.slug            URL slug
+     * @apiSuccess {String}  [data.excerpt]       Excerpt
+     * @apiSuccess {Boolean} data.published       Publish status
+     * @apiSuccess {String}  [data.publish_date]  Publish date
+     * @apiSuccess {String}  data.created_at      Creation date
+     * @apiSuccess {String}  data.updated_at      Last update date
+     * @apiSuccess {Array}   [data.tags]          Article tags. Collapsed by default (only a `meta` node with the collection url and the item count).
+     *                                            Can be expanded to the full tag objects (see the `include` parameter)
+     * @apiSuccess {Object}  [data.category]      Article category
+     * @apiSuccess {Array}   [data.attachments]   File atachments.
      *
      */
 
@@ -86,18 +87,19 @@ module.exports = function(router) {
      *
      * @apiSuccess {Object} [meta.paginator]     Pagination params
      * @apiSuccess {Object[]} data               The Articles data
-     * @apiSuccess {String} data.id              Id
-     * @apiSuccess {String} data.title           Title
-     * @apiSuccess {String} data.body            Article body
-     * @apiSuccess {String} data.slug            URL slug
-     * @apiSuccess {String} [data.excerpt]       Excerpt
-     * @apiSuccess {String} data.published       Publish status
-     * @apiSuccess {String} [data.publish_date]  Publish date
-     * @apiSuccess {String} data.created_at      Creation date
-     * @apiSuccess {String} data.updated_at      Last update date
-     * @apiSuccess {String} data.commentable     Commenting enabled
-     * @apiSuccess {String} data.tags            Post tags. Collapsed by default (only a `meta` node with the collection url and the item count).
-     *                                           Can be expanded to the full tag objects (see the `include` parameter)
+     * @apiSuccess {String}  data.id              Id
+     * @apiSuccess {String}  data.title           Title
+     * @apiSuccess {String}  data.body            Article body
+     * @apiSuccess {String}  data.slug            URL slug
+     * @apiSuccess {String}  [data.excerpt]       Excerpt
+     * @apiSuccess {Boolean} data.published       Publish status
+     * @apiSuccess {String}  [data.publish_date]  Publish date
+     * @apiSuccess {String}  data.created_at      Creation date
+     * @apiSuccess {String}  data.updated_at      Last update date
+     * @apiSuccess {Array}   [data.tags]          Article tags. Collapsed by default (only a `meta` node with the collection url and the item count).
+     *                                            Can be expanded to the full tag objects (see the `include` parameter)
+     * @apiSuccess {Object}  [data.category]      Article category
+     * @apiSuccess {Array}   [data.attachments]   File atachments.
      *
      */
 
@@ -136,7 +138,6 @@ module.exports = function(router) {
      *           "title": "Article title",
      *           "updated_at": 1434627873,
      *           "created_at": 1434627873,
-     *           "commentable": true,
      *           "publish_date": 1434540,
      *           "published": true,
      *           "id": "5582af212207075ddbc42210",
@@ -154,7 +155,6 @@ module.exports = function(router) {
      *           "title": "Article title",
      *           "updated_at": 1434628060,
      *           "created_at": 1434628060,
-     *           "commentable": true,
      *           "publish_date": 1434540,
      *           "published": true,
      *           "id": "5582afdc2cf7b648dcf84aba",
@@ -177,20 +177,19 @@ module.exports = function(router) {
      * @apiName Create
      * @apiGroup KnowledgeBase_Articles
      *
-     * @apiParam {String} title          Post title.
-     * @apiParam {String} body           Post content.
+     * @apiParam {String} title          Article title.
+     * @apiParam {String} body           Article content.
      * @apiParam {String} [excerpt]      Excerpt.
      * @apiParam {Boolean} published     Publish status.
      * @apiParam {Number} [publish_date] Publish date, as a timestamp. If `published` is true and the `publish_date` is
      *                                   provided, the post will not be published until that date.
-     * @apiParam {String} commentable    Enable user comments.
-     * @apiParam {mixed}  tags           Post tags, as objects (an array of this objects is accepted)
+     * @apiParam {mixed}  tags           Article tags, as objects (an array of this objects is accepted)
      *                                   The objects must have an id attribute for existing tags. If the tag does not have
      *                                   an ID it is assumed to be a new one and the creation of the tag will be attempted.
      * @apiUse KnowledgeBase_Articles_CommonApiParams
      *
      * @apiExample Example usage:
-     * curl -X POST -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSIsImlhdCI6MTQzNDYzMzgwNCwiZXhwIjoxNDM0NjM3NDA0fQ.IwPItcFLIDzA1MvwDXNYjVF0PxVcQ_Mft5wAU-2D8bY" -H "Content-Type: application/x-www-form-urlencoded" -d 'title=Article+title&slug=article-slug&excerpt=Article+excerpt&body=Article+body&commentable=1&published=1&publish_date=1434540172' http://localhost:9000/api/knowledge_base/articles
+     * curl -X POST -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSIsImlhdCI6MTQzNDYzMzgwNCwiZXhwIjoxNDM0NjM3NDA0fQ.IwPItcFLIDzA1MvwDXNYjVF0PxVcQ_Mft5wAU-2D8bY" -H "Content-Type: application/x-www-form-urlencoded" -d 'title=Article+title&slug=article-slug&excerpt=Article+excerpt&body=Article+body&published=1&publish_date=1434540172' http://localhost:9000/api/knowledge_base/articles
      *
      * @apiUse KnowledgeBase_Articles_CommonApiResponseHeader
      * @apiUse KnowledgeBase_Articles_SingleEntityResponse
@@ -247,7 +246,6 @@ module.exports = function(router) {
      *         "body": "HOLAQUETAL",
      *         "updated_at": 1434622332,
      *         "created_at": 1434518089,
-     *         "commentable": true,
      *         "publish_date": 1434540,
      *         "published": true,
      *         "id": "5581f70e4901e5baa84a9652",
@@ -270,8 +268,8 @@ module.exports = function(router) {
      * @apiDescription Update the article with this id
      * @apiGroup KnowledgeBase_Articles
      *
-     * @apiParam {String} title          Post title.
-     * @apiParam {String} body           Post content.
+     * @apiParam {String} title          Article title.
+     * @apiParam {String} body           Article content.
      * @apiParam {String} [slug]         Slug. If there's already some post with the same slug, a numeric suffix will be added.
      *                                   For example, if the requested slug is *foo* and there's another post with that slug,
      *                                   the slug for this post will be *foo-1*
@@ -279,14 +277,13 @@ module.exports = function(router) {
      * @apiParam {Boolean} published     Publish status.
      * @apiParam {Number} [publish_date] Publish date, as a timestamp. If `published` is true and the `publish_date` is
      *                                   provided, the post will not be published until that date.
-     * @apiParam {String} commentable    Enable user comments.
-     * @apiParam {mixed}  tags           Post tags, as objects (an array of this objects is accepted)
+     * @apiParam {mixed}  tags           Article tags, as objects (an array of this objects is accepted)
      *                                   The objects must have an id attribute for existing tags. If the tag does not have
      *                                   an ID it is assumed to be a new one and the creation of the tag will be attempted.
      * @apiUse KnowledgeBase_Articles_CommonApiParams
      *
      * @apiExample Example usage:
-     * curl -X PUT -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSIsImlhdCI6MTQzNDYzMzgwNCwiZXhwIjoxNDM0NjM3NDA0fQ.IwPItcFLIDzA1MvwDXNYjVF0PxVcQ_Mft5wAU-2D8bY" -H "Content-Type: application/x-www-form-urlencoded" -d 'title=Test&slug=this-is-a-test&excerpt=Holaquetal&body=HOCTL%C2%B7LA&commentable=1&published=1&publish_date=1434540172' http://localhost:9000/api/knowledge_base/articles/5581f70e4901e5baa84a9652
+     * curl -X PUT -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMSIsImlhdCI6MTQzNDYzMzgwNCwiZXhwIjoxNDM0NjM3NDA0fQ.IwPItcFLIDzA1MvwDXNYjVF0PxVcQ_Mft5wAU-2D8bY" -H "Content-Type: application/x-www-form-urlencoded" -d 'title=Test&slug=this-is-a-test&excerpt=Holaquetal&body=HOCTL%C2%B7LA&published=1&publish_date=1434540172' http://localhost:9000/api/knowledge_base/articles/5581f70e4901e5baa84a9652
      *
      * @apiUse KnowledgeBase_Articles_CommonApiResponseHeader
      * @apiUse KnowledgeBase_Articles_SingleEntityResponse
@@ -306,7 +303,6 @@ module.exports = function(router) {
      *         "body": "HOLAQUETAL",
      *         "updated_at": 1434636343,
      *         "created_at": 1434518089,
-     *         "commentable": true,
      *         "publish_date": 1434540,
      *         "published": true,
      *         "id": "5581f70e4901e5baa84a9652",
@@ -329,8 +325,8 @@ module.exports = function(router) {
      * @apiDescription Update the article with this id. Only provided values will be applied
      * @apiGroup KnowledgeBase_Articles
      *
-     * @apiParam {String} [title]        Post title.
-     * @apiParam {String} [body]         Post content.
+     * @apiParam {String} [title]        Article title.
+     * @apiParam {String} [body]         Article content.
      * @apiParam {String} [slug]         Slug. If there's already some post with the same slug, a numeric suffix will be added.
      *                                   For example, if the requested slug is *foo* and there's another post with that slug,
      *                                   the slug for this post will be *foo-1*
@@ -338,8 +334,7 @@ module.exports = function(router) {
      * @apiParam {Boolean} [published]   Publish status.
      * @apiParam {Number} [publish_date] Publish date, as a timestamp. If `published` is true and the `publish_date` is
      *                                   provided, the post will not be published until that date.
-     * @apiParam {String} [commentable]  Enable user comments.
-     * @apiParam {mixed}  [tags]         Post tags, as objects (an array of this objects is accepted)
+     * @apiParam {mixed}  [tags]         Article tags, as objects (an array of this objects is accepted)
      *                                   The objects must have an id attribute for existing tags. If the tag does not have
      *                                   an ID it is assumed to be a new one and the creation of the tag will be attempted.
      * @apiUse KnowledgeBase_Articles_CommonApiParams
@@ -365,7 +360,6 @@ module.exports = function(router) {
      *         "body": "HOLAQUETAL",
      *         "updated_at": 1434636343,
      *         "created_at": 1434518089,
-     *         "commentable": true,
      *         "publish_date": 1434540,
      *         "published": true,
      *         "id": "5581f70e4901e5baa84a9652",
@@ -409,7 +403,6 @@ module.exports = function(router) {
      *         "body": "HOLAQUETAL",
      *         "updated_at": 1434636343,
      *         "created_at": 1434518089,
-     *         "commentable": true,
      *         "publish_date": 1434540,
      *         "published": true,
      *         "id": "5581f70e4901e5baa84a9652",

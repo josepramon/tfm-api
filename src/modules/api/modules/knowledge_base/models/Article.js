@@ -1,9 +1,10 @@
 'use strict';
 
 var
-  mongoose = require('mongoose'),
-  Schema   = mongoose.Schema,
-  dateUtil = require('src/lib/dateUtil'),
+  mongoose         = require('mongoose'),
+  Schema           = mongoose.Schema,
+  dateUtil         = require('src/lib/dateUtil'),
+  AttachmentSchema = require('../../../models/schemas/Attachment'),
   Tag, Category;
 
 
@@ -21,7 +22,9 @@ var ArticleSchema = new Schema({
   publish_date : { type: Date, default: Date.now },
 
   created_at   : { type: Date, default: Date.now },
-  updated_at   : { type: Date, default: Date.now }
+  updated_at   : { type: Date, default: Date.now },
+
+  attachments  : [AttachmentSchema]
 }, {
 
   toJSON: {
