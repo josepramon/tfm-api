@@ -19,7 +19,7 @@ describe('User model', function() {
     var refs = (new User()).getRefs();
 
     expect(Array.isArray(refs)).to.be.true;
-    expect(refs.length).to.equal(0);
+    expect(refs.length).to.equal(1);
     done();
   });
 

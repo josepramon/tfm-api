@@ -5,6 +5,7 @@ var
   _               = require('underscore'),
   async           = require('async'),
   errors          = require('src/lib/errors'),
+  objectid        = require('mongodb').ObjectID,
 
   apiBasePath     = '../../..',
   moduleBasePath  = '..',
@@ -45,6 +46,13 @@ class ArticlesController extends BaseController
      * @type {ExpandsURLMap}
      */
     this.expandsURLMap = new ExpandsURLMap({
+      "attachments": {
+        "expands": {
+          "upload": {
+            "route": "/uploads/:itemId"
+          }
+        }
+      },
       "category": {
         "route": "/knowledge_base/categories/:itemId",
         "expands": {
@@ -90,7 +98,7 @@ class ArticlesController extends BaseController
       response = new Response(request, this.expandsURLMap),
 
       // options for the waterfall functs.
-      waterfallOptions = this._buildWaterfallOptions(null, req.body.tags, req.body.category),
+      waterfallOptions = this._buildWaterfallOptions(null, req.body.tags, req.body.category, req.body.attachments),
 
       // mass assignable attrs.
       newAttrs = this._getAssignableAttributes(request);
@@ -105,6 +113,7 @@ class ArticlesController extends BaseController
 
         callback(null, model, waterfallOptions);
       },
+      this._setAttachments,
       this._validate,
       this._setSlug,
       this._setCategory,
@@ -140,7 +149,7 @@ class ArticlesController extends BaseController
       criteria = this._buildCriteria(request),
 
       // options for the waterfall functs.
-      waterfallOptions = this._buildWaterfallOptions(req.body.slug, req.body.tags, req.body.category),
+      waterfallOptions = this._buildWaterfallOptions(req.body.slug, req.body.tags, req.body.category, req.body.attachments),
 
       // mass assignable attrs.
       newAttrs = this._getAssignableAttributes(request, patch);
@@ -177,6 +186,7 @@ class ArticlesController extends BaseController
           callback(null, articleModel, waterfallOptions);
         });
       },
+      this._setAttachments,
       this._validate,
       this._setSlug,
       this._setCategory,
@@ -249,11 +259,14 @@ class ArticlesController extends BaseController
   }
 
 
-  _buildWaterfallOptions(slug, tags, category) {
+  _buildWaterfallOptions(slug, tags, category, attachments) {
     var options = {};
-    if(!_.isUndefined(slug))     { options.slug = slug; }
-    if(!_.isUndefined(tags))     { options.tags = tags; }
-    if(!_.isUndefined(category)) { options.category = category; }
+    if(!_.isUndefined(slug))        { options.slug = slug; }
+    if(!_.isUndefined(tags))        { options.tags = tags; }
+    if(!_.isUndefined(category))    { options.category = category; }
+    if(!_.isUndefined(attachments)) { options.attachments = attachments; }
+
+
     return options;
   }
 
@@ -332,6 +345,56 @@ class ArticlesController extends BaseController
         }
         callback(null, model, options);
       });
+    }
+  }
+
+
+  /**
+   * Set the article attachments
+   *
+   * (the attachments are wrappers for the Upload model, with some additional metadata)
+   *
+   * The removed files are not deleted here (from the disk, S3 or whateer)
+   * because the file might be referenced elsewhere.
+   *
+   * TODO: create a cron to check for unreferenced files and delete them
+   */
+  _setAttachments(model, options, callback) {
+    if(_.isUndefined(options.attachments)) {
+      callback(null, model, options);
+    } else {
+
+      let attachments = options.attachments;
+
+      if(!_.isObject(attachments)) {
+        try {
+          attachments = JSON.parse(attachments);
+        } catch(e) {
+          return callback( errors.Validation(model, 'attachments', 'Attachments must be a valid JSON') );
+        }
+      }
+
+      let parsed = [];
+
+      if(_.isArray(attachments)) {
+        parsed = attachments.map(function(attachment) {
+          let parsedAttachment = _.pick(attachment, 'name', 'description');
+
+          if(attachment.upload && attachment.upload.id) {
+            parsedAttachment.upload = objectid(attachment.upload.id);
+          } else if(attachment.uploadId) {
+            // simplified version
+            parsedAttachment.upload = objectid(attachment.uploadId);
+          }
+
+          return parsedAttachment;
+        });
+      }
+
+      // update the article attachments
+      model.set('attachments', parsed);
+
+      callback(null, model, options);
     }
   }
 

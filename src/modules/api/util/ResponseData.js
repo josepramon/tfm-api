@@ -54,10 +54,8 @@ class ResponseData {
         this.data.forEach(function(item) {
           formatedData.push(that._formatItem(item, that.expands, 0));
         });
-      } else if(this.data.getRefs) {
-        formatedData = this._formatItem(this.data, this.expands, 0);
       } else {
-        formatedData = this.data;
+        formatedData = this._formatItem(this.data, this.expands, 0);
       }
     }
 
@@ -97,7 +95,7 @@ class ResponseData {
       ),
 
       // pick the 'regular' fields (non refs)
-      ret = _.omit(item.toJSON(), expandable);
+      ret = _.omit(item.toJSON ? item.toJSON(): item, expandable);
 
     // add the unexpanded nested data
     for(let attr in willNotExpand) {
