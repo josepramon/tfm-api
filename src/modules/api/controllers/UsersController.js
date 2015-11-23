@@ -4,6 +4,7 @@ var
   // generic stuff
   _               = require('underscore'),
   async           = require('async'),
+  objectid        = require('mongodb').ObjectID,
   errors          = require('src/lib/errors'),
 
   // API utilities
@@ -36,7 +37,17 @@ class UsersController extends BaseController
      *
      * @type {ExpandsURLMap}
      */
-    this.expandsURLMap = new ExpandsURLMap();
+    this.expandsURLMap = new ExpandsURLMap({
+      "profile": {
+        "route": null,
+        "expands": {
+          "image": {
+            "route": "/uploads/:itemId",
+            "expands": {"id":null}
+          }
+        }
+      }
+    });
   }
 
 
@@ -69,6 +80,7 @@ class UsersController extends BaseController
 
         callback(null, model, waterfallOptions);
       },
+      this._setProfile.bind(this),
       this._validate,
       this._save
 
@@ -120,6 +132,7 @@ class UsersController extends BaseController
           callback(null, userModel, waterfallOptions);
         });
       },
+      this._setProfile.bind(this),
       this._updatePassword,
       this._validate,
       this._save
@@ -155,8 +168,8 @@ class UsersController extends BaseController
     }
 
     return _.extend({}, defaultFilters, additionalFilters);
-
   }
+
 
   _buildWaterfallOptions(postData) {
     var options = {};
@@ -167,6 +180,11 @@ class UsersController extends BaseController
         oldPassword: postData.oldPassword || ''
       };
     }
+
+    if(!_.isUndefined(postData.profile)) {
+      options.profile = postData.profile;
+    }
+
     return options;
   }
 
@@ -184,6 +202,46 @@ class UsersController extends BaseController
     }
   }
 
+
+  _setProfile(model, options, callback) {
+    if(_.isUndefined(options.profile)) {
+      callback(null, model, options);
+    } else {
+      var
+        self    = this,
+        profile = model.profile || {};
+
+      _.keys(options.profile).forEach(function(key) {
+        let val = options.profile[key];
+
+        if(key === 'image') {
+          val = self._getProfileImageValue(val);
+        }
+
+        profile[key] = val;
+      });
+
+      model.set({profile: profile});
+
+      callback(null, model, options);
+    }
+  }
+
+
+  _getProfileImageValue(imageValue) {
+    var img;
+
+    // set the custom image
+    if(!_.isUndefined(imageValue) && !_.isEmpty(imageValue)) {
+      try {
+        // accept upload objects, or just the id as a string
+        let imgId = _.isObject(imageValue) ? imageValue.id : imageValue;
+        img = objectid(imgId);
+      } catch (e) {}
+    }
+
+    return img;
+  }
 
 }
 

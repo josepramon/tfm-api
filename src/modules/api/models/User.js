@@ -1,6 +1,7 @@
 'use strict';
 
 var
+  _        = require('underscore'),
   mongoose = require('mongoose'),
   Schema   = mongoose.Schema,
   bcrypt   = require('bcryptjs'),
@@ -39,7 +40,16 @@ var UserSchema = new Schema({
   },
 
   // other user details
-  profile: {},
+  profile: {
+    name:     { type: String },
+    surname:  { type: String },
+    avatar:   { type: String },
+    company:  { type: String },
+    phone:    { type: String },
+    url:      { type: String },
+    location: { type: String },
+    image:    { type: Schema.ObjectId, ref: 'Upload' }
+  },
 
   created_at : { type: Date, default: Date.now },
   updated_at : { type: Date, default: Date.now }
@@ -128,8 +138,8 @@ UserSchema.pre('save', function (next) {
 
 // Custom methods and attributes
 // ----------------------------------
-UserSchema.statics.safeAttrs = ['username', 'email', 'profile'];
-UserSchema.methods.getRefs = function() { return []; };
+UserSchema.statics.safeAttrs = ['username', 'email'];
+UserSchema.methods.getRefs = function() { return ['profile']; };
 
 //Password verification
 UserSchema.methods.comparePassword = function (passw, cb) {

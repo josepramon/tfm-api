@@ -23,7 +23,7 @@ var authenticate = function (req, res, next) {
 
 
   process.nextTick(function () {
-    User.findOne({username: username}).populate('role').exec(function(err, user) {
+    User.findOne({username: username}).deepPopulate('role profile.image').exec(function(err, user) {
       if (err || !user) { return next( new errors.Unauthorized(errMessage) ); }
 
       user.comparePassword(password, function (err, isMatch) {
