@@ -18,6 +18,9 @@ module.exports = function(router) {
    * @apiGroup Auth
    * @apiDescription Authenticates the user and returns the auth token. The token
    *                 is also saved to a Redis store so it can be revoked at any time.
+   *                 It returns the token data and also the user info (like the user
+   *                 name, the profile, privileges and any other user info), to avoid
+   *                 unnecessary additional API calls.
    *
    * @apiExample Example usage:
    * curl -4 -i -X POST http://localhost:9000/api/auth --data "username=demo&password=demo"
@@ -36,20 +39,59 @@ module.exports = function(router) {
    *                                apps which modules/actions the user has access
    *                                (additionally the API performs this checks on
    *                                the API endpoints)
+   * @apiSuccess {Object} user      The user object (as a relation, expanded by default)
    *
    * @apiSuccessExample {json} Success-Response:
    *     HTTP/1.1 200 OK
    *     {
-   *       "meta" : {},
-   *       "data" : {
-   *         "id": "54ee6175465eaee35cd237ed",
-   *         "username": "demo",
-   *         "email": "demo@demo.demo",
-   *         "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NGVlNjE3NTQ2NWVhZWUzNWNkMjM3ZWQiLCJpYXQiOjE0Mjc4MTQ0ODYsImV4cCI6MTQyNzgxODA4Nn0.pZVBE_GKvJUr4BI7BDeTmIIy9gQ2p3tlrG2pcMcjm3U",
-   *         "token_exp": 1427818086,
-   *         "token_iat": 1427814486,
-   *         "role": "ADMIN",
-   *         "privileges": {}
+   *       "meta": {},
+   *       "data": {
+   *         "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjU2NTEwZTdiNmM3NTQ3MjllY2U3YjAyYiIsImlhdCI6MTQ0ODMwMTU2NywiZXhwIjoxNDQ4MzA1MTY3fQ.WzT-WhiXwE3NwKglieU-Yp6sq5iMmZweOkqDEwmJL1E",
+   *         "token_exp": 1448305167,
+   *         "token_iat": 1448301567,
+   *         "user": {
+   *           "meta": {
+   *             "url": "http://localhost:8000/api/auth/admins/56510e7b6c754729ece7b02b"
+   *           },
+   *           "data": {
+   *             "updated_at": 1448220446,
+   *             "created_at": 1448152700,
+   *             "username": "someUser",
+   *             "email": "user@server.com",
+   *             "role": "ADMIN",
+   *             "profile": {
+   *               "meta": {
+   *                 "url": null
+   *               },
+   *               "data": {
+   *                 "url": "",
+   *                 "company": "",
+   *                 "location": "",
+   *                 "phone": "",
+   *                 "surname": "Whatever",
+   *                 "name": "aName",
+   *                 "avatar": "//www.gravatar.com/avatar/cec5944b19f0fbf04fc18f0a149e6ef0",
+   *                 "image": {
+   *                   "updated_at": 1448220443,
+   *                   "created_at": 1448220443,
+   *                   "contentType": "image/png",
+   *                   "size": 635230,
+   *                   "path": "uploads/VJiN8-iXx.png",
+   *                   "host": "192.168.1.10:8000",
+   *                   "url": "http://192.168.1.10:8000/uploads/VJiN8-iXx.png",
+   *                   "id": "5652171a2e804f2f4f576aae"
+   *                 }
+   *               }
+   *             },
+   *             "id": "56510e7b6c754729ece7b02b",
+   *             "privileges": {
+   *               "users": true,
+   *               "managers": true,
+   *               "admins": true,
+   *               "knowledge_base": true
+   *             }
+   *           }
+   *         }
    *       }
    *     }
    *
