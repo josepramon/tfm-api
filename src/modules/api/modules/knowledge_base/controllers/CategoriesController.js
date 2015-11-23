@@ -55,6 +55,13 @@ class CategoriesController extends TagsController
           },
           "category": {
             "route": "/knowledge_base/categories/:itemId"
+          },
+          "attachments": {
+            "expands": {
+              "upload": {
+                "route": "/uploads/:itemId"
+              }
+            }
           }
         }
       }

@@ -46,6 +46,13 @@ class ArticlesController extends BaseController
      * @type {ExpandsURLMap}
      */
     this.expandsURLMap = new ExpandsURLMap({
+      "attachments": {
+        "expands": {
+          "upload": {
+            "route": "/uploads/:itemId"
+          }
+        }
+      },
       "category": {
         "route": "/knowledge_base/categories/:itemId",
         "expands": {
@@ -350,7 +357,7 @@ class ArticlesController extends BaseController
    * The removed files are not deleted here (from the disk, S3 or whateer)
    * because the file might be referenced elsewhere.
    *
-   * TODO: create a cron to check for unreferenced fles and delete them
+   * TODO: create a cron to check for unreferenced files and delete them
    */
   _setAttachments(model, options, callback) {
     if(_.isUndefined(options.attachments)) {

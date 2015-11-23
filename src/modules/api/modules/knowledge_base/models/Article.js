@@ -111,7 +111,7 @@ ArticleSchema.index({
 // Custom methods and attributes
 // ----------------------------------
 ArticleSchema.statics.safeAttrs = ['title', 'excerpt', 'body', 'published', 'publish_date', 'commentable'];
-ArticleSchema.methods.getRefs = function() { return ['tags', 'category']; };
+ArticleSchema.methods.getRefs = function() { return ['tags', 'category', 'attachments']; };
 
 
 // Register the plugins
