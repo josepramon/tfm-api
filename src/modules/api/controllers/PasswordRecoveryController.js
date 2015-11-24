@@ -8,6 +8,7 @@ var
   mailer          = require('src/lib/mailer'),
   Request         = require('../util/Request'),
   Response        = require('../util/Response'),
+  ExpandsURLMap   = require('../util/ExpandsURLMap'),
   cache           = require('../util/Cache'),
   User            = require('../models/User');
 
@@ -20,13 +21,20 @@ class PasswordRecoveryController
   constructor() {
     // prefix for the keys used to persist the requests on redis
     this.keyPrefix = 'passwordChange_';
+
+    /**
+     * Nested references output config
+     *
+     * @type {ExpandsURLMap}
+     */
+    this.expandsURLMap = new ExpandsURLMap();
   }
 
 
   create(req, res, next) {
     var
       request  = new Request(req),
-      response = new Response(request),
+      response = new Response(request, this.expandsURLMap),
       params   = req.body,
       query    = {},
       self     = this;
@@ -67,7 +75,7 @@ class PasswordRecoveryController
   update(req, res, next) {
     var
       request    = new Request(req),
-      response   = new Response(request),
+      response   = new Response(request, this.expandsURLMap),
       recoveryId = this.keyPrefix + req.params.id;
 
 
