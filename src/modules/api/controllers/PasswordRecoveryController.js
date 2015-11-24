@@ -10,7 +10,7 @@ var
   Response        = require('../util/Response'),
   ExpandsURLMap   = require('../util/ExpandsURLMap'),
   cache           = require('../util/Cache'),
-  User            = require('../models/User');
+  User            = require('../models/UserBase');
 
 
 /**
@@ -18,7 +18,7 @@ var
  */
 class PasswordRecoveryController
 {
-  constructor() {
+  constructor(userType) {
     // prefix for the keys used to persist the requests on redis
     this.keyPrefix = 'passwordChange_';
 
@@ -27,7 +27,7 @@ class PasswordRecoveryController
      *
      * @type {ExpandsURLMap}
      */
-    this.expandsURLMap = new ExpandsURLMap();
+    this.expandsURLMap = new ExpandsURLMap({});
   }
 
 

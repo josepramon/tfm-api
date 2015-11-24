@@ -16,10 +16,10 @@ var
   userRestrictToItself   = require(moduleBasePath + '/middleware/userRestrictToItself').middleware,
 
   UsersController        = require(moduleBasePath + '/controllers/UsersController'),
-  controller             = new UsersController(),
+  controller             = new UsersController('manager'),
 
   UsersActivationController = require(moduleBasePath + '/controllers/UsersActivationController'),
-  activationController      = new UsersActivationController(false);
+  activationController      = new UsersActivationController('manager', false);
 
 
 // Setup the middleware applied to the list/create/delete actions
@@ -36,9 +36,6 @@ var
 
 // When creating a user, preset the role
 var setRole = _.partial(InjectParamsMiddleware, { role: roleId }, true);
-
-// Filters
-var managersFilter = _.partial(AddFiltersMiddleware, { role: roleId }, true);
 
 
 module.exports = function(router) {
@@ -170,7 +167,7 @@ module.exports = function(router) {
      *     }
      *
      */
-    .get(accessControlFilter, managersFilter, controller.getAll.bind(controller))
+    .get(accessControlFilter, controller.getAll.bind(controller))
 
 
     /**

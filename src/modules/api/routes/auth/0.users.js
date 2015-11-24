@@ -19,7 +19,7 @@ var
   controller             = new UsersController(),
 
   UsersActivationController = require(moduleBasePath + '/controllers/UsersActivationController'),
-  activationController      = new UsersActivationController(true);
+  activationController      = new UsersActivationController('user', true);
 
 
 // Setup the middleware applied to the list actions
@@ -36,9 +36,6 @@ var
 
 // When creating a user, preset the role
 var setRole = _.partial(InjectParamsMiddleware, { role: roleId }, true);
-
-// Filters
-var regularUsersFilter = _.partial(AddFiltersMiddleware, { role: roleId }, true);
 
 
 module.exports = function(router) {
@@ -170,7 +167,7 @@ module.exports = function(router) {
      *     }
      *
      */
-    .get(accessControlFilter, regularUsersFilter, controller.getAll.bind(controller))
+    .get(accessControlFilter, controller.getAll.bind(controller))
 
 
     /**

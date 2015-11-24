@@ -32,7 +32,7 @@ var UploadSchema = new Schema({
   updated_at : { type: Date, default: Date.now },
 
   // owner (the user that uploaded the file)
-  owner : { type: Schema.ObjectId, ref: 'User', required: true }
+  owner : { type: Schema.ObjectId, ref: 'UserBase', required: true }
 
 }, {
 

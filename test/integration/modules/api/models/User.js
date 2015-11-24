@@ -11,7 +11,7 @@ var
   Role              = require('src/modules/api/models/Role'),
 
   // file being tested
-  User              = requireHelper('modules/api/models/User');
+  User              = requireHelper('modules/api/models/UserBase');
 
 
 

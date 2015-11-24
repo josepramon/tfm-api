@@ -16,7 +16,9 @@ var
   BaseController  = require('./BaseController'),
 
   // Model managed by this controller
-  User            = require('../models/User');
+  User            = require('../models/User'),
+  Admin           = require('../models/Admin'),
+  Manager         = require('../models/Manager');
 
 
 /**
@@ -24,13 +26,27 @@ var
  */
 class UsersController extends BaseController
 {
-  constructor() {
+  constructor(userType) {
     super();
+
+    // set the user type
+    var userModel = null;
+
+    switch(userType) {
+      case 'admin':
+        userModel = Admin;
+        break;
+      case 'manager':
+        userModel = Manager;
+        break;
+      default:
+        userModel = User;
+    }
 
     /**
      * @type {Model}
      */
-    this.Model = User;
+    this.Model = userModel;
 
     /**
      * Nested references output config
@@ -63,12 +79,13 @@ class UsersController extends BaseController
       waterfallOptions = null,
 
       // mass assignable attrs.
-      newAttrs = this._getAssignableAttributes(request);
+      newAttrs = this._getAssignableAttributes(request),
 
+      Model = this.Model;
 
     async.waterfall([
       function setup(callback) {
-        var model = new User(newAttrs);
+        var model = new Model(newAttrs);
 
         if(request.req.body.role) {
           model.role = request.req.body.role;
@@ -116,11 +133,13 @@ class UsersController extends BaseController
       waterfallOptions = this._buildWaterfallOptions(req.body),
 
       // mass assignable attrs.
-      newAttrs = this._getAssignableAttributes(request, patch);
+      newAttrs = this._getAssignableAttributes(request, patch),
+
+      Model = this.Model;
 
     async.waterfall([
       function setup(callback) {
-        User.findOne(criteria).exec(function(err, userModel) {
+        Model.findOne(criteria).exec(function(err, userModel) {
           /* istanbul ignore next */
           if (err)           { return callback(err); }
           /* istanbul ignore next */
@@ -204,9 +223,22 @@ class UsersController extends BaseController
 
 
   _setProfile(model, options, callback) {
+    options = options || {};
+
     if(_.isUndefined(options.profile)) {
       callback(null, model, options);
     } else {
+
+      // convert to a JSON if the received value is a astringified JSON
+      // (this might happen with POSTMAN)
+      if(_.isString(options.profile)) {
+        try {
+          options.profile = JSON.parse(options.profile);
+        } catch(e) {
+          return callback( errors.Validation(model, 'attachments', 'Attachments must be a valid JSON') );
+        }
+      }
+
       var
         self    = this,
         profile = model.profile || {};

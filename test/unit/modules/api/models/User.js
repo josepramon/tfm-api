@@ -7,7 +7,7 @@ var
   requireHelper     = require('test/_util/require_helper'),
 
   // file being tested
-  User              = requireHelper('modules/api/models/User');
+  User              = requireHelper('modules/api/models/UserBase');
 
 
 

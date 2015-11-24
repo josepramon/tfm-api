@@ -4,7 +4,7 @@ var
   _             = require('lodash'),
   errors        = require('src/lib/errors'),
   jwtAuth       = require('src/lib/jwtAuth'),
-  User          = require('../models/User'),
+  User          = require('../models/UserBase'),
   debug         = require('debug')('ApiApp:AuthenticateMiddleware:' + process.pid);
 
 

@@ -12,7 +12,7 @@ var
   Response      = require('../util/Response'),
 
   // Model managed by this controller
-  User          = require('../models/User');
+  User          = require('../models/UserBase');
 
 
 
