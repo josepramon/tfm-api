@@ -11,6 +11,7 @@ var
   crypt           = require('src/lib/crypt'),
   Request         = require('../util/Request'),
   Response        = require('../util/Response'),
+  ExpandsURLMap   = require('../util/ExpandsURLMap'),
   cache           = require('../util/Cache'),
   RoleUtil        = require('../util/RoleUtil'),
   User            = require('../models/User');
@@ -51,6 +52,12 @@ class UsersActivationController
      */
     this.requestValidity = 12*60*60; // (12 hours)
 
+    /**
+     * Nested references output config
+     *
+     * @type {ExpandsURLMap}
+     */
+    this.expandsURLMap = new ExpandsURLMap();
   }
 
 
@@ -112,7 +119,7 @@ class UsersActivationController
   activate(req, res, next) {
     var
       request    = new Request(req),
-      response   = new Response(request),
+      response   = new Response(request, this.expandsURLMap),
       recoveryId = this.keyPrefix + req.params.id,
       self       = this;
 
