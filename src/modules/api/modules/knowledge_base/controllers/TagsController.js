@@ -84,9 +84,9 @@ class TagsController extends BaseController
         var model = new Model(newAttrs);
         callback(null, model, waterfallOptions);
       },
-      this._validate,
       this._setSlug.bind(this),
       this._setArticles,
+      this._validate,
       this._save
 
     ], function asyncComplete(err, model) {
@@ -150,9 +150,9 @@ class TagsController extends BaseController
           callback(null, tagModel, waterfallOptions);
         });
       },
-      this._validate,
       this._setSlug.bind(this),
       this._setArticles,
+      this._validate,
       this._save
 
     ], function asyncComplete(err, model) {
