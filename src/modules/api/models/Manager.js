@@ -11,10 +11,10 @@ var
   UserModel = require('./UserBase');
 
 
-var
-  options       = { discriminatorKey: '_kind' },
-  ManagerSchema = new Schema({
-    ticketCategories: String
+var ManagerSchema = new Schema({
+  // categories available to the manager
+  ticketCategories: []
+});
   });
 
 

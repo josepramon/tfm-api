@@ -11,9 +11,7 @@ var
   UserModel = require('./UserBase');
 
 
-var
-  options    = { discriminatorKey: '_kind' },
-  UserSchema = new Schema({});
+var UserSchema = new Schema({});
 
 
 /* istanbul ignore next */
