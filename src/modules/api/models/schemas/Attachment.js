@@ -7,8 +7,8 @@ var
 /**
  * Attachment schema
  *
- * Not a regular model, just a schema (attachments don't exist on their own,
- * they're embedded)
+ * Not a regular model, just a schema
+ * (attachments don't exist on their own, they're embedded)
  */
 var AttachmentSchema = new Schema({
 
