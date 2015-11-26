@@ -186,6 +186,15 @@ UserSchema.plugin( require('mongoose-paginate') );
 UserSchema.plugin( require('mongoose-deep-populate')(mongoose) );
 UserSchema.plugin( require('mongoose-time')() );
 
+// Users should not be deleted (instead soft-deleted),
+// because there migh be a lot of documents referencing the user,
+// like tickets with comments, notes and other nested entities referencing
+// that user. So, setting to null that references or destroying them
+// is not desirable (soft deleted entities don't appear by default
+// on the queries, so if the user is deleted, it won't be able to
+// login, but the references from other documents will keep working).
+UserSchema.plugin(require('mongoose-deleted'));
+
 
 /* istanbul ignore next */
 var UserModel = mongoose.models.UserBase ?
