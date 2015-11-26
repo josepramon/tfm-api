@@ -114,11 +114,11 @@ class ArticlesController extends BaseController
 
         callback(null, model, waterfallOptions);
       },
-      this._validate,
       attachmentsUtil.setAttachments,
       this._setSlug,
       this._setCategory,
       this._setTags,
+      this._validate,
       this._save
 
     ], function asyncComplete(err, model) {
@@ -187,11 +187,11 @@ class ArticlesController extends BaseController
           callback(null, articleModel, waterfallOptions);
         });
       },
-      this._validate,
       attachmentsUtil.setAttachments,
       this._setSlug,
       this._setCategory,
       this._setTags,
+      this._validate,
       this._save
 
     ], function asyncComplete(err, model) {
