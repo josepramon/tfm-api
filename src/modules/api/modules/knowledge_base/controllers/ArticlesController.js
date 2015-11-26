@@ -16,6 +16,7 @@ var
   ExpandsURLMap   = require(apiBasePath + '/util/ExpandsURLMap'),
   slugger         = require(apiBasePath + '/util/slugger'),
   filters         = require(apiBasePath + '/util/filters'),
+  attachmentsUtil = require(apiBasePath + '/modules/uploads/util/attachmentsUtil'),
 
   // utilities to manage the bidirectional relations
   CategoryUtil    = require(moduleBasePath + '/util/CategoryUtil'),
@@ -113,8 +114,8 @@ class ArticlesController extends BaseController
 
         callback(null, model, waterfallOptions);
       },
-      this._setAttachments,
       this._validate,
+      attachmentsUtil.setAttachments,
       this._setSlug,
       this._setCategory,
       this._setTags,
@@ -186,8 +187,8 @@ class ArticlesController extends BaseController
           callback(null, articleModel, waterfallOptions);
         });
       },
-      this._setAttachments,
       this._validate,
+      attachmentsUtil.setAttachments,
       this._setSlug,
       this._setCategory,
       this._setTags,
@@ -345,56 +346,6 @@ class ArticlesController extends BaseController
         }
         callback(null, model, options);
       });
-    }
-  }
-
-
-  /**
-   * Set the article attachments
-   *
-   * (the attachments are wrappers for the Upload model, with some additional metadata)
-   *
-   * The removed files are not deleted here (from the disk, S3 or whateer)
-   * because the file might be referenced elsewhere.
-   *
-   * TODO: create a cron to check for unreferenced files and delete them
-   */
-  _setAttachments(model, options, callback) {
-    if(_.isUndefined(options.attachments)) {
-      callback(null, model, options);
-    } else {
-
-      let attachments = options.attachments;
-
-      if(!_.isObject(attachments)) {
-        try {
-          attachments = JSON.parse(attachments);
-        } catch(e) {
-          return callback( errors.Validation(model, 'attachments', 'Attachments must be a valid JSON') );
-        }
-      }
-
-      let parsed = [];
-
-      if(_.isArray(attachments)) {
-        parsed = attachments.map(function(attachment) {
-          let parsedAttachment = _.pick(attachment, 'name', 'description');
-
-          if(attachment.upload && attachment.upload.id) {
-            parsedAttachment.upload = objectid(attachment.upload.id);
-          } else if(attachment.uploadId) {
-            // simplified version
-            parsedAttachment.upload = objectid(attachment.uploadId);
-          }
-
-          return parsedAttachment;
-        });
-      }
-
-      // update the article attachments
-      model.set('attachments', parsed);
-
-      callback(null, model, options);
     }
   }
 
