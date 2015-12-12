@@ -18,7 +18,7 @@ var
  */
 class PasswordRecoveryController
 {
-  constructor(userType) {
+  constructor() {
     // prefix for the keys used to persist the requests on redis
     this.keyPrefix = 'passwordChange_';
 
