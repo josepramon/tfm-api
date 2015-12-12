@@ -21,7 +21,7 @@ class AuthController
   login(req, res, next) {
     // auth handling implemented in the Authenticated middleware
 
-    (new Response()).formatOutput(this._formatUResponse(req), function(err, output) {
+    (new Response()).formatOutput(this._formatUser(req), function(err, output) {
       /* istanbul ignore next */
       if (err) { return next(err); }
       res.json(output);
@@ -105,7 +105,7 @@ class AuthController
   }
 
 
-  _formatUResponse(req) {
+  _formatUser(req) {
     var
       request  = new Request(req),
       userData = req.user,
