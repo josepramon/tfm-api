@@ -14,7 +14,10 @@ var
   Response        = require(apiBasePath + '/util/Response'),
   ExpandsURLMap   = require(apiBasePath + '/util/ExpandsURLMap'),
   slugger         = require(apiBasePath + '/util/slugger'),
-  filters         = require(apiBasePath + '/util/filters'),
+
+  filters         = require(apiBasePath +    '/util/filters'),
+  kbFilters       = require(moduleBasePath + '/util/filters'),
+
   ArticlesUtil    = require(moduleBasePath + '/util/ArticlesUtil'),
 
   // Base class
@@ -212,7 +215,7 @@ class TagsController extends BaseController
     // this is a special filter, because it is not applied to the initial query,
     // but instead in the relations population
     if(_.has(request.filters, 'articles.isPublished')) {
-      filters.setNestedArticlesPublishedFilter({isPublished: request.filters['articles.isPublished']}, request);
+      kbFilters.setNestedArticlesPublishedFilter({isPublished: request.filters['articles.isPublished']}, request);
     }
 
     return _.extend({}, defaultFilters, additionalFilters);

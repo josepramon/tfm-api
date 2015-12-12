@@ -15,7 +15,10 @@ var
   Response        = require(apiBasePath + '/util/Response'),
   ExpandsURLMap   = require(apiBasePath + '/util/ExpandsURLMap'),
   slugger         = require(apiBasePath + '/util/slugger'),
-  filters         = require(apiBasePath + '/util/filters'),
+
+  filters         = require(apiBasePath +    '/util/filters'),
+  kbFilters       = require(moduleBasePath + '/util/filters'),
+
   attachmentsUtil = require(apiBasePath + '/modules/uploads/util/attachmentsUtil'),
 
   // utilities to manage the bidirectional relations
@@ -253,7 +256,7 @@ class ArticlesController extends BaseController
 
     // add the isPublished filter (based on the published attribute and the publish date)
     if(_.has(request.filters, 'isPublished')) {
-      additionalFilters = _.extend(additionalFilters, filters.getPublishedFilter(request.filters));
+      additionalFilters = _.extend(additionalFilters, kbFilters.getPublishedFilter(request.filters));
     }
 
     return _.extend({}, defaultFilters, additionalFilters);
@@ -266,7 +269,6 @@ class ArticlesController extends BaseController
     if(!_.isUndefined(tags))        { options.tags = tags; }
     if(!_.isUndefined(category))    { options.category = category; }
     if(!_.isUndefined(attachments)) { options.attachments = attachments; }
-
 
     return options;
   }
@@ -298,7 +300,7 @@ class ArticlesController extends BaseController
         try {
           category = JSON.parse(category);
         } catch(e) {
-          return callback( errors.Validation(model, 'category', 'Tags must be a valid JSON') );
+          return callback( errors.Validation(model, 'category', 'Category must be a valid JSON') );
         }
       }
 
