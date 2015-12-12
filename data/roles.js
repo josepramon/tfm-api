@@ -25,6 +25,14 @@ exports.roles = [
       // knowledge base articles: unlimited access
       knowledge_base: true
 
+      // tickets
+      tickets: {
+        actions: {
+          manageCategories: true,
+          manageStatuses:   true
+        }
+      }
+
     }
   },
 
@@ -38,6 +46,12 @@ exports.roles = [
       // unlimited access
       knowledge_base: true
 
+      // tickets
+      tickets: {
+        actions: {
+          manageTickets: true
+        }
+      }
     }
   },
 
@@ -52,6 +66,14 @@ exports.roles = [
       knowledge_base: {
         actions: {
           read: true
+        }
+      }
+
+      // tickets
+      tickets: {
+        actions: {
+          // additional restrictions will prevent from accessing other user's tickets
+          manageTickets: true
         }
       }
 
