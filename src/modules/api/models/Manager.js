@@ -14,7 +14,7 @@ var
 
 var ManagerSchema = new Schema({
   // categories available to the manager
-  ticketCategories: []
+  ticketCategories: [{ type: Schema.ObjectId, ref: 'TicketsCategory'}]
 });
 
 
