@@ -23,6 +23,7 @@
     "jsonwebtoken": "^5.4.1",
     "lodash": "^3.10.1",
     "mongoose": "~4.2.8",
+    "mongoose-autopopulate": "^0.4.0",
     "mongoose-deep-populate": "^2.0.3",
     "mongoose-deleted": "^1.4.5",
     "mongoose-paginate": "josepramon/mongoose-paginate#4.2.1",
