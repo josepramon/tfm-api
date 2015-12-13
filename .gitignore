@@ -16,4 +16,4 @@ doc/api
 
 # other
 env.json
-uploads
+/uploads

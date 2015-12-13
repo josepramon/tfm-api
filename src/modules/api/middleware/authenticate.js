@@ -4,7 +4,7 @@ var
   _             = require('lodash'),
   errors        = require('src/lib/errors'),
   jwtAuth       = require('src/lib/jwtAuth'),
-  User          = require('../models/User'),
+  User          = require('../models/UserBase'),
   debug         = require('debug')('ApiApp:AuthenticateMiddleware:' + process.pid);
 
 
@@ -23,7 +23,7 @@ var authenticate = function (req, res, next) {
 
 
   process.nextTick(function () {
-    User.findOne({username: username}).deepPopulate('role profile.image').exec(function(err, user) {
+    User.findOne({username: username}).populate('role profile.image').exec(function(err, user) {
       if (err || !user) { return next( new errors.Unauthorized(errMessage) ); }
 
       user.comparePassword(password, function (err, isMatch) {

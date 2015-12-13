@@ -4,7 +4,7 @@ var
   _             = require('lodash'),
   errors        = require('src/lib/errors'),
   config        = require('src/config'),
-  User          = require('../models/User'),
+  User          = require('../models/UserBase'),
   debug         = require('debug')('ApiApp:RestrictByAppMiddleware:' + process.pid);
 
 

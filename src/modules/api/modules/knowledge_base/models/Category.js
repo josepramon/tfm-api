@@ -38,11 +38,11 @@ var CategorySchema = new Schema({
 
 
 // Remove relations from other collections
-CategorySchema.pre('remove', function (next) { // canviar això (no és N:N), i utils i poctlles
+CategorySchema.pre('remove', function (next) {
   var
     category = this,
     criteria = { _id: {$in: category.articles} },
-    update   = { $pull: { 'categories': category._id } };
+    update   = { category: null };
 
 
   if(!category.articles.length) {

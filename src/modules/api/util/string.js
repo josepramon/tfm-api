@@ -13,6 +13,8 @@ module.exports = {
   })(),
 
   _escape: function(str, mapObj) {
+    str = str || '';
+
     var re, strRe;
     strRe = _.keys(mapObj).map(function(k) {
       return '\\' + k;

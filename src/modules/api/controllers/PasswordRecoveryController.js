@@ -10,7 +10,7 @@ var
   Response        = require('../util/Response'),
   ExpandsURLMap   = require('../util/ExpandsURLMap'),
   cache           = require('../util/Cache'),
-  User            = require('../models/User');
+  User            = require('../models/UserBase');
 
 
 /**
@@ -27,7 +27,7 @@ class PasswordRecoveryController
      *
      * @type {ExpandsURLMap}
      */
-    this.expandsURLMap = new ExpandsURLMap();
+    this.expandsURLMap = new ExpandsURLMap({});
   }
 
 

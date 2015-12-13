@@ -5,7 +5,7 @@ var
   config                    = require('src/config'),
   moduleBasePath            = '../..',
   UsersActivationController = require(moduleBasePath + '/controllers/UsersActivationController'),
-  controller                = new UsersActivationController(false);
+  controller                = new UsersActivationController('manager', false);
 
 
 

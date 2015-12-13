@@ -108,6 +108,12 @@ class Response {
    * code inside each controllers methods.
    *
    * A 'pre' query hook should be better, but a too tricky to implement.
+   *
+   *
+   *
+   * NOTE: recent updates to mongoose added population for multiple levels
+   *       so this is no longer necessary. Changing this now requires a lot
+   *       of changes, so, it's postposed for a future version
    */
   _expandData(data, expands, callback) {
     // create a deep copy of expands because
@@ -119,7 +125,7 @@ class Response {
       paths = _.keys(expands).join(' '),
       populationOpts = { populate: expands };
 
-    if(model && paths) {
+    if(model && paths && model.deepPopulate) {
       model.deepPopulate(data, paths, populationOpts, callback);
     } else {
       callback(null, data);
