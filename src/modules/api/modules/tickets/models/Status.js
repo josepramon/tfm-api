@@ -21,8 +21,8 @@ var StatusSchema = new Schema({
   // by defining the statates that can be applied to the ticket.
   // There are two special statuses, the 'open' and 'closed' ones,
   // that should exist always, so it should not deleteable.
-  open         : { type: Boolean, default: false, unique: true },
-  closed       : { type: Boolean, default: false, unique: true },
+  open         : { type: Boolean, unique: true },
+  closed       : { type: Boolean, unique: true },
 
   created_at   : { type: Date, default: Date.now },
   updated_at   : { type: Date, default: Date.now }
