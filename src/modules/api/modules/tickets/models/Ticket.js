@@ -1,23 +1,50 @@
 'use strict';
 
 var
+  _        = require('underscore'),
   mongoose = require('mongoose'),
   Schema   = mongoose.Schema,
+  shortid  = require('shortid'),
   dateUtil = require('src/lib/dateUtil'),
 
   // nested schemas
   AttachmentSchema = require('../../../models/schemas/Attachment'),
   CommentSchema    = require('./schemas/Comment'),
-  NoteSchema       = require('./schemas/Note'),
   StatusSchema     = require('./schemas/Status');
 
 
+/**
+ * Custom shortId generator for the ticket IDs
+ *
+ * Generates a unique shortId for the ticket (because the ticket id is displayed
+ * to the user, so regular objectIds are too complicated). The method ensures the
+ * id has no dashes because the index is indexed in a full text index, and the dashes
+ * are treated as delimiters by mongo
+ *
+ * @return {String}
+ */
+var generateId = function() {
+  var id;
+
+  do {
+    id = shortid.generate();
+  } while ( id.search(/_|-/) > -1 );
+
+  return id;
+};
+
+
+/**
+ * Ticket schemma
+ * @type {Schema}
+ */
 var TicketSchema = new Schema({
+
+  _id:         { type: String, unique: true, 'default': generateId },
 
   title:       { type: String, required: true },
   body:        { type: String, required: true },
 
-  notes:       [NoteSchema],
   comments:    [CommentSchema],
   attachments: [AttachmentSchema],
   statuses:    [StatusSchema],
@@ -33,10 +60,12 @@ var TicketSchema = new Schema({
   // 3: hight
   // 2: normal
   // 1: low
-  priority:    { type: Number, enum: [4,3,2,1], default: 1 },
+  priority:    { type: Number, enum: [4,3,2,1], default: 2 },
 
-  created_at   : { type: Date, default: Date.now },
-  updated_at   : { type: Date, default: Date.now }
+  closed:      { type: Boolean, default: false },
+
+  created_at:  { type: Date, default: Date.now },
+  updated_at:  { type: Date, default: Date.now }
 
 }, {
 
@@ -71,11 +100,13 @@ TicketSchema.index({ user: 1 });
 TicketSchema.index({ manager: 1 });
 
 TicketSchema.index({
+  _id:                'text',
   title:              'text',
   body:               'text',
   'comments.comment': 'text'
 }, {
   weights: {
+    _id:                5,
     title:              5,
     body:               3,
     'comments.comment': 1
@@ -85,27 +116,17 @@ TicketSchema.index({
 
 // Custom methods and attributes
 // ----------------------------------
-TicketSchema.statics.privateAttrs = ['notes', 'tags', 'priority'];
-TicketSchema.statics.safeAttrs    = ['title', 'excerpt', 'body', 'published', 'publish_date', 'commentable'];
-TicketSchema.methods.getRefs      = function() { return ['tags', 'category', 'attachments', 'notes', 'comments', 'statuses', 'user', 'manager']; };
+TicketSchema.statics.privateAttrs = ['tags', 'priority', 'comments[private=true]'];
+TicketSchema.statics.safeAttrs    = ['title', 'body', 'priority'];
+TicketSchema.methods.getRefs      = function() { return ['tags', 'category', 'attachments', 'comments', 'statuses', 'user', 'manager']; };
 
-TicketSchema.virtual('closed')
-  .get(function () {
-    return false;
-    // statuses.last == closed
-  });
-
-TicketSchema.virtual('status')
-  .get(function () {
-    return false;
-    // statuses.last
-  });
 
 // Register the plugins
 // ----------------------------------
 TicketSchema.plugin( require('mongoose-paginate') );
 TicketSchema.plugin( require('mongoose-deep-populate')(mongoose) );
 TicketSchema.plugin( require('mongoose-time')() );
+TicketSchema.plugin( require('mongoose-autopopulate') );
 
 
 /* istanbul ignore next */

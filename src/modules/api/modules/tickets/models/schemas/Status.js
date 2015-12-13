@@ -9,9 +9,11 @@ var
  */
 var StatusSchema = new Schema({
 
-  status:     { type: Schema.ObjectId, ref: 'Status', required: true },
+  status:     { type: Schema.ObjectId, ref: 'TicketsStatus', required: true, autopopulate: true },
   user:       { type: Schema.ObjectId, ref: 'UserBase', required: true },
-  created_at: { type: Date, default: Date.now }
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now },
+  comments:   { type: String }
 
 }, {
 
@@ -27,5 +29,10 @@ var StatusSchema = new Schema({
   }
 
 });
+
+
+StatusSchema.plugin( require('mongoose-deep-populate')(mongoose) );
+StatusSchema.plugin( require('mongoose-time')() );
+StatusSchema.plugin( require('mongoose-autopopulate') );
 
 module.exports = StatusSchema;

@@ -59,7 +59,7 @@ class StatusesController extends BaseController
     async.waterfall([
       function setup(callback) {
         var model = new Model(newAttrs);
-        callback(null, model);
+        callback(null, model, {});
       },
       this._validate,
       this._save
@@ -107,7 +107,7 @@ class StatusesController extends BaseController
           // assign the new attributes
           statusModel.set(newAttrs);
 
-          callback(null, statusModel);
+          callback(null, statusModel, {});
         });
       },
       this._validate,

@@ -77,7 +77,7 @@ class TagsController extends BaseController
     async.waterfall([
       function setup(callback) {
         var model = new Model(newAttrs);
-        callback(null, model);
+        callback(null, model, {});
       },
       this._validate,
       this._save
@@ -125,7 +125,7 @@ class TagsController extends BaseController
           // assign the new attributes
           tagModel.set(newAttrs);
 
-          callback(null, tagModel);
+          callback(null, tagModel, {});
         });
       },
       this._validate,

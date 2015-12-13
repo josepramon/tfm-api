@@ -21,7 +21,7 @@ module.exports = {
    */
   setAttachments(model, options, callback) {
     if(_.isUndefined(options.attachments)) {
-      callback(null, model, options);
+      return callback(null, model, options);
     } else {
 
       let attachments = options.attachments;
@@ -52,7 +52,7 @@ module.exports = {
       }
 
       // update the article attachments
-      model.set('attachments', parsed);
+      model.attachments = parsed;
 
       callback(null, model, options);
     }

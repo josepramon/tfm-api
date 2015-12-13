@@ -19,8 +19,9 @@ var StatusSchema = new Schema({
 
   // The ticket resolution flow can be customized,
   // by defining the statates that can be applied to the ticket.
-  // There's an special status, the 'closed' one, that should exist
-  // always, so it should not deleteable.
+  // There are two special statuses, the 'open' and 'closed' ones,
+  // that should exist always, so it should not deleteable.
+  open         : { type: Boolean, default: false, unique: true },
   closed       : { type: Boolean, default: false, unique: true },
 
   created_at   : { type: Date, default: Date.now },
@@ -29,6 +30,7 @@ var StatusSchema = new Schema({
 }, {
 
   toJSON: {
+    virtuals: true,
     transform: function(doc, ret) {
       // transform _id to id
       ret.id = ret._id;
@@ -75,8 +77,14 @@ StatusSchema.index({ managers: 1 });
 
 // Custom methods and attributes
 // ----------------------------------
-StatusSchema.statics.safeAttrs = ['name', 'description'];
+StatusSchema.statics.safeAttrs = ['name', 'description', 'order'];
 StatusSchema.methods.getRefs = function() { return []; };
+
+StatusSchema.virtual('deleteable')
+  .get(function () {
+    return !this.open && !this.closed;
+  }
+);
 
 
 // Register the plugins
