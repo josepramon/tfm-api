@@ -110,7 +110,7 @@ class ResponseData {
       let newStack = stack.concat([attr]);
       ret[attr] = {
         meta: this._getNestedMeta(item, newStack, expands),
-        data: this._formatNestedData(willExpand[attr], this._getNestedExpands(attr, expands), newStack)
+        data: this._formatNestedData(willExpand[attr], this._getNestedExpands(attr, expands, stack), newStack)
       };
     }
 
@@ -254,17 +254,27 @@ class ResponseData {
    * @param  {Object}  expands Expands object
    * @return {Array}           The attributes to expand on that attr. (false if none)
    */
-  _getNestedExpands(attr, expands) {
+  _getNestedExpands(attr, expands, stack) {
+    stack = stack || [];
+
+    var re = new RegExp('^' + this._escapeRegExp(stack.join('.')+'.'), 'g');
+
     var attrs = _.compact(_.keys(expands).map(function(expand) {
-      var expandParts = expand.split('.');
+      var expandParts = expand.replace(re, '').split('.');
+
       if(expandParts.length > 1 && expandParts[0] === attr) {
-        return expandParts.join('.');
+        return expand;
       } else {
         return false;
       }
     }));
 
     return _.pick(expands, attrs);
+  }
+
+
+  _escapeRegExp(str) {
+    return str.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
   }
 
 }
