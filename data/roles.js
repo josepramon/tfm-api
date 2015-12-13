@@ -23,7 +23,7 @@ exports.roles = [
       admins:true,
 
       // knowledge base articles: unlimited access
-      knowledge_base: true
+      knowledge_base: true,
 
       // tickets
       tickets: {
@@ -44,7 +44,7 @@ exports.roles = [
     privileges: {
 
       // unlimited access
-      knowledge_base: true
+      knowledge_base: true,
 
       // tickets
       tickets: {
@@ -67,7 +67,7 @@ exports.roles = [
         actions: {
           read: true
         }
-      }
+      },
 
       // tickets
       tickets: {
