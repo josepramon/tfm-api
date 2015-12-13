@@ -61,7 +61,7 @@ class ExpandsURLMap {
 
     attrs.slice(0, this.depth).forEach(function(k,i) {
       if(i>0) {
-        node = node.expands ? node.expands[k]:null;
+        node = node && node.expands ? node.expands[k]:null;
       } else {
         node = that.data[k];
       }

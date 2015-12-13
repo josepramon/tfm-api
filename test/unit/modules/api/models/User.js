@@ -7,14 +7,14 @@ var
   requireHelper     = require('test/_util/require_helper'),
 
   // file being tested
-  User              = requireHelper('modules/api/models/User');
+  User              = requireHelper('modules/api/models/UserBase');
 
 
 
 
 describe('User model', function() {
 
-  it('should return an empty array when calling getRefs', function(done) {
+  it('should return an array when calling getRefs', function(done) {
 
     var refs = (new User()).getRefs();
 

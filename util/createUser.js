@@ -7,8 +7,12 @@ var
   mongoose          = require('mongoose'),
   mongoConfigParser = require('../src/lib/mongoConfigParser'),
   config            = require('../src/config'),
+
+  Admin             = require('../src/modules/api/models/Admin'),
+  Manager           = require('../src/modules/api/models/Manager'),
   User              = require('../src/modules/api/models/User'),
   Role              = require('../src/modules/api/models/Role'),
+
   inquirer          = require('inquirer');
 
 
@@ -36,9 +40,25 @@ var getRoles = function(callback) {
 };
 
 var createUser = function(userData) {
-  var user = new User(userData);
+  var
+    UserClass,
+    attrs = _.pick(userData, 'username', 'password', 'email'),
+    role  = userData.role || {};
 
-  user.save(function (err, model) {
+  attrs.role = role.id;
+
+  switch(role.name) {
+    case 'ADMIN':
+      UserClass = Admin;
+      break;
+    case 'MANAGER':
+      UserClass = Manager;
+      break;
+    default:
+      UserClass = User;
+  }
+
+  (new UserClass(attrs)).save(function (err, model) {
     if(err) {
       errorHandler(err);
     }
@@ -94,14 +114,13 @@ var getPromptQuestions = function(roleNames, roles) {
         var role = _.find(roles, function(role) {
           return role.name === roleName;
         });
-        return role ? role.id : null;
+        return role;
       }
     }
   ];
 };
 
 
-mongoose.set('debug', true);
 mongoose.connection.on('error', function () {
   console.log('Mongoose connection error', arguments);
 });
@@ -122,15 +141,7 @@ mongoose.connection.once('open', function callback() {
 
     var roleNames = roles.map(function(role) { return role.name; });
 
-    inquirer.prompt(getPromptQuestions(roleNames, roles), function(answers) {
-      var params = {
-        username: answers.username,
-        password: answers.password,
-        email:    answers.email,
-        role:     answers.role
-      };
-      createUser(params);
-    });
+    inquirer.prompt(getPromptQuestions(roleNames, roles), createUser);
 
   });
 });

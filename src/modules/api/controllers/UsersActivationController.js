@@ -14,7 +14,10 @@ var
   ExpandsURLMap   = require('../util/ExpandsURLMap'),
   cache           = require('../util/Cache'),
   RoleUtil        = require('../util/RoleUtil'),
-  User            = require('../models/User');
+
+  User            = require('../models/User'),
+  Admin           = require('../models/Admin'),
+  Manager         = require('../models/Manager');
 
 
 
@@ -27,7 +30,7 @@ var
  */
 class UsersActivationController
 {
-  constructor(savePasswordOnCreate) {
+  constructor(userType, savePasswordOnCreate) {
 
     /**
      * Prefix for the keys used to persist the requests on redis
@@ -57,7 +60,26 @@ class UsersActivationController
      *
      * @type {ExpandsURLMap}
      */
-    this.expandsURLMap = new ExpandsURLMap();
+    this.expandsURLMap = new ExpandsURLMap({});
+
+    // set the user type
+    var userModel = null;
+
+    switch(userType) {
+      case 'admin':
+        userModel = Admin;
+        break;
+      case 'manager':
+        userModel = Manager;
+        break;
+      default:
+        userModel = User;
+    }
+
+    /**
+     * @type {Model}
+     */
+    this.Model = userModel;
   }
 
 
@@ -77,14 +99,16 @@ class UsersActivationController
       // the admins), so in that situation, no password will be provided (the
       // users will provide one when activating the account). In order to
       // validate the model, a password is required.
-      password = this.savePasswordOnCreate ? request.req.body.password : faker.internet.password();
+      password = this.savePasswordOnCreate ? request.req.body.password : faker.internet.password(),
+
+      Model = this.Model;
 
 
     async.waterfall([
       function setup(callback) {
 
         // create and populate the user model
-        var model = new User(newAttrs);
+        var model = new Model(newAttrs);
 
         if(request.req.body.role) {
           model.role = request.req.body.role;
@@ -95,7 +119,7 @@ class UsersActivationController
         callback(null, model);
       },
       this._validate,
-      this._checkUnique,
+      this._checkUnique.bind(self),
       this._save.bind(self),
       this._sendActivationMail
 
@@ -121,7 +145,8 @@ class UsersActivationController
       request    = new Request(req),
       response   = new Response(request, this.expandsURLMap),
       recoveryId = this.keyPrefix + req.params.id,
-      self       = this;
+      self       = this,
+      Model      = this.Model;
 
     async.waterfall([
 
@@ -152,9 +177,8 @@ class UsersActivationController
       },
 
       function createModel(data, callback) {
-
         var
-          model = new User(data),
+          model = new Model(data),
 
           // update attributes with any new data
           newAttrs = self._getAssignableAttributes(request, true);
@@ -200,7 +224,7 @@ class UsersActivationController
   _getAssignableAttributes(request, patch) {
     var
       defaults  = {},
-      safeAttrs = User.safeAttrs;
+      safeAttrs = this.Model.safeAttrs;
 
     if(!patch) {
       defaults = safeAttrs.reduce(function(memo, key) {
@@ -235,14 +259,13 @@ class UsersActivationController
    * (because that is performed on the database level)
    */
   _checkUnique(model, callback) {
-
     var criteria = { $or: [
       { username: model.username },
       { email: model.email }
     ]};
 
 
-    User.findOne(criteria).exec(function(err, userModel) {
+    this.Model.findOne(criteria).exec(function(err, userModel) {
       /* istanbul ignore next */
       if (err) { return callback(err); }
 

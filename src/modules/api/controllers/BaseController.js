@@ -126,7 +126,13 @@ class BaseController
         if (err)    { return next(err); }
         if (!model) { return next( new errors.NotFound() ); }
 
-        model.remove(function() {
+        // Some models have attached a soft delete plugin that adds an additional
+        // 'delete' method that performs the soft delete.
+        // So, if the model has the plugin use that, or fall back to the regular
+        // 'remove' method provided by Mongoose
+        var removeMethod = model.delete ? 'delete' : 'remove';
+
+        model[removeMethod](function() {
           response.formatOutput(model, function(err, output) {
             /* istanbul ignore next */
             if (err) { return next(err); }

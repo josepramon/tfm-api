@@ -1,8 +1,10 @@
 'use strict';
 
 var
-  _     = require('lodash'),
-  async = require('async');
+  _          = require('lodash'),
+  async      = require('async'),
+  getFilters = require('../util/filterParser'),
+  stringUtil = require('../util/string');
 
 
 /**
@@ -13,8 +15,7 @@ var
  *                           any preexisting key with the same name
  */
 var addFilters = function(filters, override, req, res, next) {
-  req.filters = req.filters || {};
-
+  req.filters = req.filters || getFilters(req);
 
   // the filters values might be functions (to retrieve stuff from the DB,
   // or for whatever reason). So execute them if any.
@@ -34,32 +35,23 @@ var addFilters = function(filters, override, req, res, next) {
     if (err) { return next(err); }
 
     if(override) {
-      _.extend(req.filters, filters);
+      req.filters = _.extend(req.filters, filters);
     } else {
-      _.defaults(req.filters, filters);
+      req.filters = _.defaults(req.filters, filters);
     }
 
     var stringifiedFilters, currentFilters;
 
     stringifiedFilters = _.pairs(req.filters).map(function(pair) {
+      if(_.isObject(pair[1]) || _.isNull(pair[1])) {
+        // convert to string or the value will be lost
+        pair[1] = stringUtil.escapeQueryParam(JSON.stringify(pair[1]));
+      }
+
       return pair.join(':');
     }).join(',');
 
-
-    req.query      = req.query || {};
-    currentFilters = req.query.filter || '';
-
-    if(_.isArray(currentFilters)) {
-      currentFilters.push(stringifiedFilters);
-    } else {
-      if(currentFilters === '') {
-        currentFilters = stringifiedFilters;
-      } else {
-        stringifiedFilters += ',' + stringifiedFilters;
-      }
-    }
-
-    req.query.filter = currentFilters;
+    req.query.filter = stringifiedFilters;
 
     next();
   });
@@ -67,5 +59,5 @@ var addFilters = function(filters, override, req, res, next) {
 
 
 module.exports = {
-  middleware: addFilters,
+  middleware: addFilters
 };
