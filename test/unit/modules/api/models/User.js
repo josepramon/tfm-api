@@ -14,7 +14,7 @@ var
 
 describe('User model', function() {
 
-  it('should return an empty array when calling getRefs', function(done) {
+  it('should return an array when calling getRefs', function(done) {
 
     var refs = (new User()).getRefs();
 
