@@ -14,6 +14,9 @@ var
   Response        = require(apiBasePath + '/util/Response'),
   ExpandsURLMap   = require(apiBasePath + '/util/ExpandsURLMap'),
 
+  // utilities to manage the bidirectional relations
+  ManagersUtil    = require(moduleBasePath + '/util/ManagersUtil'),
+
   // Base class
   BaseController  = require(apiBasePath + '/controllers/BaseController'),
 
@@ -159,13 +162,27 @@ class CategoriesController extends BaseController
 
 
   _setManagers(model, options, callback) {
-    callback(null, model, options);
+    if(_.isUndefined(options.managers)) {
+      callback(null, model, options);
+    } else {
+      let managers = options.managers;
 
-    // if(_.isUndefined(options.managers)) {
-    //   callback(null, model, options);
-    // } else {
+      if(!_.isObject(managers)) {
+        try {
+          managers = JSON.parse(managers);
+        } catch(e) {
+          return callback( errors.Validation(model, 'managers', 'Managers must be a valid JSON') );
+        }
+      }
 
-    // }
+      ManagersUtil.setManagers(model, managers, function(err) {
+        /* istanbul ignore next */
+        if (err) {
+          return callback(err);
+        }
+        callback(null, model, options);
+      });
+    }
   }
 
 }
