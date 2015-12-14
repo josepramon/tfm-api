@@ -237,11 +237,18 @@ class TicketsController extends BaseController
       additionalFilters = {};
 
     // parse the extra filters (might come from the request or some middleware)
-    ['user', 'manager', 'closed'].forEach(function(f) {
+    ['user', 'manager'].forEach(function(f) {
       if(_.has(request.filters, f)) {
         additionalFilters[f] = request.filters[f];
       }
     });
+
+    // closed filter
+    // tickets are open unless they have the `closed attribute with a ture value
+    if(_.has(request.filters, 'closed')) {
+      var closedVal = request.filters.closed ? true : {$ne:true};
+      additionalFilters.closed = closedVal;
+    }
 
     // add the category restriction
     if(_.has(request.filters, 'categories')) {
