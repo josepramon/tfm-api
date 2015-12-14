@@ -15,6 +15,7 @@ var
   ExpandsURLMap   = require(apiBasePath + '/util/ExpandsURLMap'),
   filters         = require(apiBasePath + '/util/filters'),
   attachmentsUtil = require(apiBasePath + '/modules/uploads/util/attachmentsUtil'),
+  notify          = require(moduleBasePath + '/util/TicketChangesNotifier').notify,
 
   // Base class
   BaseController  = require(apiBasePath + '/controllers/BaseController'),
@@ -168,11 +169,16 @@ class CommentsController extends BaseController
 
         var comment = _.last(populated.comments);
 
-        response.formatOutput(comment, function(err, output) {
+        that._notifyUsers(req.user, model, comment, function(err) {
           /* istanbul ignore next */
           if (err) { return next(err); }
 
-          res.json(output);
+          response.formatOutput(comment, function(err, output) {
+            /* istanbul ignore next */
+            if (err) { return next(err); }
+
+            res.json(output);
+          });
         });
       });
     });
@@ -233,11 +239,16 @@ class CommentsController extends BaseController
 
         var comment = _.last(populated.comments);
 
-        response.formatOutput(comment, function(err, output) {
+        that._notifyUsers(req.user, model, comment, function(err) {
           /* istanbul ignore next */
           if (err) { return next(err); }
 
-          res.json(output);
+          response.formatOutput(comment, function(err, output) {
+            /* istanbul ignore next */
+            if (err) { return next(err); }
+
+            res.json(output);
+          });
         });
       });
     });
@@ -390,6 +401,24 @@ class CommentsController extends BaseController
       callback(err, populated);
     });
 
+  }
+
+
+  /**
+   * Send a mail notification to the appropiate users
+   */
+  _notifyUsers(user, model, comment, callback) {
+    // don't send anything if the commentis private
+    if(comment.private) {
+      return callback();
+    }
+
+    var mailSettings = {
+      template:     'mail_ticketNewComment',
+      templateData: {}
+    };
+
+    notify(user, model, mailSettings, callback);
   }
 
 }

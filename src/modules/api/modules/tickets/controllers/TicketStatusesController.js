@@ -14,6 +14,7 @@ var
   Response        = require(apiBasePath + '/util/Response'),
   ExpandsURLMap   = require(apiBasePath + '/util/ExpandsURLMap'),
   filters         = require(apiBasePath + '/util/filters'),
+  notify          = require(moduleBasePath + '/util/TicketChangesNotifier').notify,
 
   // Base class
   BaseController  = require(apiBasePath + '/controllers/BaseController'),
@@ -23,7 +24,6 @@ var
 
   // other entities
   Status           = require(moduleBasePath + '/models/Status');
-
 
 
 class TicketStatusesController extends BaseController
@@ -53,9 +53,7 @@ class TicketStatusesController extends BaseController
           }
         }
       },
-      "status": {
-
-      }
+      "status": {}
     });
   }
 
@@ -163,11 +161,17 @@ class TicketStatusesController extends BaseController
 
         var status = _.last(populated.statuses);
 
-        response.formatOutput(status, function(err, output) {
+
+        that._notifyUsers(req.user, model, status, function(err) {
           /* istanbul ignore next */
           if (err) { return next(err); }
 
-          res.json(output);
+          response.formatOutput(status, function(err, output) {
+            /* istanbul ignore next */
+            if (err) { return next(err); }
+
+            res.json(output);
+          });
         });
       });
     });
@@ -227,11 +231,16 @@ class TicketStatusesController extends BaseController
 
         var status = _.last(populated.statuses);
 
-        response.formatOutput(status, function(err, output) {
+        that._notifyUsers(req.user, model, status, function(err) {
           /* istanbul ignore next */
           if (err) { return next(err); }
 
-          res.json(output);
+          response.formatOutput(status, function(err, output) {
+            /* istanbul ignore next */
+            if (err) { return next(err); }
+
+            res.json(output);
+          });
         });
       });
     });
@@ -406,6 +415,22 @@ class TicketStatusesController extends BaseController
       callback(err, populated);
     });
 
+  }
+
+
+  /**
+   * Send a mail notification to the appropiate users
+   */
+  _notifyUsers(user, model, status, callback) {
+
+    var mailSettings = {
+      template:     'mail_ticketNewStatus',
+      templateData: {
+        statusName: status.status.name
+      }
+    };
+
+    notify(user, model, mailSettings, callback);
   }
 
 }
