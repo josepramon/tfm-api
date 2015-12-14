@@ -14,7 +14,7 @@ var
  */
 var _getUser = function(id, callback) {
 
-  User.findOne(id).exec(function(err, model) {
+  User.findOne({_id: id}).exec(function(err, model) {
 
     /* istanbul ignore next */
     if (err)    { return callback(err); }
