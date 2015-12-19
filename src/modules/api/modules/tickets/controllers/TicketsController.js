@@ -250,9 +250,12 @@ class TicketsController extends BaseController
       additionalFilters.closed = closedVal;
     }
 
-    // add the category restriction
+    // add the category restrictions
     if(_.has(request.filters, 'categories')) {
       additionalFilters.category = {$in: request.filters.categories};
+    }
+    if(_.has(request.filters, 'category')) {
+      additionalFilters.category = request.filters.categories;
     }
 
     return _.extend({}, safeAttrsFilters, searchFilters, additionalFilters);
