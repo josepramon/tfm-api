@@ -24,8 +24,11 @@ var
 
 // Setup the middleware applied to the list actions
 // to restrict the access only to allowed users
-var requiredPermissions = { users: true };
-var accessControlFilter = _.partial(PrivilegesMiddleware, requiredPermissions);
+var readPermissions   = { managers: { actions: { read: true } } };
+var globalPermissions = { managers: true };
+
+var readAccessControlFilter   = _.partial(PrivilegesMiddleware, readPermissions);
+var globalAccessControlFilter = _.partial(PrivilegesMiddleware, globalPermissions);
 
 
 // Get the users role id (used on the next middlewares)
@@ -51,6 +54,10 @@ module.exports = function(router) {
 
     /**
      * @apiDefine permission_auth_users  Global module access for `Auth_Users` is required.
+     */
+
+    /**
+     * @apiDefine permission_auth_managers_read  Read permissions to the module are required.
      */
 
     /**
@@ -132,7 +139,7 @@ module.exports = function(router) {
      * @apiUse Auth_Users_CommonApiResponseHeader
      * @apiUse Auth_Users_MultipleEntityResponse
      *
-     * @apiPermission permission_auth_users
+     * @apiPermission permission_auth_managers_read
      *
      * @apiSuccessExample {json} Success-Response:
      *     HTTP/1.1 200 OK
@@ -167,7 +174,7 @@ module.exports = function(router) {
      *     }
      *
      */
-    .get(accessControlFilter, controller.getAll.bind(controller))
+    .get(readAccessControlFilter, controller.getAll.bind(controller))
 
 
     /**
