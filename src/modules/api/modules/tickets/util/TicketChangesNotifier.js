@@ -46,6 +46,7 @@ var _getTicketUrl = function(ticket, user) {
  * @return {String} returns an id as a string (converting it fron an ObjectId if necessary)
  */
 var _getIdAsString = function(id) {
+  if(!id) { return null; }
   return id.toHexString ? id.toHexString() : id;
 };
 
