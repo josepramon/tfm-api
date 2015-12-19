@@ -24,6 +24,8 @@ var ArticleSchema = new Schema({
   created_at   : { type: Date, default: Date.now },
   updated_at   : { type: Date, default: Date.now },
 
+  weight       : { type: Number, default: null },
+
   attachments  : [AttachmentSchema]
 }, {
 
@@ -95,6 +97,8 @@ ArticleSchema.pre('remove', function (next) {
 // ----------------------------------
 ArticleSchema.index({ tags: 1 });
 ArticleSchema.index({ category: 1 });
+ArticleSchema.index({ weight: 1, publish_date: 1 });
+
 ArticleSchema.index({
   title:   'text',
   excerpt: 'text',
@@ -110,7 +114,7 @@ ArticleSchema.index({
 
 // Custom methods and attributes
 // ----------------------------------
-ArticleSchema.statics.safeAttrs = ['title', 'excerpt', 'body', 'published', 'publish_date', 'commentable'];
+ArticleSchema.statics.safeAttrs = ['title', 'excerpt', 'body', 'published', 'publish_date', 'commentable', 'weight'];
 ArticleSchema.methods.getRefs = function() { return ['tags', 'category', 'attachments']; };
 
 

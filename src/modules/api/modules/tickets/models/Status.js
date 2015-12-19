@@ -15,7 +15,7 @@ var StatusSchema = new Schema({
   description  : String,
 
   // used to define a sequence (open -> in progress -> closed)
-  order        : { type: Number, required: true, default: 0 },
+  order        : { type: Number, default: null },
 
   // The ticket resolution flow can be customized,
   // by defining the statates that can be applied to the ticket.
@@ -73,6 +73,7 @@ StatusSchema.pre('remove', function (next) {
 // Secondary indexes
 // ----------------------------------
 StatusSchema.index({ managers: 1 });
+StatusSchema.index({ order: 1 });
 
 
 // Custom methods and attributes
