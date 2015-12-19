@@ -12,7 +12,7 @@ var _ = require('underscore');
 var parseSortingOptions = function(sortParams) {
   if(!sortParams) { return {}; }
 
-  return _.reduce(sortParams.split(','), function(memo, param) {
+  return _.reduce(sortParams.split(/(?![^)(]*\([^)(]*?\)\)),(?![^\(]*\))/), function(memo, param) {
     let paramParts = param.split('|');
     memo[paramParts[0]] = _normalizeSortOrder(paramParts[1]);
     return memo;
