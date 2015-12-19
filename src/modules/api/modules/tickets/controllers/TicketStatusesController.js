@@ -65,14 +65,11 @@ class TicketStatusesController extends BaseController
     var
       that     = this,
       request  = new Request(req),
-      response = new Response(request, this.expandsURLMap),
-      criteria = this._buildCriteria(request);
+      response = new Response(request, this.expandsURLMap);
 
-
-    Ticket.findOne(criteria).exec(function(err, model) {
+    this._getTicket(request, function(err, model) {
       /* istanbul ignore next */
-      if (err)    { return next(err); }
-      if (!model) { return next(new errors.NotFound()); }
+      if (err) { return next(err); }
 
       var status = model.statuses.id(request.req.params.id);
 
@@ -99,14 +96,11 @@ class TicketStatusesController extends BaseController
     var
       that     = this,
       request  = new Request(req),
-      response = new Response(request, this.expandsURLMap),
-      criteria = this._buildCriteria(request);
+      response = new Response(request, this.expandsURLMap);
 
-
-    Ticket.findOne(criteria).exec(function(err, model) {
+    this._getTicket(request, function(err, model) {
       /* istanbul ignore next */
-      if (err)    { return next(err); }
-      if (!model) { return next(new errors.NotFound()); }
+      if (err) { return next(err); }
 
       that._populateStatuses(model, request, function(err, populated) {
         if(err) { return next(err); }
@@ -131,18 +125,14 @@ class TicketStatusesController extends BaseController
       request  = new Request(req),
       response = new Response(request, this.expandsURLMap),
 
-      // query used to find the doc
-      criteria = this._buildCriteria(request),
-
       // options for the waterfall functs.
       waterfallOptions = this._buildWaterfallOptions(req.user, req.body);
 
     async.waterfall([
       function setup(callback) {
-        Ticket.findOne(criteria).exec(function(err, model) {
+        that._getTicket(request, function(err, model) {
           /* istanbul ignore next */
-          if (err)    { return callback(err); }
-          if (!model) { return callback(new errors.NotFound()); }
+          if (err) { return callback(err); }
 
           callback(null, model, waterfallOptions);
         });
@@ -189,18 +179,14 @@ class TicketStatusesController extends BaseController
       request  = new Request(req),
       response = new Response(request, this.expandsURLMap),
 
-      // query used to find the doc
-      criteria = this._buildCriteria(request),
-
       // options for the waterfall functs.
       waterfallOptions = this._buildWaterfallOptions(req.user, req.body);
 
     async.waterfall([
       function setup(callback) {
-        Ticket.findOne(criteria).exec(function(err, model) {
+        that._getTicket(request, function(err, model) {
           /* istanbul ignore next */
-          if (err)    { return callback(err); }
-          if (!model) { return callback(new errors.NotFound()); }
+          if (err) { return callback(err); }
 
           var status = model.statuses.id(request.req.params.id);
           if(!status) { return next(new errors.NotFound()); }
@@ -262,14 +248,12 @@ class TicketStatusesController extends BaseController
     //post.comments.id(my_id).remove();
     var
       request  = new Request(req),
-      response = new Response(request, this.expandsURLMap),
-      criteria = this._buildCriteria(request);
+      response = new Response(request, this.expandsURLMap);
 
 
-    Ticket.findOne(criteria).exec(function(err, model) {
+    this._getTicket(request, function(err, model) {
       /* istanbul ignore next */
-      if (err)    { return next(err); }
-      if (!model) { return next(new errors.NotFound()); }
+      if (err) { return next(err); }
 
       var status = model.statuses.id(request.req.params.id);
 
@@ -297,6 +281,22 @@ class TicketStatusesController extends BaseController
   // =============================================================================
 
   /**
+   * Parent ticket retrieval
+   */
+  _getTicket(request, callback) {
+    var criteria = this._buildCriteria(request);
+
+    Ticket.findOne(criteria).exec(function(err, model) {
+      /* istanbul ignore next */
+      if (err)    { return callback(err); }
+      if (!model) { return callback(new errors.NotFound()); }
+
+      callback(null, model);
+    });
+  }
+
+
+  /**
    * Query builder for mongoose
    */
   _buildCriteria(request) {
@@ -311,6 +311,23 @@ class TicketStatusesController extends BaseController
     }
 
     return criteria;
+  }
+
+
+  _parseFilters(request) {
+    var
+      // get the regular filters (on safe attributes)
+      defaultFilters    = super._parseFilters(request),
+      additionalFilters = {};
+
+    // closed filter
+    // tickets are open unless they have the `closed attribute with a ture value
+    if(_.has(request.filters, 'closed')) {
+      var closedVal = request.filters.closed ? true : {$ne:true};
+      additionalFilters.closed = closedVal;
+    }
+
+    return _.extend({}, defaultFilters, additionalFilters);
   }
 
 
