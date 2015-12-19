@@ -1,28 +1,28 @@
 'use strict';
 
 var
-  _                  = require('lodash'),
-  CommentsController = require('../../controllers/CommentsController'),
-  controller         = new CommentsController();
+  _                    = require('lodash'),
+  apiBasePath          = '../../../..',
+  moduleBasePath       = '../..',
+  addFilters           = require(apiBasePath +'/middleware/addFilters').middleware,
+  accessControlFilter  = require(moduleBasePath + '/middleware/ticketsNestedEntitiesFilter'),
 
+  // additional restrictions fro the comments
+  ticketCommentFilter  = require(moduleBasePath + '/middleware/ticketCommentFilter'),
 
-// check owner or profile
-// user can create comments for his own tickets
-// agents can comment their assigned tickets
-// tickets must be open
-//
-// agents can update/delete, users don't
+  CommentsController   = require('../../controllers/CommentsController'),
+  controller           = new CommentsController();
 
 
 module.exports = function(router) {
 
   router.route('/tickets/tickets/:ticketId/comments')
-    .get(controller.getAll.bind(controller))
-    .post(controller.create.bind(controller));
+    .get(accessControlFilter, controller.getAll.bind(controller))
+    .post(accessControlFilter, ticketCommentFilter, controller.create.bind(controller));
 
   router.route('/tickets/tickets/:ticketId/comments/:id')
-    .get(controller.getOne.bind(controller))
-    .put(controller.update.bind(controller))
-    .patch(controller.updatePartial.bind(controller))
-    .delete(controller.delete.bind(controller));
+    .get(accessControlFilter, controller.getOne.bind(controller))
+    .put(accessControlFilter, ticketCommentFilter, controller.update.bind(controller))
+    .patch(accessControlFilter, ticketCommentFilter, controller.updatePartial.bind(controller))
+    .delete(accessControlFilter, ticketCommentFilter, controller.delete.bind(controller));
 };

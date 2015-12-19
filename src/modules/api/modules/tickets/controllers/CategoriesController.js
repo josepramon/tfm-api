@@ -43,7 +43,19 @@ class CategoriesController extends BaseController
      * @type {ExpandsURLMap}
      */
     this.expandsURLMap = new ExpandsURLMap({
-      "managers": {}
+      "managers": {
+        "expands": {
+          "profile": {
+            "route": null,
+            "expands": {
+              "image": {
+                "route": "/uploads/:itemId",
+                "expands": {"id":null}
+              }
+            }
+          }
+        }
+      }
     });
   }
 

@@ -24,7 +24,7 @@ describe('modules/api/util/nestedCollectionMiddlewareBuilder', function() {
       paramNames = [];
 
     if (params) {
-      paramNames = params[1].split(',').map(Function.prototype.call, String.prototype.trim);
+      paramNames = params[1].split(/(?![^)(]*\([^)(]*?\)\)),(?![^\(]*\))/).map(Function.prototype.call, String.prototype.trim);
     }
 
     expect(paramNames.length).to.equal(3);

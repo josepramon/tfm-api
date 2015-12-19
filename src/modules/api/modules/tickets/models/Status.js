@@ -15,14 +15,14 @@ var StatusSchema = new Schema({
   description  : String,
 
   // used to define a sequence (open -> in progress -> closed)
-  order        : { type: Number, required: true, default: 0 },
+  order        : { type: Number, default: null },
 
   // The ticket resolution flow can be customized,
   // by defining the statates that can be applied to the ticket.
   // There are two special statuses, the 'open' and 'closed' ones,
   // that should exist always, so it should not deleteable.
-  open         : { type: Boolean, unique: true },
-  closed       : { type: Boolean, unique: true },
+  open         : { type: Boolean, default: false },
+  closed       : { type: Boolean, default: false },
 
   created_at   : { type: Date, default: Date.now },
   updated_at   : { type: Date, default: Date.now }
@@ -51,28 +51,10 @@ var StatusSchema = new Schema({
 
 
 
-// Remove relations from other collections
-StatusSchema.pre('remove', function (next) {
-  var
-    tag      = this,
-    criteria = {},
-    update   = { $pull: { 'tags': tag._id } };
-
-
-  // requiring at runtime to avoid circular dependencies
-  Ticket = Ticket || require('./Ticket');
-
-  Ticket.update(criteria, update, {multi:true}, function(err, numAffected) {
-    /* istanbul ignore next */
-    if(err) { return next(err); }
-    next();
-  });
-});
-
-
 // Secondary indexes
 // ----------------------------------
 StatusSchema.index({ managers: 1 });
+StatusSchema.index({ order: 1 });
 
 
 // Custom methods and attributes
@@ -85,6 +67,26 @@ StatusSchema.virtual('deleteable')
     return !this.open && !this.closed;
   }
 );
+
+
+// Remove relations from other collections on delete
+// ---------------------------------------------------
+StatusSchema.pre('remove', function (next) {
+  var
+    status   = this,
+    criteria = {'statuses.status': status._id},
+    update   = { $pull: { 'statuses': {status: status._id} } };
+
+
+  // requiring at runtime to avoid circular dependencies
+  Ticket = Ticket || require('./Ticket');
+
+  Ticket.update(criteria, update, {multi:true}, function(err, numAffected) {
+    /* istanbul ignore next */
+    if(err) { return next(err); }
+    next();
+  });
+});
 
 
 // Register the plugins

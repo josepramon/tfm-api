@@ -44,7 +44,7 @@ class Request {
     }
     expands = _.reduce(_.compact(expands), function(memo, expand) {
       /* istanbul ignore next */
-      var expandParts = expand && _.isString(expand) ? expand.split(',') : [];
+      var expandParts = expand && _.isString(expand) ? expand.split(/(?![^)(]*\([^)(]*?\)\)),(?![^\(]*\))/) : [];
       return memo.concat(expandParts);
     }, []);
     expands = _.unique(expands);

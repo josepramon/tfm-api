@@ -13,7 +13,8 @@ var CategorySchema = new Schema({
   description  : String,
   articles     : [{ type: Schema.ObjectId, ref: 'KBArticle'}],
   created_at   : { type: Date, default: Date.now },
-  updated_at   : { type: Date, default: Date.now }
+  updated_at   : { type: Date, default: Date.now },
+  weight       : { type: Number, default: null },
 }, {
 
   toJSON: {
@@ -63,6 +64,7 @@ CategorySchema.pre('remove', function (next) {
 // Secondary indexes
 // ----------------------------------
 CategorySchema.index({ articles: 1 });
+CategorySchema.index({ weight: 1 });
 CategorySchema.index({
   name:        'text',
   description: 'text'
@@ -77,7 +79,7 @@ CategorySchema.index({
 
 // Custom methods and attributes
 // ----------------------------------
-CategorySchema.statics.safeAttrs = ['name', 'description'];
+CategorySchema.statics.safeAttrs = ['name', 'description', 'weight'];
 CategorySchema.methods.getRefs = function() { return ['articles']; };
 
 

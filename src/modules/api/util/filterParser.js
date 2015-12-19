@@ -11,7 +11,7 @@ var parseFilters = function(req) {
 
   var filters = {};
   if(req.query.filter) {
-    req.query.filter.split(',').forEach(function(filter) {
+    req.query.filter.split(/(?![^)(]*\([^)(]*?\)\)),(?![^\(]*\))/).forEach(function(filter) {
       let filterParts = filter.split(':');
       let val = stringUtil.unescapeQueryParam(filterParts[1]);
 
