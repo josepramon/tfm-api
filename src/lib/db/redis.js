@@ -9,4 +9,8 @@ if(config.redis.db) {
   client.select(config.redis.db);
 }
 
+if(config.redis.password) {
+  client.auth(config.redis.password);
+}
+
 module.exports = client;
