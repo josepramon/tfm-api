@@ -17,10 +17,12 @@ module.exports = {
       publishedFilter = {},
       filterValue = filters.isPublished;
 
-    if(_.isEmpty(filterValue)) {
-      filterValue = true;
-    } else {
-      filterValue = _.contains(['1', 'true'], filterValue.toLowerCase());
+    if(!_.isBoolean(v)) {
+      if(_.isEmpty(filterValue)) {
+        filterValue = true;
+      } else {
+        filterValue = _.contains(['1', 'true'], filterValue.toLowerCase());
+      }
     }
 
     if(filterValue) {
