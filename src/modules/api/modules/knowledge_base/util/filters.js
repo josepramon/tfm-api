@@ -17,7 +17,7 @@ module.exports = {
       publishedFilter = {},
       filterValue = filters.isPublished;
 
-    if(!_.isBoolean(v)) {
+    if(!_.isBoolean(filterValue)) {
       if(_.isEmpty(filterValue)) {
         filterValue = true;
       } else {
