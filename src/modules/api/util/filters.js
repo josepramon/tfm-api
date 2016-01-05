@@ -65,10 +65,12 @@ module.exports = {
         // assume the query just checks the value existence
         // (so a boolean value)
         // if no value, default to true
-        if(_.isEmpty(v)) {
-          v = true;
-        } else {
-          v = _.contains(['1', 'true'], String(v).toLowerCase());
+        if(!_.isBoolean(v)) {
+          if(_.isEmpty(v)) {
+            v = true;
+          } else {
+            v = _.contains(['1', 'true'], String(v).toLowerCase());
+          }
         }
 
         var op1 = {}, op2 = {}, op3 = {};
@@ -101,10 +103,12 @@ module.exports = {
       var v = filters[filterName];
 
       // if no value, default to true
-      if(_.isEmpty(v)) {
-        v = true;
-      } else {
-        v = _.contains(['1', 'true'], String(v).toLowerCase());
+      if(!_.isBoolean(v)) {
+        if(_.isEmpty(v)) {
+          v = true;
+        } else {
+          v = _.contains(['1', 'true'], String(v).toLowerCase());
+        }
       }
 
       var op1 = {}, op2 = {};
